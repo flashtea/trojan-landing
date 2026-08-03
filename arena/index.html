@@ -192,6 +192,17 @@ h2 .bl{color:var(--blue-hi)}
 .frame{position:absolute;inset:0;margin:0;opacity:0;transition:opacity .8s cubic-bezier(.2,.7,.3,1)}
 .frame.is-on{opacity:1}
 .frame .duo{position:absolute;inset:0;--tintA:.6}
+/* Die Bühne füllt den ganzen Viewport. Die Fotos sind 1,5:1 bis 1,78:1 — breiter
+   als der Viewport hoch ist, wird oben und unten beschnitten, schmaler links und
+   rechts. Deshalb pro Bild ein eigener Ankerpunkt, und ab 3:2 ein zweiter. */
+.frame:nth-of-type(1) .duo img{object-position:52% 46%}
+.frame:nth-of-type(2) .duo img{object-position:52% 46%}
+.frame:nth-of-type(3) .duo img{object-position:46% 50%}
+@media(max-aspect-ratio:3/2){
+  .frame:nth-of-type(1) .duo img{object-position:46% 50%}
+  /* sonst sitzt der Kopf der Ruderin genau unter der Überschrift */
+  .frame:nth-of-type(2) .duo img{object-position:40% 50%}
+}
 .stage .shade{position:absolute;inset:0;z-index:7;
   background:linear-gradient(90deg,rgba(4,7,11,.86),rgba(4,7,11,.36) 62%,rgba(4,7,11,.7))}
 .stage .startline{top:auto;bottom:0}
@@ -392,7 +403,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 <section id="haltung" class="firsthour">
   <div class="stage">
     <figure class="frame is-on"><div class="duo"><img src="../assets/o-hero.jpg" alt="Trainingsfläche"><div class="tint"></div><div class="mul"></div></div></figure>
-    <figure class="frame"><div class="duo"><img src="../assets/o-coach.jpg" alt="Coach in der Einheit"><div class="tint"></div><div class="mul"></div></div></figure>
+    <figure class="frame"><div class="duo"><img src="../assets/o-power.jpg" alt="Gruppe im Kurs"><div class="tint"></div><div class="mul"></div></div></figure>
     <figure class="frame"><div class="duo"><img src="../assets/o-kettle.jpg" alt=""><div class="tint"></div><div class="mul"></div></div></figure>
     <span class="shade"></span>
     <span class="startline"></span>
