@@ -695,7 +695,14 @@ function railZeichnen(){
 function railProgress(){ if(!railWartet){ railWartet=true; requestAnimationFrame(railZeichnen) } }
 rail.addEventListener('scroll',railProgress,{passive:true});
 addEventListener('resize',()=>{railMessen();railProgress()},{passive:true});
-requestAnimationFrame(()=>{railMessen();railZeichnen()});
+/* Erst messen, wenn die Schiene in die Nähe kommt. scrollWidth zu lesen zwingt
+   den Browser, das ganze Kartenband zu layouten — beim Laden waren das 163ms
+   für etwas, das drei Bildschirme tiefer liegt und noch niemand sieht. */
+new IntersectionObserver((eintraege,beobachter)=>{
+  if(!eintraege[0].isIntersecting) return;
+  beobachter.disconnect();
+  railMessen(); railZeichnen();
+},{rootMargin:'300px'}).observe(rail);
 /* Kopfleiste hinterlegen, sobald man losscrollt.
    Vorher hing das an einem scroll-Listener, der scrollY las und danach eine
    Klasse setzte — bei jedem einzelnen Ereignis ein erzwungenes Layout,
