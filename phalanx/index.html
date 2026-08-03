@@ -83,11 +83,20 @@ header{position:sticky;top:0;z-index:70;background:var(--paper);border-bottom:2p
 .metabar{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--hair)}
 .metabar div{padding:13px 0 13px 16px;border-left:1px solid var(--hair);color:var(--dim)}
 .metabar div:first-child{border-left:0;padding-left:0}
-@media(max-width:760px){.metabar{grid-template-columns:1fr 1fr}.metabar div:nth-child(odd){border-left:0;padding-left:0}.metabar div:last-child{grid-column:1/-1;border-left:0;padding-left:0;border-top:1px solid var(--hair)}}
+/* Auf dem Handy stapelten sich hier drei Fakten in zwei Spalten, von denen
+   einer über drei Zeilen lief — viel Fläche vor der ersten Aussage. Der Ort
+   entfällt, er steht direkt darunter am Bildband. */
+@media(max-width:760px){
+  .metabar{grid-template-columns:1fr}
+  /* Sperrung zurücknehmen, sonst bricht jede Zeile mit einem einzelnen Wort um */
+  .metabar div{border-left:0;padding:8px 0;letter-spacing:.1em}
+  .metabar div:first-child{display:none}
+  .metabar div+div{border-top:1px solid var(--hair)}
+}
 .hero{padding:clamp(28px,4.2vw,58px) 0 clamp(24px,3.4vw,44px)}
 .kick{display:inline-flex;align-items:center;gap:11px;color:var(--blue);margin-bottom:clamp(14px,2.2vw,24px)}
 .kick b{width:9px;height:9px;background:var(--blue);display:block;flex:none}
-h1{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;letter-spacing:-.042em;line-height:.855;
+h1{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;letter-spacing:-.042em;line-height:0.93;
   font-size:clamp(44px,10.1vw,148px);text-wrap:nowrap}
 /* Outline-Zeilen brauchen 0 Tracking — die Kontur wird mittig gezeichnet
    und benachbarte Buchstaben schneiden sich sonst sichtbar. */
@@ -119,7 +128,7 @@ h1 .bl{color:var(--blue)}
 /* SECTIONS */
 section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 .sechead{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(14px,2.4vw,32px);align-items:end;margin-bottom:clamp(24px,3.4vw,46px)}
-.sechead h2{grid-column:1 / span 8;font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;letter-spacing:-.038em;line-height:.87;font-size:clamp(30px,5.4vw,76px)}
+.sechead h2{grid-column:1 / span 8;font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;letter-spacing:-.038em;line-height:0.93;font-size:clamp(30px,5.4vw,76px)}
 .sechead h2 .bl{color:var(--blue)}
 .sechead h2 .ol{color:transparent;-webkit-text-stroke:2px var(--ink)}
 .sechead .meta{grid-column:9 / span 4;text-align:right;color:var(--dim)}
@@ -148,13 +157,15 @@ section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 .planwrap{overflow-x:auto}
 /* Mobil bis an den Rand laufen lassen und die Schnittkante ausblenden,
    damit der Zuschnitt als Scroll lesbar wird und nicht als Bug. */
-@media(max-width:860px){
+@media(min-width:820px) and (max-width:1180px){
   .planwrap{margin-inline:calc(-1 * clamp(16px,3vw,44px));padding-inline:clamp(16px,3vw,44px);
     -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent);
     mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent)}
 }
 .planhint{display:none;color:var(--dim);margin-bottom:12px}
-@media(max-width:860px){.planhint{display:block}}
+/* Nur in dem Bereich, in dem das Raster wirklich breiter ist als das Bild:
+   unter 820px steht der Plan gestapelt, da gibt es nichts zu wischen. */
+@media(min-width:820px) and (max-width:1180px){.planhint{display:block}}
 /* Zweite vollbreite Wahrheit der Seite — neben dem Raum die Woche darin */
 .planbleed{margin-inline:calc(-1 * clamp(16px,3vw,44px))}
 .plan{border-block:2px solid var(--ink);border-inline:0;background:#fff;min-width:1040px}
@@ -183,6 +194,19 @@ section.wrap{padding-block:clamp(52px,7.4vw,110px)}
   letter-spacing:.12em;font-weight:400;opacity:.72;margin-top:3px;text-transform:none}
 .slot.voll{opacity:.55}
 .planlade{padding:34px 14px;text-align:center;color:var(--dim)}
+/* Gestapelte Ansicht unter 820px — siehe planListe() */
+.plan.liste{min-width:0;border-inline:2px solid var(--ink)}
+.ptag{border-bottom:1px solid var(--hair)}
+.ptag:last-child{border-bottom:0}
+.ptag h4{background:var(--ink);color:var(--paper);font-family:'IBM Plex Mono',monospace;
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:400;padding:9px 14px}
+.peinheit{display:grid;grid-template-columns:64px 1fr;align-items:center;gap:12px;
+  padding:7px 14px;border-bottom:1px solid var(--hair)}
+.peinheit:last-child{border-bottom:0}
+.peinheit b{font-size:12.5px;color:var(--ink);font-weight:400}
+.peinheit .slot{padding:10px 12px;text-align:left;min-height:0}
+.ptag:last-child .peinheit .slot{font-family:'IBM Plex Mono',monospace;letter-spacing:.14em;
+  text-transform:none;font-weight:400;font-size:11px}
 .planquelle{margin-left:auto;color:var(--dim);text-align:right}
 @media(max-width:820px){.planquelle{margin-left:0;flex-basis:100%;text-align:left}}
 .slot.open{background:var(--paper-2);color:var(--dim)}
@@ -329,7 +353,7 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
 <div class="wrap">
   <div class="metabar">
     <div class="mono">Klagenfurt am Wörthersee</div>
-    <div class="mono">Erster offizieller HYROX Training Club in Kärnten</div>
+    <div class="mono">1. offizieller HYROX Training Club in Kärnten</div>
     <div class="mono">Keine Einschreibgebühr · Probetraining 15 €</div>
   </div>
   <div class="hero">
@@ -365,9 +389,9 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
     <div class="meta mono">Montag bis Samstag</div>
   </div>
   <p class="rv" style="max-width:64ch;margin-bottom:22px;color:#33363A;font-size:15.5px">
-    Du weißt nicht, wo du einsteigst? Starte mit drei Einheiten pro Woche: zwei für die Kraft
-    (FBB/Strength &amp; Power) und eine für die Ausdauer (Powercircle, Hyrox).
-    Damit hast du die Basis. Und wenn du das noch nicht schaffst — jedes Training ist besser als keines.
+    Drei Einheiten pro Woche sind die Basis: zwei für die Kraft (FBB/Strength &amp; Power),
+    eine für die Ausdauer (Powercircle, Hyrox). Und wenn das noch nicht geht —
+    jedes Training ist besser als keines.
   </p>
   <div class="planhint mono rv">→ seitlich wischen</div>
   <div class="planbleed"><div class="planwrap rv">
@@ -561,40 +585,73 @@ function registerZeichnen(termine){
     `<span class="arw">→</span></a>`).join('');
 }
 
-function planZeichnen(termine,live,montag){
-  registerZeichnen(termine);
-  const gitter=document.getElementById('plangrid');
-  const tage=[0,1,2,3,4,5].concat(termine.some(t=>t.tag===6)?[6]:[]);
+const marke=(t)=>{
+  const voll=t.max>0&&t.gebucht>=t.max;
+  return `<div class="slot ${PLAN_KAT[t.name]||'o'}${voll?' voll':''}">${t.name}`+
+         (voll?'<small>ausgebucht</small>':'')+`</div>`;
+};
+
+// Breite Ansicht: Zeit gegen Wochentag, wie ein Aushang.
+function planGitter(termine,tage){
   const zeiten=[...new Set(termine.map(t=>t.zeit))].sort();
   const spalten=`118px repeat(${tage.length},minmax(128px,1fr))`;
-
   let html=`<div class="prow head" style="grid-template-columns:${spalten}">`+
     `<div class="t">Zeit</div>`+tage.map(t=>`<div>${PLAN_TAGE[t]}</div>`).join('')+`</div>`;
-
   for(const zeit of zeiten){
     html+=`<div class="prow" style="grid-template-columns:${spalten}"><div class="t">${zeit}</div>`;
     for(const tag of tage){
-      const hier=termine.filter(t=>t.zeit===zeit&&t.tag===tag);
-      html+=`<div class="zelle">`+hier.map(t=>{
-        const voll=t.max>0&&t.gebucht>=t.max;
-        return `<div class="slot ${PLAN_KAT[t.name]||'o'}${voll?' voll':''}">${t.name}`+
-               (voll?'<small>ausgebucht</small>':'')+`</div>`;
-      }).join('')+`</div>`;
+      html+=`<div class="zelle">`+
+        termine.filter(t=>t.zeit===zeit&&t.tag===tag).map(marke).join('')+`</div>`;
     }
     html+=`</div>`;
   }
-  html+=`<div class="prow" style="grid-template-columns:118px 1fr"><div class="t">06—22</div>`+
-        `<div class="slot open" style="font-family:'IBM Plex Mono',monospace;letter-spacing:.16em">`+
-        `Open Gym · separat buchbar, 365 Tage</div></div>`;
+  return html+`<div class="prow" style="grid-template-columns:118px 1fr"><div class="t">06—22</div>`+
+    `<div class="slot open" style="font-family:'IBM Plex Mono',monospace;letter-spacing:.16em">`+
+    `Open Gym · separat buchbar, 365 Tage</div></div>`;
+}
 
-  gitter.innerHTML=html;
+/* Schmale Ansicht: nach Tagen gestapelt.
+   Als Raster waren auf einem 390px-Gerät zwei von sechs Tagesspalten sichtbar —
+   man musste quer scrollen, um überhaupt eine Woche zu überblicken, und dabei
+   ging die Zeitspalte aus dem Bild. Untereinander liest sich derselbe Plan in
+   einem Zug. */
+function planListe(termine,tage){
+  let html='';
+  for(const tag of tage){
+    const heute=termine.filter(t=>t.tag===tag).sort((a,b)=>a.zeit.localeCompare(b.zeit));
+    if(!heute.length) continue;
+    html+=`<section class="ptag"><h4>${PLAN_TAGE[tag]}</h4>`+
+      heute.map(t=>`<div class="peinheit"><b class="mono">${t.zeit}</b>${marke(t)}</div>`).join('')+
+      `</section>`;
+  }
+  return html+`<section class="ptag"><h4>Täglich</h4>`+
+    `<div class="peinheit"><b class="mono">06—22</b>`+
+    `<div class="slot open">Open Gym · separat buchbar, 365 Tage</div></div></section>`;
+}
+
+let planDaten=null, planSchmal=null;
+const PLAN_UMBRUCH=820;
+
+function planZeichnen(termine,live,montag){
+  if(termine){ planDaten={termine,live,montag}; registerZeichnen(termine); }
+  if(!planDaten) return;
+  const schmal=innerWidth<PLAN_UMBRUCH;
+  if(schmal===planSchmal&&!termine) return;      // Form unverändert, nichts zu tun
+  planSchmal=schmal;
+  const {termine:d,live:l,montag:mo}=planDaten;
+  const tage=[0,1,2,3,4,5].concat(d.some(t=>t.tag===6)?[6]:[]);
+  const gitter=document.getElementById('plangrid');
+  gitter.classList.toggle('liste',schmal);
+  gitter.innerHTML=schmal?planListe(d,tage):planGitter(d,tage);
   gitter.removeAttribute('aria-busy');
-  const bis=new Date(montag.getFullYear(),montag.getMonth(),montag.getDate()+5);
-  const d=x=>x.toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit'});
-  document.getElementById('planquelle').textContent=live
-    ? `Live aus dem Buchungssystem · ${d(montag)}–${d(bis)}`
+  const bis=new Date(mo.getFullYear(),mo.getMonth(),mo.getDate()+5);
+  const f=x=>x.toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit'});
+  document.getElementById('planquelle').textContent=l
+    ? `Live aus dem Buchungssystem · ${f(mo)}–${f(bis)}`
     : 'Letzter bekannter Stand';
 }
+let planTimer;
+addEventListener('resize',()=>{clearTimeout(planTimer);planTimer=setTimeout(()=>planZeichnen(null),150)});
 
 (async()=>{
   const [von,bis,montag]=planWoche();
