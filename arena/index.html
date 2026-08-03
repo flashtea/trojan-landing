@@ -243,7 +243,19 @@ h2 .bl{color:var(--blue-hi)}
 .tarif p{color:#B3BCC7;font-size:14px}
 .tarif ul{list-style:none;margin-top:auto;padding-top:16px;border-top:1px solid var(--line);display:grid;gap:7px}
 .tarif li{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.05em;color:var(--dim)}
-.tarifnote{display:flex;gap:18px;flex-wrap:wrap;margin-top:22px;color:var(--dim)}
+/* Die Fußnoten zum Tarif waren eine einzige Reihe zusammenhangloser Häppchen —
+   jetzt drei Gruppen, damit man findet, wonach man sucht. */
+.tarifnote{margin-top:clamp(28px,3.2vw,42px);border-top:1px solid var(--line);
+  padding-top:clamp(24px,2.6vw,32px);display:grid;gap:clamp(22px,2.6vw,36px);
+  grid-template-columns:repeat(auto-fit,minmax(min(285px,100%),1fr))}
+.tarifnote h4{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.19em;
+  text-transform:uppercase;color:var(--blue-hi);font-weight:400;margin-bottom:13px}
+.tarifnote ul{list-style:none;display:grid;gap:8px}
+.tarifnote li{color:#A8B2BF;font-size:14.5px;line-height:1.45}
+.tarifnote li b{color:var(--white);font-weight:700;font-variant-numeric:tabular-nums}
+.tarifnote .svs{grid-column:1/-1;border-top:1px solid var(--line);padding-top:20px;
+  color:#A8B2BF;font-size:14.5px}
+.tarifnote .svs b{color:var(--white);font-weight:700}
 
 /* ZAHLEN — Fakten in Plakatgröße statt als Fußnote */
 .zahlen{display:grid;grid-template-columns:repeat(5,1fr);border-block:1px solid var(--line)}
@@ -432,20 +444,40 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
       <ul><li>6 Monate → 160 €</li><li>12 Monate → 150 €</li></ul>
     </div>
   </div>
-  <div class="tarifnote mono rv">
-    <span>Probetraining 15 €</span>
-    <span>Keine Einschreibgebühr</span>
-    <span>10er-Block 200 €, ein Jahr gültig</span>
-    <span>Open Gym separat 60 €</span>
-    <span>6 Monate: einmal Vertragspause bis 4 Wochen · 12 Monate: zweimal</span>
-    <span>SVS-versichert und selbstständig? 100 € zurück aufs Konto.</span>
+  <div class="tarifnote rv">
+    <div>
+      <h4>Enthalten</h4>
+      <ul>
+        <li>Keine Einschreibgebühr</li>
+        <li>Eigener Kraftaufbauplan</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Vertrag</h4>
+      <ul>
+        <li>Bindung 1, 6 oder 12 Monate</li>
+        <li>Pause: bei 6 Monaten einmal, bei 12 Monaten zweimal — je bis 4 Wochen</li>
+        <li>Bei triftigem Grund übertragbar</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Einzeln</h4>
+      <ul>
+        <li><b>15 €</b> Probetraining</li>
+        <li><b>25 €</b> Drop-in</li>
+        <li><b>200 €</b> 10er-Block, ein Jahr gültig</li>
+        <li><b>100 €</b> Personal Training</li>
+        <li><b>60 €</b> Open Gym, monatlich kündbar</li>
+      </ul>
+    </div>
+    <p class="svs">Selbstständig und SVS-versichert? Für jeden Tarif außer Open Gym und für den
+      10er-Block überweist dir die SVS <b>100 €</b> aufs Konto.</p>
   </div>
 </section>
 
 <section id="coaches" class="wrap">
   <div class="sechead rv">
     <h2>Vier Coaches.<br>Zwei davon <span class="bl">Brüder.</span></h2>
-    <span class="mono">2017 gegründet · seit 2018 Trojan Performance</span>
   </div>
   <div class="coaches">
     <a class="coach rv" href="#"><div class="duo"><img src="../assets/o-coachmike.jpg" alt="Coach Mike"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
@@ -462,7 +494,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 <section id="programme" class="wrap">
   <div class="sechead rv">
     <h2>Acht Kurse.<br>Einer passt <span class="bl">zu dir.</span></h2>
-    <span class="mono">Acht Kurse · seitlich scrollen</span>
+    <span class="mono">Kraft · Ausdauer · Technik, je 0–100</span>
   </div>
   <div class="rail rv">
     <a class="card" href="#">
@@ -515,7 +547,6 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
     <span class="veil"></span>
     <div class="sechead">
       <h2><span class="ol">HYROX:</span><br>dreimal pro Woche.</h2>
-      <span class="mono">1. offizieller Training Club in Kärnten</span>
     </div>
     <ol class="stations">
       <li><span class="mono">01</span><b>1000 m SkiErg</b></li>
@@ -527,7 +558,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
       <li><span class="mono">04</span><b>80 m Burpee Broad Jumps</b></li>
       <li><span class="mono">08</span><b>100 Wall Balls</b></li>
     </ol>
-    <p class="foot mono">Das offizielle Rennformat: vor jeder der acht Stationen 1 km Laufen. Wer sich darauf vorbereiten will, findet hier die Einheiten dazu.</p>
+    <p class="foot mono">Das offizielle Rennformat: vor jeder der acht Stationen 1 km Laufen.</p>
   </div>
 </section>
 

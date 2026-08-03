@@ -144,8 +144,7 @@ h2 .bl{color:var(--blue-hi)}
 .readout{grid-row:1/3;grid-column:3;width:clamp(210px,20vw,260px);align-self:stretch;
   border-left:1px solid var(--edge);padding-left:clamp(18px,2vw,28px);display:flex;flex-direction:column}
 .readout h3{font-family:'Archivo Black',sans-serif;text-transform:uppercase;font-size:clamp(20px,2.2vw,28px);
-  letter-spacing:-.03em;line-height:1;margin:10px 0 4px}
-.readout .meta{color:var(--dim);margin-bottom:22px}
+  letter-spacing:-.03em;line-height:1;margin:0 0 22px}
 .bars{display:grid;gap:14px}
 .bar b{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10.5px;
   letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:400;margin-bottom:7px}
@@ -186,7 +185,19 @@ h2 .bl{color:var(--blue-hi)}
 .tier p{color:#AEB7C3;font-size:14px}
 .tier ul{list-style:none;margin-top:auto;padding-top:16px;border-top:1px solid var(--edge);display:grid;gap:7px}
 .tier li{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.06em;color:var(--dim)}
-.pricenote{margin-top:20px;color:var(--dim);display:flex;gap:18px;flex-wrap:wrap}
+/* Die Fußnoten zum Tarif waren eine einzige Reihe zusammenhangloser Häppchen —
+   jetzt drei Gruppen, damit man findet, wonach man sucht. */
+.pricenote{margin-top:clamp(28px,3.2vw,42px);border-top:1px solid var(--edge);
+  padding-top:clamp(24px,2.6vw,32px);display:grid;gap:clamp(22px,2.6vw,36px);
+  grid-template-columns:repeat(auto-fit,minmax(min(285px,100%),1fr))}
+.pricenote h4{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.19em;
+  text-transform:uppercase;color:var(--blue-hi);font-weight:400;margin-bottom:13px}
+.pricenote ul{list-style:none;display:grid;gap:8px}
+.pricenote li{color:#AEB7C3;font-size:14.5px;line-height:1.45}
+.pricenote li b{color:var(--white);font-weight:700;font-variant-numeric:tabular-nums}
+.pricenote .svs{grid-column:1/-1;border-top:1px solid var(--edge);padding-top:20px;
+  color:#AEB7C3;font-size:14.5px}
+.pricenote .svs b{color:var(--white);font-weight:700}
 
 /* ZEITEN */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -252,7 +263,7 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
 <section id="kurse" class="wrap matrix-sec">
   <div class="mhead rv">
     <h2>Wähl nicht nach Namen.<br><span class="bl">Wähl nach Wirkung.</span></h2>
-    <span class="mono">HYROX 3× pro Woche · Werte aus dem Kursangebot</span>
+    <span class="mono">Je größer der Ring, desto mehr Technik</span>
   </div>
 
   <div class="matrix rv" id="matrix">
@@ -261,15 +272,13 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
     <div class="xlab mono"><span>0</span><b>Ausdaueranteil</b><span>100</span></div>
     <ol class="mlegend" id="mlegend"></ol>
     <div class="readout" id="readout">
-      <span class="mono">Ausgewählt</span>
       <h3 id="rName">Hyrox</h3>
-      <div class="meta mono" id="rMeta">75 Minuten · mit Coach</div>
       <div class="bars">
         <div class="bar"><b>Kraft <span id="vK">30</span></b><i><span id="bK"></span></i></div>
         <div class="bar"><b>Ausdauer <span id="vA">100</span></b><i><span id="bA"></span></i></div>
         <div class="bar"><b>Koordination &amp; Technik <span id="vT">40</span></b><i><span id="bT"></span></i></div>
       </div>
-      <p class="hint mono">Je größer der Ring, desto mehr Technik.<br>Team-WOD und Performance haben dasselbe<br>Profil und teilen sich einen Punkt.<br><br>Technische Kurse 10–12 Personen,<br>Hyrox und Powercircle bis 24.</p>
+      <p class="hint mono">10–12 Plätze,<br>bei Hyrox und Powercircle bis 24.</p>
     </div>
   </div>
   <p class="rv" style="max-width:62ch;margin-top:clamp(22px,2.6vw,34px);color:#AEB7C3;font-size:clamp(15px,1.5vw,17px)">
@@ -283,7 +292,6 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
 <section id="coaches" class="wrap matrix-sec" style="padding-top:0">
   <div class="mhead rv">
     <h2>Vier Coaches.<br>In <span class="bl">jeder</span> Einheit einer.</h2>
-    <span class="mono">2017 gegründet · seit 2018 Trojan Performance</span>
   </div>
   <div class="coaches">
     <a class="coach rv" href="#"><img src="../assets/o-coachmike.jpg" alt="Coach Mike"><span class="veil"></span>
@@ -316,9 +324,34 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
       <p>26 Einheiten, Montag bis Samstag.</p>
       <ul><li>6 Monate → 160 €</li><li>12 Monate → 150 €</li></ul></div>
   </div>
-  <div class="pricenote mono">
-    <span>Probetraining 15 €</span><span>Keine Einschreibgebühr</span><span>Eigener Kraftaufbauplan</span><span>6 Monate: einmal Vertragspause bis 4 Wochen · 12 Monate: zweimal</span><span>10er-Block 200 €, ein Jahr gültig</span>
-    <span>Personal Training 100 €</span><span>Open Gym separat 60 €</span><span>SVS-versichert und selbstständig? 100 € zurück aufs Konto, für jeden Tarif außer Open Gym.</span>
+  <div class="pricenote rv">
+    <div>
+      <h4>Enthalten</h4>
+      <ul>
+        <li>Keine Einschreibgebühr</li>
+        <li>Eigener Kraftaufbauplan</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Vertrag</h4>
+      <ul>
+        <li>Bindung 1, 6 oder 12 Monate</li>
+        <li>Pause: bei 6 Monaten einmal, bei 12 Monaten zweimal — je bis 4 Wochen</li>
+        <li>Bei triftigem Grund übertragbar</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Einzeln</h4>
+      <ul>
+        <li><b>15 €</b> Probetraining</li>
+        <li><b>25 €</b> Drop-in</li>
+        <li><b>200 €</b> 10er-Block, ein Jahr gültig</li>
+        <li><b>100 €</b> Personal Training</li>
+        <li><b>60 €</b> Open Gym, monatlich kündbar</li>
+      </ul>
+    </div>
+    <p class="svs">Selbstständig und SVS-versichert? Für jeden Tarif außer Open Gym und für den
+      10er-Block überweist dir die SVS <b>100 €</b> aufs Konto.</p>
   </div>
 </section>
 
@@ -403,14 +436,13 @@ KURSE.forEach((c,i)=>{
   ml.appendChild(li);
 });
 const lis=[...ml.children];
-const rName=document.getElementById('rName'), rMeta=document.getElementById('rMeta');
+const rName=document.getElementById('rName');
 function show(i,fokus=true){
   const c=KURSE[i];
   if(fokus) M.classList.add('dim');
   pts.forEach((p,n)=>p.classList.toggle('on',n===i));
   lis.forEach((l,n)=>l.classList.toggle('on',n===i));
   rName.textContent=c.n;
-  rMeta.textContent='75 Minuten · mit Coach';
   [['K',c.k],['A',c.a],['T',c.t]].forEach(([key,v])=>{
     document.getElementById('v'+key).textContent=v;
     document.getElementById('b'+key).style.width=v+'%';
