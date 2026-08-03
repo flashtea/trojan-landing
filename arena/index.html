@@ -696,10 +696,18 @@ function railProgress(){ if(!railWartet){ railWartet=true; requestAnimationFrame
 rail.addEventListener('scroll',railProgress,{passive:true});
 addEventListener('resize',()=>{railMessen();railProgress()},{passive:true});
 requestAnimationFrame(()=>{railMessen();railZeichnen()});
+/* Kopfleiste hinterlegen, sobald man losscrollt.
+   Vorher hing das an einem scroll-Listener, der scrollY las und danach eine
+   Klasse setzte — bei jedem einzelnen Ereignis ein erzwungenes Layout,
+   gemessen 149ms. Ein unsichtbarer Wächter am Seitenanfang liefert dasselbe
+   Signal, und dessen Sichtbarkeit verfolgt der Browser ohnehin. */
 const hd=document.getElementById('hd');
-const setStuck=()=>hd.classList.toggle('stuck',scrollY>40);
-addEventListener('scroll',setStuck,{passive:true});
-setStuck();
+const waechter=document.createElement('div');
+waechter.setAttribute('aria-hidden','true');
+waechter.style.cssText='position:absolute;top:0;left:0;width:1px;height:40px;pointer-events:none';
+document.body.prepend(waechter);
+new IntersectionObserver(([e])=>hd.classList.toggle('stuck',!e.isIntersecting))
+  .observe(waechter);
 </script>
 </body>
 </html>
