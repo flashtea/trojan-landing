@@ -40,6 +40,8 @@
 picture{display:contents}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:98px}
 body{background:var(--void);color:var(--white);font-family:'Archivo',system-ui,sans-serif;font-weight:500;font-size:16px;line-height:1.55;overflow-x:hidden}
+/* Verhindert einzelne Wörter in der letzten Zeile */
+p{text-wrap:pretty}
 .wrap{max-width:1340px;margin:0 auto;padding:0 clamp(26px,3.6vw,48px)}
 .mono{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.19em;text-transform:uppercase}
 /* Tastaturfokus sichtbar machen. Der Standardring des Browsers geht auf
@@ -79,7 +81,10 @@ header.stuck{background:rgba(6,8,11,.88);backdrop-filter:blur(16px);border-botto
   padding:16px 28px;font-weight:800;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;
   clip-path:polygon(0 0,100% 0,100% 100%,12px 100%,0 calc(100% - 12px));
   transition:transform .22s cubic-bezier(.2,.7,.3,1),background .22s}
+.btn{white-space:nowrap}
 .btn:hover{background:var(--blue-hi);transform:translateY(-2px)}
+/* Bei 360px fehlten 2px und das € fiel allein in die zweite Zeile */
+@media(max-width:400px){.btn{padding-inline:20px;letter-spacing:.08em}}
 .btn.sm{padding:12px 21px;font-size:11.5px;clip-path:polygon(0 0,100% 0,100% 100%,9px 100%,0 calc(100% - 9px))}
 .btn.gh{background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.26);backdrop-filter:blur(6px)}
 .btn.gh:hover{background:rgba(255,255,255,.14)}
@@ -92,7 +97,7 @@ header.stuck{background:rgba(6,8,11,.88);backdrop-filter:blur(16px);border-botto
   .links::-webkit-scrollbar{display:none}
   .links li{white-space:nowrap}
 }
-@media(max-width:1000px){html{scroll-padding-top:132px}}
+@media(max-width:1000px){html{scroll-padding-top:118px}}
 @media(max-width:400px){.btn.sm{padding:11px 16px;font-size:11px}}
 @media(max-width:520px){.hero-actions{gap:12px}.hero-actions .btn{flex:1 1 100%;justify-content:center}}
 
@@ -150,10 +155,12 @@ h2 .bl{color:var(--blue-hi)}
   scrollbar-width:thin;scrollbar-color:var(--blue) rgba(255,255,255,.08);
   -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 96px),rgba(0,0,0,.25));
   mask-image:linear-gradient(to right,#000 calc(100% - 96px),rgba(0,0,0,.25))}
-.rail::-webkit-scrollbar{height:4px}
+/* eigene Fortschrittsanzeige unter der Schiene reicht — die native lag daneben */
+.rail{scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
 .rail::-webkit-scrollbar-thumb{background:var(--blue)}
 .rail::-webkit-scrollbar-track{background:rgba(255,255,255,.08)}
-.card{position:relative;flex:0 0 clamp(212px,20vw,286px);scroll-snap-align:start;aspect-ratio:3/4;
+.card{position:relative;flex:0 0 clamp(238px,20vw,286px);scroll-snap-align:start;aspect-ratio:3/4;
   text-decoration:none;color:var(--white);overflow:hidden;
   clip-path:polygon(0 0,100% 0,100% calc(100% - 20px),calc(100% - 20px) 100%,0 100%);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
@@ -162,6 +169,8 @@ h2 .bl{color:var(--blue-hi)}
 /* versetzte Startaufstellung statt Regalbrett */
 .rail{align-items:flex-start}
 .card:nth-child(even){margin-top:clamp(18px,2.8vw,42px)}
+/* Versatz kostet auf Mobil nur Höhe und lässt die Anzeige weit abrücken */
+@media(max-width:520px){.card:nth-child(even){margin-top:0}}
 /* die Disziplin, auf die man zeigt, wird farbig */
 .card .tint{transition:opacity .45s cubic-bezier(.2,.7,.3,1)}
 .card:hover .tint{opacity:.14}
@@ -199,7 +208,8 @@ h2 .bl{color:var(--blue-hi)}
 /* COACHES — die einzigen Gesichter der Seite */
 .coaches{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 @media(max-width:900px){.coaches{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:480px){.coaches{grid-template-columns:1fr}}
+/* Einspaltig ergaben vier Porträts 1576px — fast zwei Bildschirmhöhen */
+@media(max-width:480px){.coach{aspect-ratio:3/2}}
 .coach{position:relative;overflow:hidden;display:block;text-decoration:none;color:var(--white);
   aspect-ratio:4/5;box-shadow:inset 0 0 0 1px var(--line);
   clip-path:polygon(0 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%)}
@@ -247,7 +257,7 @@ h2 .bl{color:var(--blue-hi)}
 @media(max-width:760px){
   .beat{min-height:82svh}
   .beat:nth-child(even)>div{margin-left:0}
-  .stage .shade{background:linear-gradient(180deg,rgba(4,7,11,.52),rgba(4,7,11,.88))}
+  .stage .shade{background:linear-gradient(180deg,rgba(4,7,11,.52),rgba(4,7,11,.72))}
 }
 @media(prefers-reduced-motion:reduce){.frame{transition:none}}
 
@@ -298,14 +308,21 @@ h2 .bl{color:var(--blue-hi)}
 .tarifnote .svs b{color:var(--white);font-weight:700}
 
 /* ZAHLEN — Fakten in Plakatgröße statt als Fußnote */
-.zahlen{display:grid;grid-template-columns:repeat(5,1fr);border-block:1px solid var(--line)}
+.zahlen{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-block:1px solid var(--line)}
 @media(max-width:900px){.zahlen{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:560px){.zahlen{grid-template-columns:1fr 1fr}}
+/* Ohne minmax(0,…) sprengt das ungebrochene Wort EINSCHREIBGEBÜHR die Spalte:
+   gemessen 163 gegen 145px. Dazu eine senkrechte Zäsur, sonst berühren sich
+   zwei Zahlen ohne Trennung, und die fünfte Kachel füllt die letzte Reihe. */
+@media(max-width:560px){
+  .zahlen{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .zahl:nth-child(odd){border-right:1px solid var(--line)}
+  .zahl:last-child{grid-column:1/-1;border-right:0}
+}
 .zahl{padding:clamp(26px,3.4vw,46px) clamp(12px,1.6vw,24px);border-right:1px solid var(--line)}
 .zahl:last-child{border-right:0}
 .zahl b{display:block;font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;line-height:.92;letter-spacing:-.05em;
   font-size:clamp(34px,4.7vw,62px);font-variant-numeric:tabular-nums;white-space:nowrap}
-.zahl b em{font-style:normal;color:var(--blue-hi)}
+.zahl b em{font-style:normal;color:var(--blue-hi);margin-inline:.1em;vertical-align:.06em}
 .zahl span{display:block;color:var(--dim);margin-top:12px}
 @media(max-width:560px){.zahl{border-right:0;border-bottom:1px solid var(--line)}.zahl:last-child{border-bottom:0}}
 
@@ -320,9 +337,10 @@ h2 .bl{color:var(--blue-hi)}
 .hyrox .veil{position:absolute;inset:0;z-index:6;background:linear-gradient(180deg,rgba(4,7,11,.86),rgba(4,7,11,.94))}
 .hyrox h2{font-size:clamp(26px,3.9vw,54px);line-height:.98;max-width:18ch}
 .hyrox h2 .ol{color:transparent;-webkit-text-stroke:1.5px var(--white);letter-spacing:0}
-.hyrox .sechead{margin-bottom:clamp(22px,3vw,36px)}
-.stations{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);column-gap:clamp(24px,5vw,80px)}
-@media(max-width:720px){.stations{grid-template-columns:1fr}}
+.hyrox .sechead{margin-bottom:clamp(22px,3vw,36px);gap:10px 24px}
+.stations{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);
+  grid-template-rows:repeat(4,auto);grid-auto-flow:column;column-gap:clamp(24px,5vw,80px)}
+@media(max-width:720px){.stations{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row}}
 .stations li{display:flex;align-items:baseline;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
 .stations .mono{color:var(--blue-hi);flex:none}
 .stations b{font-weight:700;font-size:clamp(14.5px,1.5vw,17px);letter-spacing:-.005em}
@@ -378,6 +396,18 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 .fgrid a,.fgrid p{color:#BEC6D1;font-size:14px;text-decoration:none;display:block;margin-bottom:7px;line-height:1.6;font-weight:500}
 .fgrid a:hover{color:var(--blue-hi)}
 .legal{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:36px;padding-top:20px;border-top:1px solid var(--line);color:var(--dim)}
+
+/* Tippflächen — siehe Kommentar in den anderen Entwürfen */
+.links a{display:block;padding-block:14px}
+.fgrid a{padding-block:9px;margin-bottom:0}
+.rechtliches{display:flex;gap:20px}
+.rechtliches a{color:inherit;text-decoration:none;padding-block:10px}
+.rechtliches a:hover{color:#fff}
+@media(max-width:1000px){.nav{padding-block:2px}}
+/* Bei 30px Schriftgrad sind 0,93 nur 27,9px Zeilenabstand, nötig sind 27,0 —
+   und die Konturschrift nimmt davon noch einen halben Pixel. Auf schmalen
+   Viewports zählt jeder Zehntel, also hier grosszügiger. */
+@media(max-width:820px){h1,h2,.sechead h2,.final h2{line-height:.98}}
 </style>
 </head>
 <body>
@@ -515,7 +545,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
   </div>
 </section>
 
-<section id="coaches" class="wrap">
+<section id="coaches" class="wrap" style="padding-top:0">
   <div class="sechead rv">
     <h2>Vier Coaches.<br>Zwei davon <span class="bl">Brüder.</span></h2>
   </div>
@@ -523,7 +553,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
     <a class="coach rv" href="#"><div class="duo"><img src="__PH_COACHMIKE__" alt="Coach Mike" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
       <div class="body"><h3>Mike</h3><p>Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien. Hat die Box 2017 mit seinem Bruder aufgemacht.</p></div></a>
     <a class="coach rv" href="#"><div class="duo"><img src="__PH_COACHDOMINIK__" alt="Coach Dominik" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
-      <div class="body"><h3>Dominik</h3><p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor für Gewichtheben.</p></div></a>
+      <div class="body"><h3>Dominik</h3><p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor.</p></div></a>
     <a class="coach rv" href="#"><div class="duo"><img src="__PH_COACHDIEGO__" alt="Coach Diego" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
       <div class="body"><h3>Diego</h3><p>Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf regionaler Ebene Wettkämpfe bestritten hat.</p></div></a>
     <a class="coach rv" href="#"><div class="duo"><img src="__PH_COACHBENNI__" alt="Coach Benni" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
@@ -531,7 +561,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
   </div>
 </section>
 
-<section id="programme" class="wrap">
+<section id="programme" class="wrap" style="padding-top:0">
   <div class="sechead rv">
     <h2>Acht Kurse.<br>Einer passt <span class="bl">zu dir.</span></h2>
     <span class="mono">Wie oft er läuft, wie viele Plätze</span>
@@ -595,12 +625,12 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
     </div>
     <ol class="stations">
       <li><span class="mono">01</span><b>1000 m SkiErg</b></li>
-      <li><span class="mono">05</span><b>1000 m Rudern</b></li>
       <li><span class="mono">02</span><b>50 m Sled Push</b></li>
-      <li><span class="mono">06</span><b>200 m Farmers Carry</b></li>
       <li><span class="mono">03</span><b>50 m Sled Pull</b></li>
-      <li><span class="mono">07</span><b>100 m Sandbag Lunges</b></li>
       <li><span class="mono">04</span><b>80 m Burpee Broad Jumps</b></li>
+      <li><span class="mono">05</span><b>1000 m Rudern</b></li>
+      <li><span class="mono">06</span><b>200 m Farmers Carry</b></li>
+      <li><span class="mono">07</span><b>100 m Sandbag Lunges</b></li>
       <li><span class="mono">08</span><b>100 Wall Balls</b></li>
     </ol>
     <p class="foot mono">Das offizielle Rennformat: vor jeder der acht Stationen 1 km Laufen.</p>
@@ -662,13 +692,21 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
       <div><h4 class="mono">Training</h4><a href="#">Kursangebot</a><a href="#">Wochenplan</a><a href="#">Tarife</a><a href="#">Coaches</a></div>
       <div><h4 class="mono">Kontakt</h4><a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a><a href="tel:+4367682277302">+43 676 8227 7302</a><a href="#">Sebastiangasse 1, 9020 Klagenfurt</a></div>
     </div>
-    <div class="legal mono"><span>© 2026 Trojan Performance</span><span>Impressum · AGB · Datenschutz</span></div>
+    <div class="legal mono"><span>© 2026 Trojan Performance</span><span class="rechtliches"><a href="#">Impressum</a><a href="#">AGB</a><a href="#">Datenschutz</a></span></div>
   </div>
 </footer>
 
 <script>
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.rv').forEach((el,i)=>{el.style.transitionDelay=(i%4)*60+'ms';io.observe(el)});
+/* Bildwechsel auf der Bühne.
+   Vorher hing das an threshold:.5 pro Texttafel. Eine Tafel ist 82svh hoch, der
+   Viewport 100svh — zwei benachbarte Tafeln überschreiten die Hälfte also
+   gleichzeitig, und welche zuletzt meldet, entscheidet die Reihenfolge im
+   Beobachter-Stapel. Gemessen: bei 800px Höhe war das ein 144px breites Fenster,
+   in dem das falsche Bild zum sichtbaren Text lief.
+   Jetzt entscheidet ein schmales Band in der Bildschirmmitte: dort kann immer
+   nur eine Tafel liegen. */
 const frames=[...document.querySelectorAll('.stage .frame')];
 if(frames.length){
   const bo=new IntersectionObserver(es=>es.forEach(e=>{
@@ -676,7 +714,7 @@ if(frames.length){
       const i=+e.target.dataset.frame;
       frames.forEach((f,n)=>f.classList.toggle('is-on',n===i));
     }
-  }),{threshold:.5});
+  }),{rootMargin:'-45% 0px -45% 0px',threshold:0});
   document.querySelectorAll('.beat').forEach(b=>bo.observe(b));
 }
 /* Fortschritt der Kursschiene.
