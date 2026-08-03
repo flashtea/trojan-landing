@@ -86,7 +86,9 @@ header.stuck{background:rgba(6,8,11,.88);backdrop-filter:blur(16px);border-botto
 /* Links umbrechen statt löschen; verhindert zugleich den Nav-Überlauf */
 @media(max-width:1000px){
   .nav{flex-wrap:wrap;height:auto;padding-block:14px;gap:12px 24px}
-  .links{order:3;flex-basis:100%;gap:24px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  /* Nicht scrollen, sondern verteilen: die vier Punkte passen auf 360px,
+     sie klebten nur am linken Rand und liessen rechts eine tote Fläche. */
+  .links{order:3;flex-basis:100%;justify-content:space-between;gap:10px;padding-bottom:2px}
   .links::-webkit-scrollbar{display:none}
   .links li{white-space:nowrap}
 }

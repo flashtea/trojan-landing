@@ -69,8 +69,14 @@ header{position:sticky;top:0;z-index:70;background:var(--paper);border-bottom:2p
 /* Links nicht verstecken — es gibt keinen Ersatz-Trigger. Stattdessen umbrechen. */
 @media(max-width:1060px){
   .nav{flex-wrap:wrap;height:auto;align-items:center;padding-block:14px}
-  .links{order:3;flex-basis:100%;margin-left:0;overflow-x:auto;border-top:1px solid var(--hair);padding-top:2px;-webkit-overflow-scrolling:touch}
-  .links li{border-left:0;padding:10px 22px 10px 0;white-space:nowrap}
+  /* Fünf Punkte, davon zwei lange, passen auf 360px nicht nebeneinander —
+     scrollen wäre die falsche Antwort. Coaches und Einstieg entfallen hier;
+     beide Abschnitte stehen im Fussbereich und liegen einen Scroll entfernt,
+     und für den Einstieg gibt es die Schaltfläche daneben. */
+  .links{order:3;flex-basis:100%;margin-left:0;justify-content:space-between;
+    border-top:1px solid var(--hair);padding-top:2px}
+  .links li{border-left:0;padding:10px 0;white-space:nowrap}
+  .links li:nth-child(3),.links li:nth-child(5){display:none}
   .nav .cta{border-left:0;padding-left:0;margin-left:auto}
   /* Die Leiste ist umgebrochen und damit höher — ohne das schneidet jeder
      Ankersprung die erste Zeile der Überschrift ab. */
