@@ -106,6 +106,7 @@ h2 .bl{color:var(--blue-hi)}
 .mlegend b{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--blue-hi);font-weight:400;flex:none}
 .mlegend span{font-size:12.5px;color:#AEB7C3;line-height:1.3}
 .mlegend li.on span{color:var(--white);font-weight:700}
+.mlegend i{font-style:normal;color:var(--dim);font-size:11px}
 /* Unter 780px ist die Zeichenfläche zu flach: zwischen zwei Punkten bleibt
    dann keine Zeile Platz mehr, und jede Fahne klebt am falschen Punkt.
    Ab hier also Ziffern am Punkt und die Namen in der Legende darunter. */
@@ -148,6 +149,11 @@ h2 .bl{color:var(--blue-hi)}
 .pt:hover::before,.pt:focus-visible::before{width:13px;height:13px;background:#fff}
 .pt:hover::after,.pt:focus-visible::after{border-color:rgba(99,160,234,.4);inset:-13px}
 .pt:hover .tag,.pt:focus-visible .tag{color:var(--blue-hi)}
+/* Abgeleitetes Profil: gestrichelt statt durchgezogen, damit auf einen Blick
+   klar ist, welcher Punkt nicht belegt ist. */
+.pt.est{box-shadow:none;border:1.5px dashed rgba(99,160,234,.55)}
+.pt.est:hover,.pt.est:focus-visible{box-shadow:0 0 24px -4px rgba(99,160,234,.55);
+  border-color:var(--blue-hi)}
 .matrix.dim .pt{opacity:.28}
 .matrix.dim .pt.on{opacity:1}
 
@@ -274,7 +280,7 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
 <section id="kurse" class="wrap matrix-sec">
   <div class="mhead rv">
     <h2>Wähl nicht nach Namen.<br><span class="bl">Wähl nach Wirkung.</span></h2>
-    <span class="mono">Je größer der Ring, desto mehr Technik</span>
+    <span class="mono">Ring = Technikanteil · gestrichelt = Profil abgeleitet</span>
   </div>
 
   <div class="matrix rv" id="matrix">
@@ -294,9 +300,11 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
   </div>
   <p class="rv" style="max-width:62ch;margin-top:clamp(22px,2.6vw,34px);color:#AEB7C3;font-size:clamp(15px,1.5vw,17px)">
     Wenn du neu anfängst, empfehlen wir drei Einheiten pro Woche: zwei aus der Kraftecke
-    (Kraft, Functional Bodybuilding) und eine aus der Ausdauerecke (Hyrox, Powercircle).
+    (FBB/Strength &amp; Power) und eine aus der Ausdauerecke (Powercircle, Hyrox).
     Dazu bekommst du einen eigenen Kraftaufbauplan. Schaffst du das noch nicht, gilt:
-    jedes Training ist besser als kein Training.
+    jedes Training ist besser als kein Training.<br><br>
+    <span style="color:var(--dim);font-size:.92em">Nicht im Diagramm: <b style="color:#AEB7C3;font-weight:700">Mama reloaded</b>,
+    dreimal pro Woche, 45 Minuten. Dafür liegt kein Profil vor.</span>
   </p>
 </section>
 
@@ -411,19 +419,22 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
 </footer>
 
 <script>
+/* Werte von den Kursseiten des Kunden. Für zwei Kurse gibt es keine —
+   sie sind aus den zusammengelegten Kursen abgeleitet und im Diagramm
+   gestrichelt gezeichnet (geschaetzt:1).
+   Team-WOD, Performance und Community TeamWOD haben dasselbe Profil und
+   damit dieselbe Koordinate; sie teilen sich eine Marke. */
 const KURSE=[
- {n:'Powercircle',k:40,a:90,t:40},
- {n:'Gymnastics',k:70,a:10,t:100},
  {n:'Hyrox',k:30,a:100,t:40},
- {n:'Team-WOD & Performance',k:50,a:50,t:70},
- {n:'Functional Bodybuilding',k:90,a:40,t:50},
- {n:'Kraft',k:100,a:10,t:50},
- {n:'Olympic Weightlifting',k:90,a:10,t:100}
+ {n:'Powercircle',k:40,a:90,t:40},
+ {n:'Team-WOD, Performance & Community',k:50,a:50,t:70},
+ {n:'FBB',k:90,a:40,t:50},
+ {n:'FBB/Strength & Power',k:95,a:25,t:50,geschaetzt:1}
 ];
 const plot=document.getElementById('plot');
 KURSE.forEach((c,i)=>{
   const el=document.createElement('button');
-  el.className='pt'+(c.a>=85?' nl':'');
+  el.className='pt'+(c.a>=85?' nl':'')+(c.geschaetzt?' est':'');
   el.type='button';
   // Position = Ausdauer × Kraft, Ringgröße = Technik
   // Punkt steht exakt auf seinem Wert; nur die Beschriftung weicht aus
@@ -516,7 +527,8 @@ fahnenSetzen();
 const ml=document.getElementById('mlegend');
 KURSE.forEach((c,i)=>{
   const li=document.createElement('li');
-  li.innerHTML=`<b>${String(i+1).padStart(2,'0')}</b><span>${c.n}</span>`;
+  li.innerHTML=`<b>${String(i+1).padStart(2,'0')}</b><span>${c.n}`+
+    (c.geschaetzt?` <i>abgeleitet</i>`:'')+`</span>`;
   li.addEventListener('click',()=>show(i));
   ml.appendChild(li);
 });
