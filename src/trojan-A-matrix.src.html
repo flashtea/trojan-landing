@@ -477,15 +477,22 @@ function fahnenSetzen(){
   const eintraege=pts.map((pt,i)=>({pt,i,tag:pt.querySelector('.tag'),k:+pt.style.getPropertyValue('--y').replace('%','')}));
   eintraege.forEach(({tag})=>{tag.style.setProperty('--lx','0px');tag.style.setProperty('--ly','0px')});
 
+  // Alles messen, bevor irgendetwas geschrieben wird. Sonst erzwingt jede
+  // Schleifenrunde ein neues Layout, weil vorher --lx/--ly gesetzt wurde.
+  // Die Fahnengröße ändert sich durch den Versatz nicht — translate verschiebt,
+  // es skaliert nicht.
   const punktKaesten=pts.map(pt=>pt.getBoundingClientRect());
+  const fahnenMasse=eintraege.map(({tag})=>{
+    const r=tag.getBoundingClientRect();
+    return {breite:r.width, hoehe:r.height};
+  });
   const belegt=[];
   const trifft=(a,b)=>!(a.right<=b.left||a.left>=b.right||a.bottom<=b.top||a.top>=b.bottom);
 
   // Von oben nach unten: die oberen Fahnen haben am wenigsten Platz über sich
   eintraege.sort((a,b)=>b.k-a.k).forEach(({pt,tag,i})=>{
     const eigen=punktKaesten[i];
-    const roh=tag.getBoundingClientRect();
-    const breite=roh.width, hoehe=roh.height;
+    const {breite,hoehe}=fahnenMasse[i];
     const mx=eigen.left+eigen.width/2, my=eigen.top+eigen.height/2;
 
     const kandidaten=[];

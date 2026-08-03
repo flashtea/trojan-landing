@@ -668,19 +668,32 @@ if(frames.length){
   }),{threshold:.5});
   document.querySelectorAll('.beat').forEach(b=>bo.observe(b));
 }
+/* Fortschritt der Kursschiene.
+   Vorher las diese Funktion bei JEDEM Scroll-Ereignis scrollWidth und
+   clientWidth und schrieb direkt danach zwei Stile — der Browser musste
+   also zwischen Schreiben und nächstem Lesen jedes Mal neu layouten.
+   Gemessen waren das 193ms erzwungene Layouts allein beim Laden.
+   Jetzt: Breiten einmal messen, Schreiben in einen Frame bündeln, und die
+   Maske nur anfassen, wenn sich ihr Wert tatsächlich ändert. */
 const rail=document.querySelector('.rail'), fill=document.querySelector('.track i');
-function railProgress(){
-  const max=rail.scrollWidth-rail.clientWidth;
-  const p=max>0?rail.scrollLeft/max:1;
+let railMax=0, railWartet=false, railKante=-1;
+function railMessen(){ railMax=rail.scrollWidth-rail.clientWidth }
+function railZeichnen(){
+  railWartet=false;
+  const p=railMax>0?rail.scrollLeft/railMax:1;
   fill.style.width=(p*100).toFixed(2)+'%';
-  // Ausblendkante zurücknehmen, sobald das Ende erreicht ist
-  const end=Math.round(96*(1-p));
-  rail.style.maskImage=rail.style.webkitMaskImage=
-    `linear-gradient(to right,#000 calc(100% - ${end}px),rgba(0,0,0,${end?0.25:1}))`;
+  // in 8px-Stufen: die Ausblendkante ist ein Verlauf, feiner sieht niemand
+  const kante=Math.round(96*(1-p)/8)*8;
+  if(kante!==railKante){
+    railKante=kante;
+    rail.style.maskImage=rail.style.webkitMaskImage=
+      `linear-gradient(to right,#000 calc(100% - ${kante}px),rgba(0,0,0,${kante?0.25:1}))`;
+  }
 }
+function railProgress(){ if(!railWartet){ railWartet=true; requestAnimationFrame(railZeichnen) } }
 rail.addEventListener('scroll',railProgress,{passive:true});
-addEventListener('resize',railProgress,{passive:true});
-railProgress();
+addEventListener('resize',()=>{railMessen();railProgress()},{passive:true});
+requestAnimationFrame(()=>{railMessen();railZeichnen()});
 const hd=document.getElementById('hd');
 const setStuck=()=>hd.classList.toggle('stuck',scrollY>40);
 addEventListener('scroll',setStuck,{passive:true});
