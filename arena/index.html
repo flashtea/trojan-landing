@@ -20,6 +20,10 @@ html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:98p
 body{background:var(--void);color:var(--white);font-family:'Archivo',system-ui,sans-serif;font-weight:500;font-size:16px;line-height:1.55;overflow-x:hidden}
 .wrap{max-width:1340px;margin:0 auto;padding:0 clamp(18px,3.6vw,48px)}
 .mono{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.19em;text-transform:uppercase}
+/* Tastaturfokus sichtbar machen. Der Standardring des Browsers geht auf
+   diesem Untergrund fast unter, und ohne ihn ist die Seite per Tab
+   nicht bedienbar. */
+:focus-visible{outline:2px solid var(--blue-hi);outline-offset:3px}
 .rv{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.7,.3,1),transform .8s cubic-bezier(.2,.7,.3,1)}
 .rv.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
@@ -355,7 +359,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 
 <header id="hd">
   <div class="wrap nav">
-    <a href="#"><img class="logo" src="../assets/logo.png" alt="Trojan Performance"></a>
+    <a href="#"><img class="logo" src="../assets/logo.png" alt="Trojan Performance" loading="lazy"></a>
     <ul class="links">
       <li><a href="#programme">Kurse</a></li>
       <li><a href="#preise">Preise</a></li>
@@ -403,8 +407,8 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 <section id="haltung" class="firsthour">
   <div class="stage">
     <figure class="frame is-on"><div class="duo"><img src="../assets/o-hero.jpg" alt="Trainingsfläche"><div class="tint"></div><div class="mul"></div></div></figure>
-    <figure class="frame"><div class="duo"><img src="../assets/o-power.jpg" alt="Gruppe im Kurs"><div class="tint"></div><div class="mul"></div></div></figure>
-    <figure class="frame"><div class="duo"><img src="../assets/o-kettle.jpg" alt=""><div class="tint"></div><div class="mul"></div></div></figure>
+    <figure class="frame"><div class="duo"><img src="../assets/o-power.jpg" alt="Gruppe im Kurs" loading="lazy"><div class="tint"></div><div class="mul"></div></div></figure>
+    <figure class="frame"><div class="duo"><img src="../assets/o-kettle.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div></figure>
     <span class="shade"></span>
     <span class="startline"></span>
   </div>
@@ -491,13 +495,13 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
     <h2>Vier Coaches.<br>Zwei davon <span class="bl">Brüder.</span></h2>
   </div>
   <div class="coaches">
-    <a class="coach rv" href="#"><div class="duo"><img src="../assets/o-coachmike.jpg" alt="Coach Mike"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
+    <a class="coach rv" href="#"><div class="duo"><img src="../assets/o-coachmike.jpg" alt="Coach Mike" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
       <div class="body"><h3>Mike</h3><p>Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien. Hat die Box 2017 mit seinem Bruder aufgemacht.</p></div></a>
-    <a class="coach rv" href="#"><div class="duo"><img src="../assets/o-coachdominik.jpg" alt="Coach Dominik"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
+    <a class="coach rv" href="#"><div class="duo"><img src="../assets/o-coachdominik.jpg" alt="Coach Dominik" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
       <div class="body"><h3>Dominik</h3><p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor für Gewichtheben.</p></div></a>
-    <a class="coach rv" href="#"><div class="duo"><img src="../assets/o-coachdiego.jpg" alt="Coach Diego"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
+    <a class="coach rv" href="#"><div class="duo"><img src="../assets/o-coachdiego.jpg" alt="Coach Diego" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
       <div class="body"><h3>Diego</h3><p>Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf regionaler Ebene Wettkämpfe bestritten hat.</p></div></a>
-    <a class="coach rv" href="#"><div class="duo"><img src="../assets/o-coachbenni.jpg" alt="Coach Benni"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
+    <a class="coach rv" href="#"><div class="duo"><img src="../assets/o-coachbenni.jpg" alt="Coach Benni" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
       <div class="body"><h3>Benni</h3><p>Aktiver Eishockeyspieler, studiert Lehramt für Bewegung und Sport in Klagenfurt. Schwerpunkt Konditionstraining.</p></div></a>
   </div>
 </section>
@@ -509,52 +513,57 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
   </div>
   <div class="rail rv">
     <a class="card" href="#">
-      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-hyrox.jpg" alt=""><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-hyrox.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
       <span class="tag mono">Training Club</span><span class="veil"></span>
       <div class="body"><span class="n mono">01</span><h3>HYROX</h3><p class="mono prof">Kraft 30 · Ausdauer 100 · Technik 40</p></div>
     </a>
     <a class="card" href="#">
-      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-power.jpg" alt=""><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-power.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">02</span><h3>Powercircle</h3><p class="mono prof">Kraft 40 · Ausdauer 90 · Technik 40</p></div>
     </a>
     <a class="card" href="#">
-      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-teamwod.jpg" alt=""><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-teamwod.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">03</span><h3>Team-WOD</h3><p class="mono prof">Kraft 50 · Ausdauer 50 · Technik 70</p></div>
     </a>
     <a class="card" href="#">
-      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-gym.jpg" alt=""><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-gym.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">04</span><h3>Gymnastics</h3><p class="mono prof">Kraft 70 · Ausdauer 10 · Technik 100</p></div>
     </a>
     <a class="card" href="#">
-      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-kraft.jpg" alt=""><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-kraft.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">05</span><h3>Kraft</h3><p class="mono prof">Kraft 100 · Ausdauer 10 · Technik 50</p></div>
     </a>
     <a class="card" href="#">
-      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-wl.jpg" alt=""><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-wl.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">06</span><h3>Olympic Weightlifting</h3><p class="mono prof">Kraft 90 · Ausdauer 10 · Technik 100</p></div>
     </a>
     <a class="card" href="#">
-      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-perf.jpg" alt=""><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-perf.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">07</span><h3>Performance</h3><p class="mono prof">Kraft 50 · Ausdauer 50 · Technik 70</p></div>
     </a>
     <a class="card" href="#">
-      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-fbb.jpg" alt=""><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-fbb.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">08</span><h3>Functional Bodybuilding</h3><p class="mono prof">Kraft 90 · Ausdauer 40 · Technik 50</p></div>
     </a>
   </div>
   <div class="track rv"><i></i></div>
+  <p class="rv" style="max-width:64ch;margin-top:clamp(24px,2.8vw,36px);color:#A8B2BF;font-size:clamp(15px,1.5vw,17px)">
+    Wenn du neu anfängst, empfehlen wir drei Einheiten pro Woche: zwei für die Kraft
+    (Kraft, Functional Bodybuilding) und eine für die Ausdauer (HYROX, Powercircle).
+    Schaffst du das noch nicht — jedes Training ist besser als keines.
+  </p>
 </section>
 
 <section id="hyrox" class="wrap" style="padding-top:0">
   <div class="hyrox rv">
-    <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-kettle.jpg" alt=""><div class="tint"></div><div class="mul"></div></div>
+    <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-kettle.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
     <span class="veil"></span>
     <div class="sechead">
       <h2><span class="ol">HYROX:</span><br>dreimal pro Woche.</h2>
@@ -606,7 +615,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 
 <section id="start" class="wrap" style="padding-top:0">
   <div class="final rv">
-    <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-mural.jpg" alt=""><div class="tint"></div><div class="mul"></div></div>
+    <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-mural.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
     <span class="veil"></span>
     <div class="inner">
       <h2>Einmal <span class="bl">mittrainieren.</span></h2>
@@ -622,7 +631,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
   <div class="wrap">
     <div class="fgrid">
       <div>
-        <img class="logo" src="../assets/logo.png" alt="Trojan Performance" style="height:32px;margin-bottom:15px">
+        <img class="logo" src="../assets/logo.png" alt="Trojan Performance" style="height:32px;margin-bottom:15px" loading="lazy">
         <p style="color:var(--dim);max-width:30ch">Performance Center in Klagenfurt. Erster offizieller HYROX Training Club in Kärnten.</p>
       </div>
       <div><h4 class="mono">Training</h4><a href="#">Kursangebot</a><a href="#">Wochenplan</a><a href="#">Tarife</a><a href="#">Coaches</a></div>

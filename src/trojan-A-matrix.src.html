@@ -20,6 +20,10 @@ html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:96p
 body{background:var(--void);color:var(--white);font-family:'Archivo',system-ui,sans-serif;font-weight:500;font-size:16px;line-height:1.55;overflow-x:hidden}
 .wrap{max-width:1280px;margin:0 auto;padding:0 clamp(20px,4vw,56px)}
 .mono{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.19em;text-transform:uppercase}
+/* Tastaturfokus sichtbar machen. Der Standardring des Browsers geht auf
+   diesem Untergrund fast unter, und ohne ihn ist die Seite per Tab
+   nicht bedienbar. Die Diagrammpunkte haben weiter unten ihre eigene Regel. */
+:focus-visible{outline:2px solid var(--blue-hi);outline-offset:3px}
 .rv{opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.2,.7,.3,1),transform .8s cubic-bezier(.2,.7,.3,1)}
 .rv.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
@@ -239,7 +243,7 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
 
 <header>
   <div class="wrap nav">
-    <a href="#"><img class="logo" src="__LOGO__" alt="Trojan Performance"></a>
+    <a href="#"><img class="logo" src="__LOGO__" alt="Trojan Performance" loading="lazy"></a>
     <ul class="links">
       <li><a href="#kurse">Kurse</a></li>
       <li><a href="#coaches">Coaches</a></li>
@@ -299,13 +303,13 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
     <h2>Vier Coaches.<br>In <span class="bl">jeder</span> Einheit einer.</h2>
   </div>
   <div class="coaches">
-    <a class="coach rv" href="#"><img src="__PH_COACHMIKE__" alt="Coach Mike"><span class="veil"></span>
+    <a class="coach rv" href="#"><img src="__PH_COACHMIKE__" alt="Coach Mike" loading="lazy"><span class="veil"></span>
       <div class="body"><h3>Mike</h3><p>Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien. Hat die Box 2017 mit seinem Bruder Dominik aufgemacht.</p></div></a>
-    <a class="coach rv" href="#"><img src="__PH_COACHDOMINIK__" alt="Coach Dominik"><span class="veil"></span>
+    <a class="coach rv" href="#"><img src="__PH_COACHDOMINIK__" alt="Coach Dominik" loading="lazy"><span class="veil"></span>
       <div class="body"><h3>Dominik</h3><p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor für Gewichtheben.</p></div></a>
-    <a class="coach rv" href="#"><img src="__PH_COACHDIEGO__" alt="Coach Diego"><span class="veil"></span>
+    <a class="coach rv" href="#"><img src="__PH_COACHDIEGO__" alt="Coach Diego" loading="lazy"><span class="veil"></span>
       <div class="body"><h3>Diego</h3><p>Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf regionaler Ebene Wettkämpfe bestritten hat.</p></div></a>
-    <a class="coach rv" href="#"><img src="__PH_COACHBENNI__" alt="Coach Benni"><span class="veil"></span>
+    <a class="coach rv" href="#"><img src="__PH_COACHBENNI__" alt="Coach Benni" loading="lazy"><span class="veil"></span>
       <div class="body"><h3>Benni</h3><p>Aktiver Eishockeyspieler, studiert Lehramt für Bewegung und Sport in Klagenfurt. Schwerpunkt Konditionstraining.</p></div></a>
   </div>
 </section>
@@ -376,7 +380,9 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
     <div class="panel rv">
       <h3>Standort</h3>
       <p class="addr">Sebastiangasse 1<br>9020 Klagenfurt<br>am Wörthersee</p>
-      <a class="btn" style="margin-top:26px" href="#">Route öffnen</a>
+      <p style="margin-top:18px;color:#AEB7C3;font-size:14.5px;max-width:34ch">Gratis Parkplätze
+        rund ums Gebäude. In beiden Garderoben je ein Duschraum mit drei Duschen.</p>
+      <a class="btn" style="margin-top:24px" href="#">Route öffnen</a>
     </div>
   </div>
 </section>
@@ -392,7 +398,7 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
   <div class="wrap">
     <div class="fgrid">
       <div>
-        <img class="logo" src="__LOGO__" alt="Trojan Performance" style="height:32px;margin-bottom:15px">
+        <img class="logo" src="__LOGO__" alt="Trojan Performance" style="height:32px;margin-bottom:15px" loading="lazy">
         <p style="color:var(--dim);max-width:30ch">Performance Center in Klagenfurt. Erster offizieller HYROX Training Club in Kärnten.</p>
       </div>
       <div><h4 class="mono">Training</h4><a href="#kurse">Kursangebot</a><a href="#">Wochenplan</a><a href="#preise">Tarife</a><a href="#coaches">Coaches</a></div>
