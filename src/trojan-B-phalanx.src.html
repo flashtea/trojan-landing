@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trojan Performance — Phalanx</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFEFEC; --paper-2:#E3E3DF; --ink:#0B0B0B;
+  --blue:#3971B7; --blue-dk:#2A578F; --dim:#63676D;
+  --rule:rgba(11,11,11,.2); --hair:rgba(11,11,11,.11);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:90px}
+body{background:var(--paper);color:var(--ink);font-family:'Archivo',system-ui,sans-serif;font-weight:500;font-size:16px;line-height:1.5;overflow-x:hidden}
+.wrap{max-width:1400px;margin:0 auto;padding:0 clamp(16px,3vw,44px)}
+.mono{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.17em;text-transform:uppercase}
+.rv{opacity:0;transform:translateY(20px);transition:opacity .75s cubic-bezier(.2,.7,.3,1),transform .75s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+
+/* NAV */
+header{position:sticky;top:0;z-index:70;background:var(--paper);border-bottom:2px solid var(--ink)}
+.nav{display:flex;align-items:stretch;justify-content:space-between;height:70px}
+.nav .brand{display:flex;align-items:center;padding-right:26px}
+.logo{height:27px;width:auto}
+.links{display:flex;list-style:none;margin-left:auto}
+.links li{display:flex;align-items:center;border-left:1px solid var(--hair);padding:0 22px}
+.links a{color:var(--ink);text-decoration:none;font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;transition:color .18s}
+.links a:hover{color:var(--blue)}
+.nav .cta{display:flex;align-items:center;border-left:2px solid var(--ink);padding-left:22px}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--blue);color:#fff;text-decoration:none;
+  padding:14px 24px;font-weight:800;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;transition:background .18s,transform .18s}
+.btn:hover{background:var(--blue-dk);transform:translateY(-1px)}
+.btn.sm{padding:11px 18px;font-size:11px}
+.btn.out{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.btn.out:hover{background:var(--ink);color:var(--paper)}
+/* Links nicht verstecken — es gibt keinen Ersatz-Trigger. Stattdessen umbrechen. */
+@media(max-width:1060px){
+  .nav{flex-wrap:wrap;height:auto;align-items:center;padding-block:14px}
+  .links{order:3;flex-basis:100%;margin-left:0;overflow-x:auto;border-top:1px solid var(--hair);padding-top:2px;-webkit-overflow-scrolling:touch}
+  .links li{border-left:0;padding:10px 22px 10px 0;white-space:nowrap}
+  .nav .cta{border-left:0;padding-left:0;margin-left:auto}
+}
+
+/* HERO */
+.metabar{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--hair)}
+.metabar div{padding:13px 0 13px 16px;border-left:1px solid var(--hair);color:var(--dim)}
+.metabar div:first-child{border-left:0;padding-left:0}
+@media(max-width:760px){.metabar{grid-template-columns:1fr 1fr}.metabar div:nth-child(odd){border-left:0;padding-left:0}.metabar div:last-child{grid-column:1/-1;border-left:0;padding-left:0;border-top:1px solid var(--hair)}}
+.hero{padding:clamp(28px,4.2vw,58px) 0 clamp(24px,3.4vw,44px)}
+.kick{display:inline-flex;align-items:center;gap:11px;color:var(--blue);margin-bottom:clamp(14px,2.2vw,24px)}
+.kick b{width:9px;height:9px;background:var(--blue);display:block;flex:none}
+h1{font-family:'Archivo Black',sans-serif;text-transform:uppercase;letter-spacing:-.042em;line-height:.855;
+  font-size:clamp(44px,10.1vw,148px);text-wrap:nowrap}
+/* Outline-Zeilen brauchen 0 Tracking — die Kontur wird mittig gezeichnet
+   und benachbarte Buchstaben schneiden sich sonst sichtbar. */
+h1 .ol,.sechead h2 .ol{color:transparent;-webkit-text-stroke:2px var(--ink);letter-spacing:0}
+h1 .bl{color:var(--blue)}
+@media(max-width:560px){h1{font-size:clamp(27px,9.7vw,52px)}h1 .ol{-webkit-text-stroke-width:1.4px}}
+.hero-foot{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(14px,2.4vw,32px);align-items:end;margin-top:clamp(22px,3.2vw,40px)}
+.hero-foot .txt{grid-column:1 / span 5}
+.hero-foot .act{grid-column:9 / span 4;display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+@media(max-width:900px){.hero-foot .txt,.hero-foot .act{grid-column:1 / span 12}.hero-foot .act{justify-content:flex-start}}
+.hero-foot p{color:#33363A;font-size:clamp(15px,1.6vw,17.5px);max-width:42ch}
+
+/* BILDBAND — ein Bild, randlos */
+.band{position:relative;border-block:2px solid var(--ink);height:clamp(240px,34vw,460px);overflow:hidden}
+.band img{width:100%;height:100%;object-fit:cover;object-position:50% 46%;display:block}
+/* Block bleibt randbündig, der Text landet auf dem Gutter */
+.band .tag{position:absolute;right:0;top:0;background:var(--blue);color:#fff;padding:9px clamp(16px,3vw,44px)}
+
+/* FAKTEN */
+.facts{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:2px solid var(--ink)}
+.fact{padding:clamp(22px,3.2vw,42px) clamp(12px,1.8vw,26px);border-right:1px solid var(--hair)}
+.fact:first-child{padding-left:0}
+.fact:last-child{border-right:0;padding-right:0}
+.fact b{display:block;font-family:'Archivo Black',sans-serif;font-size:clamp(26px,4.2vw,56px);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.fact b em{font-style:normal;color:var(--blue);margin-inline:.1em;vertical-align:.06em}
+.fact span{color:var(--dim);margin-top:10px;display:block}
+@media(max-width:700px){.facts{grid-template-columns:1fr}.fact{padding-inline:0;border-right:0;border-bottom:1px solid var(--hair)}.fact:last-child{border-bottom:0}}
+
+/* SECTIONS */
+section.wrap{padding-block:clamp(52px,7.4vw,110px)}
+.sechead{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(14px,2.4vw,32px);align-items:end;margin-bottom:clamp(24px,3.4vw,46px)}
+.sechead h2{grid-column:1 / span 8;font-family:'Archivo Black',sans-serif;text-transform:uppercase;letter-spacing:-.038em;line-height:.87;font-size:clamp(30px,5.4vw,76px)}
+.sechead h2 .bl{color:var(--blue)}
+.sechead h2 .ol{color:transparent;-webkit-text-stroke:2px var(--ink)}
+.sechead .meta{grid-column:9 / span 4;text-align:right;color:var(--dim)}
+@media(max-width:820px){.sechead h2,.sechead .meta{grid-column:1 / span 12;text-align:left}.sechead h2 .ol{-webkit-text-stroke-width:1.4px}}
+
+/* REGISTER */
+.reg{border-top:2px solid var(--ink)}
+.rrow{display:grid;grid-template-columns:84px 1fr 44px;align-items:center;gap:16px;
+  padding:clamp(14px,1.9vw,23px) 0;border-bottom:1px solid var(--hair);text-decoration:none;color:var(--ink);
+  position:relative;transition:color .24s;overflow:hidden}
+.rrow::before{content:"";position:absolute;inset:0;background:var(--ink);transform:scaleY(0);transform-origin:bottom;transition:transform .3s cubic-bezier(.2,.7,.3,1);z-index:0}
+.rrow:hover::before{transform:scaleY(1)}
+.rrow>*{position:relative;z-index:1;transition:color .24s,transform .3s cubic-bezier(.2,.7,.3,1)}
+.rrow:hover{color:var(--paper)}
+.rrow:hover>*{transform:translateX(16px)}
+.rrow:hover .arw{transform:translateX(0);color:var(--paper)}
+.rrow .n{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;color:var(--blue)}
+.rrow:hover .n{color:#7FAFEA}
+.rrow h3{font-family:'Archivo Black',sans-serif;text-transform:uppercase;font-size:clamp(19px,2.9vw,38px);letter-spacing:-.032em;line-height:1}
+.rrow .arw{text-align:right;font-size:20px;color:var(--dim)}
+
+/* WOCHENPLAN — das Herzstück */
+.planwrap{overflow-x:auto}
+/* Mobil bis an den Rand laufen lassen und die Schnittkante ausblenden,
+   damit der Zuschnitt als Scroll lesbar wird und nicht als Bug. */
+@media(max-width:860px){
+  .planwrap{margin-inline:calc(-1 * clamp(16px,3vw,44px));padding-inline:clamp(16px,3vw,44px);
+    -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent);
+    mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent)}
+}
+.planhint{display:none;color:var(--dim);margin-bottom:12px}
+@media(max-width:860px){.planhint{display:block}}
+/* Zweite vollbreite Wahrheit der Seite — neben dem Raum die Woche darin */
+.planbleed{margin-inline:calc(-1 * clamp(16px,3vw,44px))}
+.plan{border-block:2px solid var(--ink);border-inline:0;background:#fff;min-width:1040px}
+.prow{display:grid;grid-template-columns:118px repeat(6,minmax(128px,1fr));border-bottom:1px solid var(--hair)}
+.prow:last-child{border-bottom:0}
+.prow>*{padding:10px 14px;border-right:1px solid var(--hair);min-height:74px;display:flex;align-items:center;justify-content:center;text-align:center}
+.prow>*:last-child{border-right:0}
+.prow.head{background:var(--ink);color:var(--paper);border-bottom-color:rgba(255,255,255,.28)}
+.prow.head>*{border-right:1px solid rgba(255,255,255,.18);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;min-height:44px}
+/* Zeitspalte als Skala, nicht als Bildunterschrift */
+.prow .t{font-family:'Archivo Black',sans-serif;font-size:20px;letter-spacing:-.02em;color:var(--ink);background:var(--paper-2)}
+.prow.head .t{background:transparent;color:var(--paper)}
+.slot{font-weight:800;text-transform:uppercase;font-size:14.5px;letter-spacing:.01em}
+/* eine Achse: Programmfamilie */
+.slot.b{background:var(--blue);color:#fff}
+/* Schwarze Zellen: --hair ist auf #0B0B0B unsichtbar, eigene helle Kante nötig */
+.slot.k{background:var(--ink);color:#fff;box-shadow:inset -1px 0 0 rgba(255,255,255,.2),inset 0 -1px 0 rgba(255,255,255,.2)}
+.slot.o{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+/* "kein Kurs" darf nicht dieselbe Fläche sein wie die Zeitspalte */
+.slot.g{background:transparent;color:#B0B4B8}
+.slot.open{background:var(--paper-2);color:var(--dim)}
+.legendrow{display:flex;gap:20px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.legendrow span{display:inline-flex;align-items:center;gap:8px;color:var(--dim)}
+.legendrow i{width:12px;height:12px;display:block}
+.legendrow a{color:var(--blue);text-decoration:none;font-weight:800;margin-left:auto}
+@media(max-width:640px){.legendrow{gap:12px 20px}.legendrow a{margin-left:0;flex-basis:100%;margin-top:4px}}
+
+/* EINSTIEG — ein Block */
+.offer{display:grid;grid-template-columns:1fr .82fr;border:2px solid var(--ink)}
+@media(max-width:860px){.offer{grid-template-columns:1fr}}
+.offer .txt{padding:clamp(26px,3.6vw,50px);display:flex;flex-direction:column;gap:14px;background:var(--blue);color:#fff}
+.offer .mono{color:rgba(255,255,255,.74)}
+.offer .big{font-family:'Archivo Black',sans-serif;font-size:clamp(38px,5.4vw,70px);line-height:.9;letter-spacing:-.05em;text-transform:uppercase}
+.offer .big em{font-style:normal;font-size:.3em;letter-spacing:.03em;margin-left:12px;font-family:'Archivo';font-weight:700;opacity:.75}
+/* Einzelwort kann nicht umbrechen — auf schmalen Viewports eigene Zeile */
+@media(max-width:520px){.offer .big em{display:block;margin-left:0;margin-top:6px}}
+.offer p{font-size:14.5px;max-width:40ch;color:rgba(255,255,255,.9)}
+.offer .btn{align-self:flex-start;background:#fff;color:var(--blue)}
+.offer .btn:hover{background:var(--ink);color:#fff}
+.offer .svs{margin-top:auto;padding-top:16px;border-top:1px solid rgba(255,255,255,.28);font-size:13.5px;color:rgba(255,255,255,.86)}
+.offer .svs a{color:#fff;font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.offer .pic{position:relative;overflow:hidden;min-height:250px}
+.offer .pic img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* ZEITEN */
+.two{display:grid;grid-template-columns:1fr 1fr;border:2px solid var(--ink)}
+@media(max-width:820px){.two{grid-template-columns:1fr}.half{border-right:0;border-bottom:1px solid var(--hair)}.half:last-child{border-bottom:0}}
+.half{border-right:1px solid var(--hair)}
+.half:last-child{border-right:0}
+.half.pad{padding:clamp(26px,3.4vw,44px);display:flex;flex-direction:column;gap:14px}
+/* gleicher Innenabstand wie die rechte Hälfte, sonst kippt der Rahmen optisch */
+.hrow{display:flex;justify-content:space-between;gap:16px;padding:17px clamp(26px,3.4vw,44px);border-bottom:1px solid var(--hair);font-size:14.5px;align-items:center}
+@media(max-width:520px){.hrow{flex-direction:column;align-items:flex-start;gap:6px}.hrow span{text-align:left;white-space:nowrap}}
+.hrow:last-child{border-bottom:0}
+.hrow b{font-weight:800;text-transform:uppercase;letter-spacing:.05em;font-size:12.5px}
+.hrow span{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--dim);text-align:right}
+.hrow.key{background:var(--blue);color:#fff}
+.hrow.key span{color:rgba(255,255,255,.92)}
+.addr{font-family:'Archivo Black',sans-serif;font-size:clamp(21px,2.9vw,34px);text-transform:uppercase;letter-spacing:-.032em;line-height:1.1}
+
+/* SCHLUSS */
+.final{position:relative;background:var(--ink);color:var(--paper);padding:clamp(40px,5.6vw,84px) clamp(24px,4vw,56px);text-align:center;overflow:hidden}
+.final img{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(48vw,400px);opacity:.07;pointer-events:none}
+.final>*{position:relative;z-index:2}
+.final h2{font-family:'Archivo Black',sans-serif;text-transform:uppercase;letter-spacing:-.038em;line-height:.9;font-size:clamp(28px,5vw,66px);max-width:17ch;margin:0 auto}
+.final h2 .bl{color:#6BA3E8}
+.final p{color:#9CA2AA;margin:16px auto 26px;max-width:42ch}
+
+/* FOOTER */
+footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
+.fgrid{display:grid;grid-template-columns:1.7fr 1fr 1fr;gap:32px}
+@media(max-width:700px){.fgrid{grid-template-columns:1fr}}
+.fgrid h4{color:var(--dim);margin-bottom:14px}
+.fgrid a,.fgrid p{color:#2E3135;font-size:14px;text-decoration:none;display:block;margin-bottom:7px;line-height:1.6;font-weight:500}
+.fgrid a:hover{color:var(--blue)}
+.legal{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:34px;padding-top:18px;border-top:1px solid var(--hair);color:var(--dim)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#"><img class="logo" src="__LOGO__" alt="Trojan Performance"></a>
+    <ul class="links">
+      <li><a href="#programme">Programme</a></li>
+      <li><a href="#plan">Wochenplan</a></li>
+      <li><a href="#einstieg">Einstieg</a></li>
+      
+    </ul>
+    <div class="cta"><a class="btn sm" href="#start">Probetraining</a></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="metabar">
+    <div class="mono">Klagenfurt am Wörthersee</div>
+    <div class="mono">Erster offizieller HYROX Training Club in Kärnten</div>
+    <div class="mono">Keine Einschreibgebühr · Probetraining 15 €</div>
+  </div>
+  <div class="hero">
+    <div class="kick mono"><b></b>Performance Center</div>
+    <h1>Kraft<br><span class="ol">entsteht</span><br><span class="bl">in Formation.</span></h1>
+    <div class="hero-foot">
+      <div class="txt"><p>75 Minuten pro Einheit, feste Struktur, in jedem Kurs ein Coach mit dir auf der Fläche. Keine Einschreibgebühr, Probetraining 15 €.</p></div>
+      <div class="act">
+        <a class="btn" href="#start">Probetraining buchen</a>
+        <a class="btn out" href="#plan">Wochenplan</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="band">
+  <img src="__PH_HERO__" alt="Trainingsfläche Trojan Performance">
+  <span class="tag mono">Sebastiangasse 1 · Klagenfurt</span>
+</div>
+
+<section id="programme" class="wrap">
+  <div class="sechead rv">
+    <h2>Acht Kurse.<br><span class="ol">Einer passt</span> <span class="bl">zu dir.</span></h2>
+    <div class="meta mono">10–12 Plätze · HYROX und Powercircle bis 24</div>
+  </div>
+  <div class="reg">
+    <a class="rrow rv" href="#"><span class="n">01</span><h3>Powercircle</h3><span class="arw">→</span></a>
+    <a class="rrow rv" href="#"><span class="n">02</span><h3>Team-WOD</h3><span class="arw">→</span></a>
+    <a class="rrow rv" href="#"><span class="n">03</span><h3>Gymnastics</h3><span class="arw">→</span></a>
+    <a class="rrow rv" href="#"><span class="n">04</span><h3>HYROX</h3><span class="arw">→</span></a>
+    <a class="rrow rv" href="#"><span class="n">05</span><h3>Performance</h3><span class="arw">→</span></a>
+    <a class="rrow rv" href="#"><span class="n">06</span><h3>Functional Bodybuilding</h3><span class="arw">→</span></a>
+    <a class="rrow rv" href="#"><span class="n">07</span><h3>Kraft</h3><span class="arw">→</span></a>
+    <a class="rrow rv" href="#"><span class="n">08</span><h3>Olympisches Gewichtheben</h3><span class="arw">→</span></a>
+  </div>
+</section>
+
+<section id="plan" class="wrap" style="padding-top:0">
+  <div class="sechead rv">
+    <h2><span class="ol">Passt das</span><br>in <span class="bl">deine Woche?</span></h2>
+    <div class="meta mono">Montag bis Samstag</div>
+  </div>
+  <p class="rv" style="max-width:64ch;margin-bottom:22px;color:#33363A;font-size:15.5px">
+    Du weißt nicht, wo du einsteigst? Starte mit drei Einheiten pro Woche: zwei für die Kraft
+    (Kraft, Functional Bodybuilding) und eine für die Ausdauer (HYROX, Powercircle).
+    Damit hast du die Basis. Und wenn du das noch nicht schaffst — jedes Training ist besser als keines.
+  </p>
+  <div class="planhint mono rv">→ seitlich wischen</div>
+  <div class="planbleed"><div class="planwrap rv">
+    <div class="plan">
+      <div class="prow head">
+        <div class="t">Zeit</div><div>Montag</div><div>Dienstag</div><div>Mittwoch</div><div>Donnerstag</div><div>Freitag</div><div>Samstag</div>
+      </div>
+      <div class="prow">
+        <div class="t">08:00</div>
+        <div class="slot b">Powercircle</div><div class="slot o">Gymnastics</div><div class="slot b">Powercircle</div>
+        <div class="slot k">Kraft</div><div class="slot b">Powercircle</div><div class="slot b">Team-WOD</div>
+      </div>
+      <div class="prow">
+        <div class="t">09:00</div>
+        <div class="slot b">Team-WOD</div><div class="slot b">HYROX</div><div class="slot b">Team-WOD</div>
+        <div class="slot b">HYROX</div><div class="slot b">Team-WOD</div><div class="slot b">HYROX</div>
+      </div>
+      <div class="prow">
+        <div class="t">17:00</div>
+        <div class="slot b">HYROX</div><div class="slot k">Performance</div><div class="slot b">HYROX</div>
+        <div class="slot k">Olympic Weightlifting</div><div class="slot k">Functional Bodybuilding</div><div class="slot g">—</div>
+      </div>
+      <div class="prow">
+        <div class="t">18:30</div>
+        <div class="slot k">Kraft</div><div class="slot b">Team-WOD</div><div class="slot o">Gymnastics</div>
+        <div class="slot b">Team-WOD</div><div class="slot k">Performance</div><div class="slot g">—</div>
+      </div>
+      <div class="prow">
+        <div class="t">06—22</div>
+        <div class="slot open" style="grid-column:span 6;font-family:'IBM Plex Mono',monospace;letter-spacing:.16em">Open Gym · separat buchbar, 365 Tage</div>
+      </div>
+    </div>
+  </div>
+  </div></div>
+  <div class="legendrow mono">
+    <span><i style="background:var(--blue)"></i>Ausdauer</span>
+    <span><i style="background:var(--ink)"></i>Kraft</span>
+    <span><i style="box-shadow:inset 0 0 0 2px var(--ink)"></i>Technik</span>
+    <span><i style="background:var(--paper-2)"></i>Open Gym</span>
+  </div>
+</section>
+
+<section id="einstieg" class="wrap" style="padding-top:0">
+  <div class="offer rv">
+    <div class="txt">
+      <span class="mono">Einstieg</span>
+      <div class="big">15 €<em>Probetraining</em></div>
+      <p>Eine ganze Einheit mit der Gruppe, 75 Minuten, Coach dabei. Mitbringen: Handtuch, Trinkflasche, Hallenschuhe mit sauberer Sohle.</p>
+      <a class="btn" href="#start">Termin wählen</a>
+      <div class="svs">Selbstständig und SVS-versichert? Die SVS überweist dir 100 € aufs Konto — für jeden Tarif außer Open Gym und für den 10er-Block. <a href="#">Details</a></div>
+    </div>
+    <div class="pic"><img src="__PH_KETTLE__" alt="Kettlebells"></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div class="two rv">
+    <div class="half">
+      <div class="hrow"><b>Montag — Freitag</b><span>08:00–09:45 · 17:00–20:00</span></div>
+      <div class="hrow"><b>Samstag</b><span>08:00–11:00</span></div>
+      <div class="hrow key"><b>Open Gym · täglich</b><span>06:00–22:00</span></div>
+    </div>
+    <div class="half pad">
+      <span class="mono" style="color:var(--dim)">Standort</span>
+      <div class="addr">Sebastiangasse 1<br>9020 Klagenfurt</div>
+      <p style="font-size:14px;color:#33363A;max-width:36ch">Gratis Parkplätze rund ums Gebäude. In beiden Garderoben je ein Duschraum mit drei Duschen.</p>
+      <a class="btn out" style="align-self:flex-start;margin-top:auto" href="#">Route öffnen</a>
+    </div>
+  </div>
+</section>
+
+<section id="start" class="wrap" style="padding-top:0">
+  <div class="final rv">
+    <img src="__MONOA__" alt="">
+    <h2>Erster offizieller<br><span class="bl">HYROX</span> Training Club<br>in Kärnten.</h2>
+    <p>Klagenfurt, Sebastiangasse 1. Vier Coaches — darunter ein dreifacher Staatsmeister im Gewichtheben. Dreimal pro Woche HYROX.</p>
+    <a class="btn" href="#">Probetraining buchen</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <img class="logo" src="__LOGO__" alt="Trojan Performance" style="height:30px;margin-bottom:15px">
+        <p style="color:var(--dim);max-width:30ch">Performance Center in Klagenfurt. 2017 als CrossFit Klagenfurt gestartet, seit 2018 Trojan Performance. 1. offizieller HYROX Training Club in Kärnten.</p>
+      </div>
+      <div><h4 class="mono">Training</h4><a href="#">Kursangebot</a><a href="#">Wochenplan</a><a href="#">Tarife</a><a href="#">Coaches</a></div>
+      <div><h4 class="mono">Kontakt</h4><a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a><a href="tel:+4367682277302">+43 676 8227 7302</a><a href="#">Sebastiangasse 1, 9020 Klagenfurt</a></div>
+    </div>
+    <div class="legal mono"><span>© 2026 Trojan Performance</span><span>Impressum · AGB · Datenschutz</span></div>
+  </div>
+</footer>
+
+<script>
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.rv').forEach((el,i)=>{el.style.transitionDelay=(i%4)*60+'ms';io.observe(el)});
+</script>
+</body>
+</html>

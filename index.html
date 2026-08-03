@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/monogram.png">
+<title>Trojan Performance — drei Entwürfe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#06080B; --deep:#0B1119;
+  --blue:#3971B7; --blue-hi:#6FAAF0;
+  --white:#EDF2F8; --dim:#7C8794; --line:rgba(255,255,255,.1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--void);color:var(--white);font-family:'Archivo',system-ui,sans-serif;
+  font-weight:500;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+/* padding-inline, nicht die Kurzform: sonst überschreibt .wrap die
+   vertikalen Abstände von header/main/footer (Klasse schlägt Typ) */
+.wrap{max-width:1180px;margin:0 auto;padding-inline:clamp(20px,4vw,48px)}
+.mono{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.19em;text-transform:uppercase}
+
+header{padding-block:clamp(40px,7vw,72px) clamp(28px,5vw,56px)}
+/* die Wortmarke liegt schwarz vor, auf dunklem Grund invertiert */
+header img{height:26px;width:auto;display:block;margin-bottom:clamp(32px,6vw,56px);
+  filter:brightness(0) invert(1)}
+h1{font-family:'Archivo Black',sans-serif;font-weight:400;letter-spacing:-.022em;
+  font-size:clamp(34px,6.4vw,64px);line-height:1.04;text-transform:uppercase}
+h1 span{color:var(--blue-hi)}
+.lede{margin-top:20px;max-width:56ch;color:var(--dim);font-size:clamp(15px,1.5vw,18px)}
+
+.grid{display:grid;gap:clamp(20px,2.6vw,32px);padding-bottom:clamp(48px,8vw,96px);
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.card{display:flex;flex-direction:column;background:var(--deep);border:1px solid var(--line);
+  transition:border-color .3s,transform .3s}
+.card:hover{border-color:rgba(111,170,240,.5);transform:translateY(-3px)}
+/* gleiches Seitenverhältnis wie die Screenshots — so wird nichts angeschnitten */
+.shot{aspect-ratio:880/556;overflow:hidden;background:#070A0F;border-bottom:1px solid var(--line)}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:50% 0;display:block}
+.body{padding:clamp(20px,2.4vw,28px);display:flex;flex-direction:column;gap:10px;flex:1}
+.kicker{color:var(--blue-hi)}
+h2{font-family:'Archivo Black',sans-serif;font-weight:400;font-size:clamp(22px,2.4vw,28px);
+  letter-spacing:-.01em;text-transform:uppercase;line-height:1.1}
+.card p{color:var(--dim);font-size:15px}
+.go{margin-top:auto;padding-top:16px;display:inline-flex;align-items:center;gap:9px;
+  color:var(--white);font-weight:700;font-size:14px;letter-spacing:.02em}
+.go i{width:22px;height:1px;background:var(--blue-hi);transition:width .3s}
+.card:hover .go i{width:36px}
+
+footer{border-top:1px solid var(--line);padding-block:clamp(28px,4vw,40px) clamp(40px,6vw,72px)}
+footer p{color:var(--dim);font-size:13px;max-width:64ch}
+footer p+p{margin-top:10px}
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <img src="assets/logo.png" alt="Trojan Performance">
+  <h1>Drei Entwürfe<br>für <span>eine Seite.</span></h1>
+  <p class="lede">Derselbe Inhalt, drei Handschriften. Jeder Entwurf ist eine vollständige,
+    klickbare Startseite — am besten am Desktop und am Handy ansehen.</p>
+</header>
+
+<main class="wrap grid">
+
+  <a class="card" href="matrix/">
+    <div class="shot"><img src="assets/prev-matrix.jpg" alt="Vorschau Matrix" loading="lazy"></div>
+    <div class="body">
+      <span class="mono kicker">Entwurf A</span>
+      <h2>Matrix</h2>
+      <p>Dunkel und sachlich. Das Kursangebot steht nicht als Liste da, sondern als Diagramm:
+        Kraft gegen Ausdauer, der Ring um jeden Punkt zeigt den Technikanteil.</p>
+      <span class="go">Ansehen <i></i></span>
+    </div>
+  </a>
+
+  <a class="card" href="phalanx/">
+    <div class="shot"><img src="assets/prev-phalanx.jpg" alt="Vorschau Phalanx" loading="lazy"></div>
+    <div class="body">
+      <span class="mono kicker">Entwurf B</span>
+      <h2>Phalanx</h2>
+      <p>Hell, plakativ, wie ein gedrucktes Plakat. In der Mitte steht der Wochenplan —
+        die Frage „passt das in meine Woche?“ beantwortet sich vor dem ersten Klick.</p>
+      <span class="go">Ansehen <i></i></span>
+    </div>
+  </a>
+
+  <a class="card" href="arena/">
+    <div class="shot"><img src="assets/prev-arena.jpg" alt="Vorschau Arena" loading="lazy"></div>
+    <div class="body">
+      <span class="mono kicker">Entwurf C</span>
+      <h2>Arena</h2>
+      <p>Dunkel und filmisch. Eine Vollbild-Bühne führt durch die erste Stunde, danach
+        Zahlen, Preise, Coaches und Kurse auf einer durchgehenden Seite.</p>
+      <span class="go">Ansehen <i></i></span>
+    </div>
+  </a>
+
+</main>
+
+<footer class="wrap">
+  <p>Entwürfe, keine fertige Seite. Alle Fotos, Preise und Texte stammen von
+    trojanperformance.at und gehören Trojan Performance.</p>
+  <p>Zwei Dinge sind noch offen: der Wochenplan in Entwurf B enthält Beispielzeiten,
+    und die Öffnungszeiten fürs Open Gym stehen auf der Live-Seite an zwei Stellen
+    unterschiedlich (22:00 bzw. 21:00).</p>
+</footer>
+
+</body>
+</html>
