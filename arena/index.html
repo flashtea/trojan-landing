@@ -200,12 +200,13 @@ h2 .bl{color:var(--blue-hi)}
    als der Viewport hoch ist, wird oben und unten beschnitten, schmaler links und
    rechts. Deshalb pro Bild ein eigener Ankerpunkt, und ab 3:2 ein zweiter. */
 .frame:nth-of-type(1) .duo img{object-position:52% 46%}
-.frame:nth-of-type(2) .duo img{object-position:52% 46%}
+/* Fast quadratisch (909x768): bei 16:9 fällt ein Drittel der Höhe weg.
+   Oben ausrichten, sonst ist der Coach kopflos. */
+.frame:nth-of-type(2) .duo img{object-position:50% 6%}
 .frame:nth-of-type(3) .duo img{object-position:46% 50%}
 @media(max-aspect-ratio:3/2){
   .frame:nth-of-type(1) .duo img{object-position:46% 50%}
-  /* sonst sitzt der Kopf der Ruderin genau unter der Überschrift */
-  .frame:nth-of-type(2) .duo img{object-position:40% 50%}
+  .frame:nth-of-type(2) .duo img{object-position:50% 50%}
 }
 .stage .shade{position:absolute;inset:0;z-index:7;
   background:linear-gradient(90deg,rgba(4,7,11,.86),rgba(4,7,11,.36) 62%,rgba(4,7,11,.7))}
@@ -407,7 +408,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 <section id="haltung" class="firsthour">
   <div class="stage">
     <figure class="frame is-on"><div class="duo"><img src="../assets/o-brueder.jpg" alt="Mike und Dominik, die beiden Inhaber"><div class="tint"></div><div class="mul"></div></div></figure>
-    <figure class="frame"><div class="duo"><img src="../assets/o-power.jpg" alt="Gruppe im Kurs" loading="lazy"><div class="tint"></div><div class="mul"></div></div></figure>
+    <figure class="frame"><div class="duo"><img src="../assets/o-vormachen.jpg" alt="Coach macht vor, die Gruppe zieht mit" loading="lazy"><div class="tint"></div><div class="mul"></div></div></figure>
     <figure class="frame"><div class="duo"><img src="../assets/o-ringe.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div></figure>
     <span class="shade"></span>
     <span class="startline"></span>
