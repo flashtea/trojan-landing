@@ -14,6 +14,15 @@
 /* Variabler Schnitt: deckt 500 bis 800 mit einer Datei ab */
 @font-face{font-family:'Archivo';src:url('../assets/fonts/archivo-var.woff2') format('woff2');
   font-weight:500 800;font-style:normal;font-display:swap}
+/* Ersatzschrift auf die Breite von Archivo Black getrimmt. Gemessen an
+   derselben Textprobe: Archivo Black ist 17,1% breiter als das systemeigene
+   Sans. Ohne diesen Ausgleich springt beim Schriftwechsel jede Überschrift um
+   ein Sechstel ihrer Breite — das war der einzige Layoutsprung der Seite.
+   Unbedenklich, weil alle Überschriften eine feste line-height haben: die
+   Zeilenhöhe hängt an der font-size, nicht an den Metriken der Schrift. */
+@font-face{font-family:'Archivo Black Ersatz';
+  src:local('Arial Bold'),local('Helvetica Bold'),local('Liberation Sans Bold'),local('Arial');
+  size-adjust:117.1%;font-weight:400;font-style:normal}
 @font-face{font-family:'Archivo Black';src:url('../assets/fonts/archivo-black.woff2') format('woff2');
   font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:'IBM Plex Mono';src:url('../assets/fonts/plexmono-400.woff2') format('woff2');
@@ -76,7 +85,7 @@ header{position:sticky;top:0;z-index:70;background:var(--paper);border-bottom:2p
 .hero{padding:clamp(28px,4.2vw,58px) 0 clamp(24px,3.4vw,44px)}
 .kick{display:inline-flex;align-items:center;gap:11px;color:var(--blue);margin-bottom:clamp(14px,2.2vw,24px)}
 .kick b{width:9px;height:9px;background:var(--blue);display:block;flex:none}
-h1{font-family:'Archivo Black',sans-serif;text-transform:uppercase;letter-spacing:-.042em;line-height:.855;
+h1{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;letter-spacing:-.042em;line-height:.855;
   font-size:clamp(44px,10.1vw,148px);text-wrap:nowrap}
 /* Outline-Zeilen brauchen 0 Tracking — die Kontur wird mittig gezeichnet
    und benachbarte Buchstaben schneiden sich sonst sichtbar. */
@@ -100,7 +109,7 @@ h1 .bl{color:var(--blue)}
 .fact{padding:clamp(22px,3.2vw,42px) clamp(12px,1.8vw,26px);border-right:1px solid var(--hair)}
 .fact:first-child{padding-left:0}
 .fact:last-child{border-right:0;padding-right:0}
-.fact b{display:block;font-family:'Archivo Black',sans-serif;font-size:clamp(26px,4.2vw,56px);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.fact b{display:block;font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;font-size:clamp(26px,4.2vw,56px);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .fact b em{font-style:normal;color:var(--blue);margin-inline:.1em;vertical-align:.06em}
 .fact span{color:var(--dim);margin-top:10px;display:block}
 @media(max-width:700px){.facts{grid-template-columns:1fr}.fact{padding-inline:0;border-right:0;border-bottom:1px solid var(--hair)}.fact:last-child{border-bottom:0}}
@@ -108,7 +117,7 @@ h1 .bl{color:var(--blue)}
 /* SECTIONS */
 section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 .sechead{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(14px,2.4vw,32px);align-items:end;margin-bottom:clamp(24px,3.4vw,46px)}
-.sechead h2{grid-column:1 / span 8;font-family:'Archivo Black',sans-serif;text-transform:uppercase;letter-spacing:-.038em;line-height:.87;font-size:clamp(30px,5.4vw,76px)}
+.sechead h2{grid-column:1 / span 8;font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;letter-spacing:-.038em;line-height:.87;font-size:clamp(30px,5.4vw,76px)}
 .sechead h2 .bl{color:var(--blue)}
 .sechead h2 .ol{color:transparent;-webkit-text-stroke:2px var(--ink)}
 .sechead .meta{grid-column:9 / span 4;text-align:right;color:var(--dim)}
@@ -127,7 +136,7 @@ section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 .rrow:hover .arw{transform:translateX(0);color:var(--paper)}
 .rrow .n{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;color:var(--blue)}
 .rrow:hover .n{color:#7FAFEA}
-.rrow h3{font-family:'Archivo Black',sans-serif;text-transform:uppercase;font-size:clamp(19px,2.9vw,38px);letter-spacing:-.032em;line-height:1}
+.rrow h3{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;font-size:clamp(19px,2.9vw,38px);letter-spacing:-.032em;line-height:1}
 .rrow .arw{text-align:right;font-size:20px;color:var(--dim)}
 .rrow .wie{color:var(--dim);white-space:nowrap;text-align:right}
 .rrow:hover .wie{color:rgba(239,239,236,.7)}
@@ -154,7 +163,7 @@ section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 .prow.head{background:var(--ink);color:var(--paper);border-bottom-color:rgba(255,255,255,.28)}
 .prow.head>*{border-right:1px solid rgba(255,255,255,.18);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;min-height:44px}
 /* Zeitspalte als Skala, nicht als Bildunterschrift */
-.prow .t{font-family:'Archivo Black',sans-serif;font-size:20px;letter-spacing:-.02em;color:var(--ink);background:var(--paper-2)}
+.prow .t{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;font-size:20px;letter-spacing:-.02em;color:var(--ink);background:var(--paper-2)}
 .prow.head .t{background:transparent;color:var(--paper)}
 .slot{font-weight:800;text-transform:uppercase;font-size:14.5px;letter-spacing:.01em}
 /* eine Achse: Programmfamilie */
@@ -186,7 +195,7 @@ section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 @media(max-width:860px){.offer{grid-template-columns:1fr}}
 .offer .txt{padding:clamp(26px,3.6vw,50px);display:flex;flex-direction:column;gap:14px;background:var(--blue);color:#fff}
 .offer .mono{color:rgba(255,255,255,.74)}
-.offer .big{font-family:'Archivo Black',sans-serif;font-size:clamp(38px,5.4vw,70px);line-height:.9;letter-spacing:-.05em;text-transform:uppercase}
+.offer .big{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;font-size:clamp(38px,5.4vw,70px);line-height:.9;letter-spacing:-.05em;text-transform:uppercase}
 .offer .big em{font-style:normal;font-size:.3em;letter-spacing:.03em;margin-left:12px;font-family:'Archivo';font-weight:700;opacity:.75}
 /* Einzelwort kann nicht umbrechen — auf schmalen Viewports eigene Zeile */
 @media(max-width:520px){.offer .big em{display:block;margin-left:0;margin-top:6px}}
@@ -208,7 +217,7 @@ section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 .tarif .mono{color:var(--blue)}
 .tarif.key{background:var(--ink);color:var(--paper)}
 .tarif.key .mono{color:#7FAFEA}
-.preis{font-family:'Archivo Black',sans-serif;font-size:clamp(30px,3.6vw,50px);
+.preis{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;font-size:clamp(30px,3.6vw,50px);
   line-height:.9;letter-spacing:-.045em}
 .preis em{font-style:normal;font-family:'Archivo',sans-serif;font-weight:700;
   font-size:.28em;letter-spacing:.02em;margin-left:8px;color:var(--dim)}
@@ -251,7 +260,7 @@ section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 .coach:hover img{filter:none}
 .coach .body{padding:clamp(16px,1.8vw,24px);display:flex;flex-direction:column;gap:8px;
   border-top:1px solid var(--hair);flex:1}
-.coach h3{font-family:'Archivo Black',sans-serif;text-transform:uppercase;
+.coach h3{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;
   font-size:clamp(17px,1.9vw,24px);letter-spacing:-.028em;line-height:1}
 .coach p{font-size:13.5px;color:var(--dim);line-height:1.45}
 @media(max-width:900px){
@@ -278,13 +287,13 @@ section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 .hrow span{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--dim);text-align:right}
 .hrow.key{background:var(--blue);color:#fff}
 .hrow.key span{color:rgba(255,255,255,.92)}
-.addr{font-family:'Archivo Black',sans-serif;font-size:clamp(21px,2.9vw,34px);text-transform:uppercase;letter-spacing:-.032em;line-height:1.1}
+.addr{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;font-size:clamp(21px,2.9vw,34px);text-transform:uppercase;letter-spacing:-.032em;line-height:1.1}
 
 /* SCHLUSS */
 .final{position:relative;background:var(--ink);color:var(--paper);padding:clamp(40px,5.6vw,84px) clamp(24px,4vw,56px);text-align:center;overflow:hidden}
 .final img{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(48vw,400px);opacity:.07;pointer-events:none}
 .final>*{position:relative;z-index:2}
-.final h2{font-family:'Archivo Black',sans-serif;text-transform:uppercase;letter-spacing:-.038em;line-height:.9;font-size:clamp(28px,5vw,66px);max-width:17ch;margin:0 auto}
+.final h2{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;letter-spacing:-.038em;line-height:.9;font-size:clamp(28px,5vw,66px);max-width:17ch;margin:0 auto}
 .final h2 .bl{color:#6BA3E8}
 .final p{color:#9CA2AA;margin:16px auto 26px;max-width:42ch}
 
