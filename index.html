@@ -6,16 +6,22 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="assets/monogram.png">
 <title>Trojan Performance — drei Entwürfe</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/archivo-black.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+@font-face{font-family:'Archivo';src:url('assets/fonts/archivo-var.woff2') format('woff2');
+  font-weight:500 800;font-style:normal;font-display:swap}
+@font-face{font-family:'Archivo Black';src:url('assets/fonts/archivo-black.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'IBM Plex Mono';src:url('assets/fonts/plexmono-400.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
 :root{
   --void:#06080B; --deep:#0B1119;
   --blue:#3971B7; --blue-hi:#6FAAF0;
   --white:#EDF2F8; --dim:#7C8794; --line:rgba(255,255,255,.1);
 }
 *{margin:0;padding:0;box-sizing:border-box}
+picture{display:contents}
 html{-webkit-text-size-adjust:100%}
 body{background:var(--void);color:var(--white);font-family:'Archivo',system-ui,sans-serif;
   font-weight:500;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
@@ -69,7 +75,7 @@ footer p+p{margin-top:10px}
 <main class="wrap grid">
 
   <a class="card" href="matrix/">
-    <div class="shot"><img src="assets/prev-matrix.jpg" alt="Vorschau Matrix" loading="lazy"></div>
+    <div class="shot"><picture><source type="image/webp" srcset="assets/prev-matrix.webp"><img src="assets/prev-matrix.jpg" alt="Vorschau Matrix" loading="lazy"></picture></div>
     <div class="body">
       <span class="mono kicker">Entwurf A</span>
       <h2>Matrix</h2>
@@ -80,7 +86,7 @@ footer p+p{margin-top:10px}
   </a>
 
   <a class="card" href="phalanx/">
-    <div class="shot"><img src="assets/prev-phalanx.jpg" alt="Vorschau Phalanx" loading="lazy"></div>
+    <div class="shot"><picture><source type="image/webp" srcset="assets/prev-phalanx.webp"><img src="assets/prev-phalanx.jpg" alt="Vorschau Phalanx" loading="lazy"></picture></div>
     <div class="body">
       <span class="mono kicker">Entwurf B</span>
       <h2>Phalanx</h2>
@@ -91,7 +97,7 @@ footer p+p{margin-top:10px}
   </a>
 
   <a class="card" href="arena/">
-    <div class="shot"><img src="assets/prev-arena.jpg" alt="Vorschau Arena" loading="lazy"></div>
+    <div class="shot"><picture><source type="image/webp" srcset="assets/prev-arena.webp"><img src="assets/prev-arena.jpg" alt="Vorschau Arena" loading="lazy"></picture></div>
     <div class="body">
       <span class="mono kicker">Entwurf C</span>
       <h2>Arena</h2>

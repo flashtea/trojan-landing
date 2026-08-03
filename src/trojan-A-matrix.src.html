@@ -4,10 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Trojan Performance — Matrix</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- Schriften liegen neben der Seite. Über Google Fonts wären es zwei
+     zusätzliche Origins mit DNS und TLS, und die Schriftdateien könnten erst
+     starten, nachdem das CSS von fonts.googleapis.com da ist. Vom eigenen
+     Host laden sie sofort und parallel. -->
+<link rel="preload" href="../assets/fonts/archivo-black.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* Variabler Schnitt: deckt 500 bis 800 mit einer Datei ab */
+@font-face{font-family:'Archivo';src:url('../assets/fonts/archivo-var.woff2') format('woff2');
+  font-weight:500 800;font-style:normal;font-display:swap}
+@font-face{font-family:'Archivo Black';src:url('../assets/fonts/archivo-black.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'IBM Plex Mono';src:url('../assets/fonts/plexmono-400.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'IBM Plex Mono';src:url('../assets/fonts/plexmono-500.woff2') format('woff2');
+  font-weight:500;font-style:normal;font-display:swap}
 :root{
   --void:#08090B; --steel:#13161B; --steel-2:#1C2027;
   --edge:rgba(255,255,255,.09); --edge-2:rgba(255,255,255,.18);
@@ -16,6 +28,9 @@
   --pad:clamp(28px,3.6vw,48px);
 }
 *{margin:0;padding:0;box-sizing:border-box}
+/* Der Build hüllt jedes Bild in <picture>. Ohne display:contents wäre das
+   ein zusätzlicher Inline-Kasten zwischen Flex-/Grid-Container und Bild. */
+picture{display:contents}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:96px}
 body{background:var(--void);color:var(--white);font-family:'Archivo',system-ui,sans-serif;font-weight:500;font-size:16px;line-height:1.55;overflow-x:hidden}
 .wrap{max-width:1280px;margin:0 auto;padding:0 clamp(20px,4vw,56px)}
@@ -261,7 +276,7 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
 </header>
 
 <div class="hero">
-  <div class="bg"><img src="__PH_HERO__" alt="Trainingsfläche Trojan Performance"></div>
+  <div class="bg" fetchpriority="high"><img src="__PH_HERO__" alt="Trainingsfläche Trojan Performance"></div>
   <div class="wrap hero-inner">
     <div class="kick mono"><i></i>Klagenfurt · 1. offizieller HYROX Training Club in Kärnten</div>
     <h1>Acht Kurse.<br>Einer passt<br><span class="bl">zu dir.</span></h1>

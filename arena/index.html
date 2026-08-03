@@ -6,16 +6,31 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="../assets/monogram.png">
 <title>Trojan Performance — Arena</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- Schriften liegen neben der Seite. Über Google Fonts wären es zwei
+     zusätzliche Origins mit DNS und TLS, und die Schriftdateien könnten erst
+     starten, nachdem das CSS von fonts.googleapis.com da ist. Vom eigenen
+     Host laden sie sofort und parallel. -->
+<link rel="preload" href="../assets/fonts/archivo-black.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* Variabler Schnitt: deckt 500 bis 800 mit einer Datei ab */
+@font-face{font-family:'Archivo';src:url('../assets/fonts/archivo-var.woff2') format('woff2');
+  font-weight:500 800;font-style:normal;font-display:swap}
+@font-face{font-family:'Archivo Black';src:url('../assets/fonts/archivo-black.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'IBM Plex Mono';src:url('../assets/fonts/plexmono-400.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'IBM Plex Mono';src:url('../assets/fonts/plexmono-500.woff2') format('woff2');
+  font-weight:500;font-style:normal;font-display:swap}
 :root{
   --void:#06080B; --deep:#0B1119;
   --blue:#3971B7; --blue-hi:#6FAAF0; --blue-dp:#16386B;
   --white:#EDF2F8; --dim:#7C8794; --line:rgba(255,255,255,.1);
 }
 *{margin:0;padding:0;box-sizing:border-box}
+/* Der Build hüllt jedes Bild in <picture>. Ohne display:contents wäre das
+   ein zusätzlicher Inline-Kasten zwischen Flex-/Grid-Container und Bild. */
+picture{display:contents}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:98px}
 body{background:var(--void);color:var(--white);font-family:'Archivo',system-ui,sans-serif;font-weight:500;font-size:16px;line-height:1.55;overflow-x:hidden}
 .wrap{max-width:1340px;margin:0 auto;padding:0 clamp(18px,3.6vw,48px)}
@@ -373,7 +388,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 
 <div class="hero">
   <div class="bg duo">
-    <img src="../assets/o-hero.jpg" alt="Trainingsfläche Trojan Performance">
+    <picture><source type="image/webp" srcset="../assets/o-hero.webp"><img src="../assets/o-hero.jpg" alt="Trainingsfläche Trojan Performance" fetchpriority="high"></picture>
     <div class="tint"></div><div class="mul"></div>
   </div>
   <div class="wedge"></div>
@@ -407,9 +422,9 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 
 <section id="haltung" class="firsthour">
   <div class="stage">
-    <figure class="frame is-on"><div class="duo"><img src="../assets/o-brueder.jpg" alt="Mike und Dominik, die beiden Inhaber"><div class="tint"></div><div class="mul"></div></div></figure>
-    <figure class="frame"><div class="duo"><img src="../assets/o-vormachen.jpg" alt="Coach macht vor, die Gruppe zieht mit" loading="lazy"><div class="tint"></div><div class="mul"></div></div></figure>
-    <figure class="frame"><div class="duo"><img src="../assets/o-ringe.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div></figure>
+    <figure class="frame is-on"><div class="duo"><picture><source type="image/webp" srcset="../assets/o-brueder.webp"><img src="../assets/o-brueder.jpg" alt="Mike und Dominik, die beiden Inhaber" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div></figure>
+    <figure class="frame"><div class="duo"><picture><source type="image/webp" srcset="../assets/o-vormachen.webp"><img src="../assets/o-vormachen.jpg" alt="Coach macht vor, die Gruppe zieht mit" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div></figure>
+    <figure class="frame"><div class="duo"><picture><source type="image/webp" srcset="../assets/o-ringe.webp"><img src="../assets/o-ringe.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div></figure>
     <span class="shade"></span>
     <span class="startline"></span>
   </div>
@@ -496,13 +511,13 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
     <h2>Vier Coaches.<br>Zwei davon <span class="bl">Brüder.</span></h2>
   </div>
   <div class="coaches">
-    <a class="coach rv" href="#"><div class="duo"><img src="../assets/o-coachmike.jpg" alt="Coach Mike" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
+    <a class="coach rv" href="#"><div class="duo"><picture><source type="image/webp" srcset="../assets/o-coachmike.webp"><img src="../assets/o-coachmike.jpg" alt="Coach Mike" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
       <div class="body"><h3>Mike</h3><p>Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien. Hat die Box 2017 mit seinem Bruder aufgemacht.</p></div></a>
-    <a class="coach rv" href="#"><div class="duo"><img src="../assets/o-coachdominik.jpg" alt="Coach Dominik" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
+    <a class="coach rv" href="#"><div class="duo"><picture><source type="image/webp" srcset="../assets/o-coachdominik.webp"><img src="../assets/o-coachdominik.jpg" alt="Coach Dominik" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
       <div class="body"><h3>Dominik</h3><p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor für Gewichtheben.</p></div></a>
-    <a class="coach rv" href="#"><div class="duo"><img src="../assets/o-coachdiego.jpg" alt="Coach Diego" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
+    <a class="coach rv" href="#"><div class="duo"><picture><source type="image/webp" srcset="../assets/o-coachdiego.webp"><img src="../assets/o-coachdiego.jpg" alt="Coach Diego" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
       <div class="body"><h3>Diego</h3><p>Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf regionaler Ebene Wettkämpfe bestritten hat.</p></div></a>
-    <a class="coach rv" href="#"><div class="duo"><img src="../assets/o-coachbenni.jpg" alt="Coach Benni" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
+    <a class="coach rv" href="#"><div class="duo"><picture><source type="image/webp" srcset="../assets/o-coachbenni.webp"><img src="../assets/o-coachbenni.jpg" alt="Coach Benni" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
       <div class="body"><h3>Benni</h3><p>Aktiver Eishockeyspieler, studiert Lehramt für Bewegung und Sport in Klagenfurt. Schwerpunkt Konditionstraining.</p></div></a>
   </div>
 </section>
@@ -514,42 +529,42 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
   </div>
   <div class="rail rv">
     <a class="card" href="#plan">
-      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-perf.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-perf.webp"><img src="../assets/o-perf.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">01</span><h3>Performance</h3><p class="mono prof">7× pro Woche · 12–16 Plätze</p></div>
     </a>
     <a class="card" href="#plan">
-      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-kraft.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-kraft.webp"><img src="../assets/o-kraft.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">02</span><h3>FBB/Strength &amp; Power</h3><p class="mono prof">6× pro Woche · 16 Plätze</p></div>
     </a>
     <a class="card" href="#plan">
-      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-power.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-power.webp"><img src="../assets/o-power.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">03</span><h3>Powercircle</h3><p class="mono prof">3× pro Woche · 24 Plätze</p></div>
     </a>
     <a class="card" href="#plan">
-      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-gym.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-gym.webp"><img src="../assets/o-gym.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">04</span><h3>Mama reloaded</h3><p class="mono prof">3× pro Woche · 45 Minuten</p></div>
     </a>
     <a class="card" href="#plan">
-      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-hyrox.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-hyrox.webp"><img src="../assets/o-hyrox.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
       <span class="tag mono">Training Club</span><span class="veil"></span>
       <div class="body"><span class="n mono">05</span><h3>Hyrox</h3><p class="mono prof">2× pro Woche · 24 Plätze</p></div>
     </a>
     <a class="card" href="#plan">
-      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-teamwod.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-teamwod.webp"><img src="../assets/o-teamwod.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">06</span><h3>Team-WOD</h3><p class="mono prof">1× pro Woche · 16 Plätze</p></div>
     </a>
     <a class="card" href="#plan">
-      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-fbb.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-fbb.webp"><img src="../assets/o-fbb.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">07</span><h3>FBB</h3><p class="mono prof">1× pro Woche · 12 Plätze</p></div>
     </a>
     <a class="card" href="#plan">
-      <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-fans.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-fans.webp"><img src="../assets/o-fans.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">08</span><h3>Community TeamWOD</h3><p class="mono prof">1× pro Woche · 24 Plätze</p></div>
     </a>
@@ -564,7 +579,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 
 <section id="hyrox" class="wrap" style="padding-top:0">
   <div class="hyrox rv">
-    <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-kettle.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
+    <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-kettle.webp"><img src="../assets/o-kettle.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
     <span class="veil"></span>
     <div class="sechead">
       <h2><span class="ol">HYROX:</span><br>zweimal pro Woche.</h2>
@@ -616,7 +631,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 
 <section id="start" class="wrap" style="padding-top:0">
   <div class="final rv">
-    <div class="duo" style="position:absolute;inset:0"><img src="../assets/o-mural.jpg" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
+    <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-mural.webp"><img src="../assets/o-mural.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
     <span class="veil"></span>
     <div class="inner">
       <h2>Einmal <span class="bl">mittrainieren.</span></h2>

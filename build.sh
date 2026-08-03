@@ -14,6 +14,18 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
+# WebP-Zwillinge erzeugen, wo sie fehlen oder älter als das JPEG sind.
+# Method 6 rechnet länger, komprimiert aber spürbar besser — bei einer Handvoll
+# Bildern, die selten wechseln, ist das die richtige Seite des Tauschs.
+for jpg in assets/*.jpg; do
+  webp="${jpg%.jpg}.webp"
+  if [ ! -f "$webp" ] || [ "$jpg" -nt "$webp" ]; then
+    magick "$jpg" -quality 72 -define webp:method=6 "$webp"
+    printf 'webp  %-24s %5s kB -> %5s kB\n' "$(basename "$webp")" \
+      "$(( $(stat -c%s "$jpg") / 1024 ))" "$(( $(stat -c%s "$webp") / 1024 ))"
+  fi
+done
+
 python3 - <<'PY'
 import pathlib, re, sys
 
@@ -38,6 +50,22 @@ PREFIX = '../assets/'
 NOINDEX = ('<meta name="robots" content="noindex, nofollow">\n'
            '<link rel="icon" href="../assets/monogram.png">\n')
 
+# Jedes <img> auf ein JPEG bekommt ein <picture> mit WebP davor. WebP spart
+# hier im Schnitt die Hälfte; das JPEG bleibt als Rückfall stehen, damit die
+# Seite auch ohne WebP-Unterstützung vollständig ist. Die Quelldateien in src/
+# bleiben lesbares, einfaches <img>-Markup.
+def webp_umhuellen(html):
+    def ersetze(m):
+        tag, datei = m.group(0), m.group(1)
+        webp = pathlib.Path('assets', pathlib.Path(datei).stem + '.webp')
+        if not webp.exists():
+            return tag
+        # loading/fetchpriority stehen am <img> und gelten für das ganze <picture>
+        return (f'<picture><source type="image/webp" srcset="{PREFIX}{webp.name}">'
+                f'{tag}</picture>')
+    return re.sub(r'<img\b[^>]*?src="\.\./assets/([a-z0-9-]+\.jpg)"[^>]*>', ersetze, html)
+
+
 for src, ziel in SEITEN.items():
     html = pathlib.Path('src', src).read_text(encoding='utf-8')
 
@@ -57,6 +85,7 @@ for src, ziel in SEITEN.items():
         sys.exit(f'Nicht ersetzt in {src}: {sorted(set(offen))}')
 
     html = html.replace('<title>', NOINDEX + '<title>', 1)
+    html = webp_umhuellen(html)
 
     out = pathlib.Path(ziel, 'index.html')
     out.parent.mkdir(exist_ok=True)
