@@ -223,9 +223,6 @@ section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 .prow>.zelle{flex-direction:column;gap:2px;padding:6px;justify-content:center}
 .zelle .slot{width:100%;padding:9px 8px;min-height:0}
 .zelle:empty::after{content:"—";color:#B0B4B8}
-.slot small{display:block;font-family:'IBM Plex Mono',monospace;font-size:9.5px;
-  letter-spacing:.12em;font-weight:400;opacity:.72;margin-top:3px;text-transform:none}
-.slot.voll{opacity:.55}
 .planlade{padding:34px 14px;text-align:center;color:var(--dim)}
 /* Gestapelte Ansicht unter 820px — siehe planListe() */
 .plan.liste{min-width:0;border-inline:0}
@@ -592,7 +589,7 @@ document.querySelectorAll('.rv').forEach((el,i)=>{el.style.transitionDelay=(i%4)
 /* ---- Wochenplan ----------------------------------------------------------
    Hier standen Beispielzeiten. Der Plan kommt jetzt aus derselben öffentlichen
    Schnittstelle, aus der auch die App bucht — er kann also nicht veralten und
-   zeigt nebenbei, welche Einheiten gerade voll sind.
+   kann also nicht veralten.
    Fällt die Abfrage aus, greift der eingefrorene Stand darunter. Eine leere
    Tabelle wäre im Zweifel schlimmer als eine, die eine Woche alt ist. */
 const PLAN_STAND=[
@@ -607,7 +604,7 @@ const PLAN_STAND=[
   [3,'17:15','Performance',16],[4,'17:15','Hyrox',24],
   [0,'18:30','FBB/Strength & Power',16],[1,'18:30','Performance',16],
   [2,'18:30','Hyrox',24],[3,'18:30','FBB',12],[3,'18:30','Powercircle',24]
-].map(([tag,zeit,name,max])=>({tag,zeit,name,max,gebucht:0}));
+].map(([tag,zeit,name])=>({tag,zeit,name}));
 
 // Alles, was nicht eindeutig Kraft oder Ausdauer ist, bleibt neutral — lieber
 // keine Aussage als eine erfundene, wenn ein neuer Kurs dazukommt.
@@ -636,9 +633,7 @@ function registerZeichnen(termine){
 
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const marke=(t)=>{
-  const voll=t.max>0&&t.gebucht>=t.max;
-  return `<div class="slot ${PLAN_KAT[t.name]||'o'}${voll?' voll':''}">${esc(t.name)}`+
-         (voll?'<small>ausgebucht</small>':'')+`</div>`;
+  return `<div class="slot ${PLAN_KAT[t.name]||'o'}">${esc(t.name)}</div>`;
 };
 
 // Breite Ansicht: Zeit gegen Wochentag, wie ein Aushang.
@@ -715,8 +710,6 @@ addEventListener('resize',()=>{clearTimeout(planTimer);planTimer=setTimeout(()=>
       tag:(new Date(e.startTime).getDay()+6)%7,
       zeit:e.startTime.slice(11,16),
       name:(e.course&&e.course.name||'').trim(),
-      max:e.maxParticipants||0,
-      gebucht:e.bookingCount||0
     })),true,montag);
   }catch(_){
     planZeichnen(PLAN_STAND,false,montag);

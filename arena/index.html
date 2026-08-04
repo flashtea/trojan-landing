@@ -382,9 +382,6 @@ h2 .bl{color:var(--blue-hi)}
 .wtag .wein:first-of-type{border-top:0;padding-top:0}
 .wein b{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--white);flex:none}
 .wein span{font-size:13.5px;color:#B3BCC7;line-height:1.32}
-.wein.voll span{color:var(--dim)}
-.wein.voll em{display:block;font-style:normal;font-family:'IBM Plex Mono',monospace;
-  font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-hi)}
 .wquelle{margin-top:clamp(16px,2vw,22px);color:var(--dim)}
 
 /* WOCHENBAND — 06 bis 22 Uhr, echte Form der Woche */
@@ -778,7 +775,7 @@ const PLAN_STAND=[
   [0,'18:30',75,'FBB/Strength & Power',16], [1,'18:30',75,'Performance',16],
   [2,'18:30',75,'Hyrox',24],          [3,'18:30',75,'FBB',12],
   [3,'18:30',75,'Powercircle',24]
-].map(([tag,zeit,dauer,name,max])=>({tag,zeit,dauer,name,max,gebucht:0}));
+].map(([tag,zeit,dauer,name])=>({tag,zeit,dauer,name}));
 
 const TAGE=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
 // Fremde Zeichenkette in eigenes Markup: der Kursname kommt aus einer API,
@@ -799,9 +796,7 @@ function planZeichnen(termine,live,montag){
   document.getElementById('wplan').innerHTML=tage.map(tag=>{
     const heute=termine.filter(t=>t.tag===tag).sort((a,b)=>a.zeit.localeCompare(b.zeit));
     return `<div class="wtag"><h3 class="mono">${TAGE[tag]}</h3>`+heute.map(t=>{
-      const voll=t.max>0&&t.gebucht>=t.max;
-      return `<div class="wein${voll?' voll':''}"><b>${t.zeit}</b><span>${esc(t.name)}`+
-             (voll?'<em>ausgebucht</em>':'')+`</span></div>`;
+      return `<div class="wein"><b>${t.zeit}</b><span>${esc(t.name)}</span></div>`;
     }).join('')+`</div>`;
   }).join('');
   document.getElementById('wplan').removeAttribute('aria-busy');
@@ -850,8 +845,6 @@ function planZeichnen(termine,live,montag){
       zeit:e.startTime.slice(11,16),
       dauer:Math.round((new Date(e.endTime)-new Date(e.startTime))/60000)||75,
       name:(e.course&&e.course.name||'').trim(),
-      max:e.maxParticipants||0,
-      gebucht:e.bookingCount||0
     })),true,montag);
   }catch(_){
     planZeichnen(PLAN_STAND,false,montag);
