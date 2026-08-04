@@ -11,6 +11,7 @@
      Host laden sie sofort und parallel. -->
 <link rel="preload" href="../assets/fonts/archivo-black.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/plexmono-400.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 /* Variabler Schnitt: deckt 500 bis 800 mit einer Datei ab */
 @font-face{font-family:'Archivo';src:url('../assets/fonts/archivo-var.woff2') format('woff2');
@@ -52,13 +53,26 @@ p,.meta{text-wrap:pretty}
 :focus-visible{outline:2px solid var(--blue);outline-offset:3px}
 .rv{opacity:0;transform:translateY(20px);transition:opacity .75s cubic-bezier(.2,.7,.3,1),transform .75s cubic-bezier(.2,.7,.3,1)}
 .rv.in{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+/* Der Block deckte nur .rv ab. Gemessen liefen scroll-behavior und jede
+   Hover-Transformation weiter — die Zusage stand im Kommentar, nicht im CSS. */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rv{opacity:1;transform:none}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+/* Ohne Sprunglink beginnt jeder Tastaturdurchlauf mit fünf Navigationsstopps. */
+.skip{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;
+  z-index:200;background:var(--blue);color:#fff;font-weight:800;font-size:13px;letter-spacing:.1em;
+  text-transform:uppercase;text-decoration:none}
+.skip:focus{width:auto;height:auto;overflow:visible;clip-path:none;left:12px;top:12px;padding:14px 20px}
 
 /* NAV */
 header{position:sticky;top:0;z-index:70;background:var(--paper);border-bottom:2px solid var(--ink)}
 .nav{display:flex;align-items:stretch;justify-content:space-between;height:70px}
 .nav .brand{display:flex;align-items:center;padding-right:26px}
 .logo{height:27px;width:auto}
+.nav>a:first-child,.nav .brand{display:inline-flex;align-items:center;min-height:44px}
 .links{display:flex;list-style:none;margin-left:auto}
 .links li{display:flex;align-items:center;border-left:1px solid var(--hair);padding:0 22px}
 .links a{color:var(--ink);text-decoration:none;font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;transition:color .18s}
@@ -130,7 +144,6 @@ h1 .bl{color:var(--blue)}
 @media(max-width:700px){.band .tag{top:auto;bottom:0;right:auto;left:0;letter-spacing:.1em}}
 
 /* FAKTEN */
-.facts{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:2px solid var(--ink)}
 .fact{padding:clamp(22px,3.2vw,42px) clamp(12px,1.8vw,26px);border-right:1px solid var(--hair)}
 .fact:first-child{padding-left:0}
 .fact:last-child{border-right:0;padding-right:0}
@@ -144,9 +157,8 @@ section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 .sechead{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(14px,2.4vw,32px);align-items:end;margin-bottom:clamp(24px,3.4vw,46px)}
 .sechead h2{grid-column:1 / span 8;font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;letter-spacing:-.038em;line-height:.95;font-size:clamp(30px,5.4vw,76px)}
 .sechead h2 .bl{color:var(--blue)}
-.sechead h2 .ol{color:transparent;-webkit-text-stroke:2px var(--ink)}
 .sechead .meta{grid-column:9 / span 4;text-align:right;color:var(--dim)}
-@media(max-width:820px){.sechead h2,.sechead .meta{grid-column:1 / span 12;text-align:left}.sechead h2 .ol{-webkit-text-stroke-width:1.4px}}
+@media(max-width:820px){.sechead h2,.sechead .meta{grid-column:1 / span 12;text-align:left}}
 
 /* REGISTER */
 .reg{border-top:2px solid var(--ink)}
@@ -217,7 +229,7 @@ section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 .plan.liste{min-width:0;border-inline:0}
 .ptag{border-bottom:1px solid var(--hair)}
 .ptag:last-child{border-bottom:0}
-.ptag h4{background:var(--ink);color:var(--paper);font-family:'IBM Plex Mono',monospace;
+.ptag h3{background:var(--ink);color:var(--paper);font-family:'IBM Plex Mono',monospace;
   font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:400;padding:9px 14px}
 .peinheit{display:grid;grid-template-columns:64px 1fr;align-items:center;gap:12px;
   padding:7px 14px;border-bottom:1px solid var(--hair)}
@@ -231,7 +243,6 @@ section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 .legendrow{display:flex;gap:20px;flex-wrap:wrap;align-items:center;margin-top:16px}
 .legendrow span{display:inline-flex;align-items:center;gap:8px;color:var(--dim)}
 .legendrow i{width:12px;height:12px;display:block}
-.legendrow a{color:var(--blue);text-decoration:none;font-weight:800;margin-left:auto}
 @media(max-width:640px){.legendrow{gap:12px 20px}.legendrow a{margin-left:0;flex-basis:100%;margin-top:4px}}
 
 /* EINSTIEG — ein Block */
@@ -251,7 +262,6 @@ section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 .offer .pic{position:relative;overflow:hidden;min-height:250px}
 .offer .pic img{width:100%;height:100%;object-fit:cover;display:block}
 
-/* ZEITEN */
 /* TARIFE — dieselben Zahlen wie in den anderen Entwürfen, aber als harte
    Tabelle statt als Karten: das ist die Sprache dieser Seite. */
 .tarife{display:grid;grid-template-columns:repeat(3,1fr);border:2px solid var(--ink)}
@@ -284,7 +294,7 @@ section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 .tarifnote{margin-top:clamp(24px,3vw,38px);border-top:2px solid var(--ink);
   padding-top:clamp(22px,2.4vw,30px);display:grid;gap:clamp(20px,2.4vw,34px);
   grid-template-columns:repeat(auto-fit,minmax(min(285px,100%),1fr))}
-.tarifnote h4{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.19em;
+.tarifnote h3{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.19em;
   text-transform:uppercase;color:var(--blue);font-weight:400;margin-bottom:12px}
 .tarifnote ul{list-style:none;display:grid;gap:8px}
 .tarifnote li{font-size:14.5px;color:var(--dim);line-height:1.45}
@@ -348,17 +358,17 @@ section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
 .fgrid{display:grid;grid-template-columns:1.7fr 1fr 1fr;gap:32px}
 @media(max-width:700px){.fgrid{grid-template-columns:1fr}}
-.fgrid h4{color:var(--dim);margin-bottom:14px}
+.fgrid h3{color:var(--dim);margin-bottom:14px}
 .fgrid a,.fgrid p{color:#2E3135;font-size:14px;text-decoration:none;display:block;margin-bottom:7px;line-height:1.6;font-weight:500}
 .fgrid a:hover{color:var(--blue)}
 .legal{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:34px;padding-top:18px;border-top:1px solid var(--hair);color:var(--dim)}
 
 /* Tippflächen — siehe Kommentar in den anderen Entwürfen */
 .links a{display:flex;align-items:center;min-height:44px}
-.fgrid a{padding-block:11px;margin-bottom:0}
+.fgrid a{display:inline-flex;align-items:center;min-height:44px;padding-block:11px;margin-bottom:0}
 .offer .svs a{display:inline-block;padding-block:12px}
 .rechtliches{display:flex;gap:20px}
-.rechtliches a{color:inherit;text-decoration:none;padding-block:10px}
+.rechtliches a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;color:inherit;text-decoration:none;padding-block:10px}
 .rechtliches a:hover{color:var(--blue)}
 @media(max-width:1060px){.links li{padding-block:0}.nav{padding-block:8px}}
 /* Bei 30px Schriftgrad sind 0,93 nur 27,9px Zeilenabstand, nötig sind 27,0 —
@@ -368,12 +378,13 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
 </style>
 </head>
 <body>
+<a class="skip" href="#inhalt">Zum Inhalt</a>
 
 <header>
   <div class="wrap nav">
-    <a class="brand" href="#"><img class="logo" src="__LOGO__" alt="Trojan Performance" loading="lazy"></a>
+    <a class="brand" href="#"><img class="logo" src="__LOGO__" alt="Trojan Performance"></a>
     <ul class="links">
-      <li><a href="#programme">Programme</a></li>
+      <li><a href="#programme">Kurse</a></li>
       <li><a href="#plan">Wochenplan</a></li>
       <li><a href="#coaches">Coaches</a></li>
       <li><a href="#preise">Preise</a></li>
@@ -384,7 +395,7 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
   </div>
 </header>
 
-<div class="wrap">
+<div class="wrap" id="inhalt">
   <div class="metabar">
     <div class="mono">Klagenfurt am Wörthersee</div>
     <div class="mono">Erster offizieller HYROX Training Club in Kärnten</div>
@@ -394,7 +405,7 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
     <div class="kick mono"><b></b>Performance Center</div>
     <h1>Nie<br><span class="ol">allein auf</span><br><span class="bl">der Fläche.</span></h1>
     <div class="hero-foot">
-      <div class="txt"><p>75 Minuten pro Einheit. In jedem Kurs steht ein Coach mit dir auf der Fläche, zwölf bis sechzehn Leute pro Gruppe.</p></div>
+      <div class="txt"><p>Die Kurse dauern 75 Minuten, Mama reloaded 45. In jedem steht ein Coach mit dir auf der Fläche, 12 bis 24 Plätze je nach Kurs.</p></div>
       <div class="act">
         <a class="btn" href="#start">Probetraining buchen</a>
         <a class="btn out" href="#plan">Wochenplan</a>
@@ -465,7 +476,7 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
 <section id="preise" class="wrap" style="padding-top:0">
   <div class="sechead rv">
     <h2><span class="ol">Nicht das</span><br>billigste Gym <span class="bl">der Stadt.</span></h2>
-    <div class="meta mono">Zwölf bis sechzehn Leute pro Kurs, ein Coach auf der Fläche, 75 Minuten. Dafür zahlst du.</div>
+    <div class="meta mono">Die meisten Kurse sind bei 16 Leuten voll, die kleinsten bei 12. Immer mit Coach, immer 75 Minuten.</div>
   </div>
   <div class="tarife">
     <div class="tarif rv">
@@ -489,14 +500,14 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
   </div>
   <div class="tarifnote rv">
     <div>
-      <h4>In jedem Tarif</h4>
+      <h3>In jedem Tarif</h3>
       <ul>
         <li>Keine Einschreibgebühr</li>
         <li>Eigener Kraftaufbauplan</li>
       </ul>
     </div>
     <div>
-      <h4>Vertrag</h4>
+      <h3>Vertrag</h3>
       <ul>
         <li>Bindung 1, 6 oder 12 Monate</li>
         <li>Pause: bei 6 Monaten einmal, bei 12 Monaten zweimal — je bis 4 Wochen</li>
@@ -504,7 +515,7 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
       </ul>
     </div>
     <div>
-      <h4>Ohne Bindung</h4>
+      <h3>Ohne Bindung</h3>
       <ul>
         <li><b>15 €</b> Probetraining</li>
         <li><b>25 €</b> Drop-in</li>
@@ -525,7 +536,7 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
       <div class="big">15 €<em>Probetraining</em></div>
       <p>Eine ganze Einheit mit der Gruppe, 75 Minuten, Coach dabei. Vorkenntnisse brauchst du keine. Mitbringen: Handtuch, Trinkflasche, Hallenschuhe mit sauberer Sohle.</p>
       <a class="btn" href="#start">Termin wählen</a>
-      <div class="svs">Selbstständig und SVS-versichert? Die SVS überweist dir 100 € aufs Konto — für jeden Tarif außer Open Gym und für den 10er-Block. <a href="#">Details</a></div>
+      <div class="svs">Selbstständig und SVS-versichert? Die SVS zahlt dir 100 € zurück. <a href="#">Details</a></div>
     </div>
     <div class="pic"><img src="__PH_KETTLE__" alt="Kettlebells" loading="lazy"></div>
   </div>
@@ -552,8 +563,9 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
   <div class="final rv">
     <img src="__MONOA__" alt="" loading="lazy">
     <h2>Erster offizieller <span class="bl">HYROX</span> Training Club in Kärnten.</h2>
-    <p>Klagenfurt, Sebastiangasse 1. Acht Kurse, 75 Minuten pro Einheit, zwölf bis sechzehn Leute pro Gruppe. Morgens ab sechs, abends bis Viertel vor acht.</p>
+    <p>Klagenfurt, Sebastiangasse 1. Acht Kurse, 75 Minuten pro Einheit, 12 bis 24 Plätze je nach Kurs. Morgens ab sechs, abends bis Viertel vor acht.</p>
     <a class="btn" href="#">Probetraining buchen</a>
+    <p class="mono" style="margin-top:18px;color:var(--dim);letter-spacing:.14em">Probetraining 15 € · Keine Einschreibgebühr · Kurstarife ab 110 €/Monat</p>
   </div>
 </section>
 
@@ -564,8 +576,8 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
         <img class="logo" src="__LOGO__" alt="Trojan Performance" style="height:30px;margin-bottom:15px" loading="lazy">
         <p style="color:var(--dim);max-width:30ch">Performance Center in Klagenfurt, Sebastiangasse 1. Erster offizieller HYROX Training Club in Kärnten.</p>
       </div>
-      <div><h4 class="mono">Seite</h4><a href="#programme">Programme</a><a href="#plan">Wochenplan</a><a href="#coaches">Coaches</a><a href="#preise">Preise</a><a href="#einstieg">Einstieg</a></div>
-      <div><h4 class="mono">Kontakt</h4><a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a><a href="tel:+4367682277302">+43 676 8227 7302</a><a href="#">Sebastiangasse 1, 9020 Klagenfurt</a></div>
+      <div><h3 class="mono">Seite</h3><a href="#programme">Kurse</a><a href="#plan">Wochenplan</a><a href="#coaches">Coaches</a><a href="#preise">Preise</a><a href="#einstieg">Einstieg</a></div>
+      <div><h3 class="mono">Kontakt</h3><a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a><a href="tel:+4367682277302">+43 676 8227 7302</a><a href="#">Sebastiangasse 1, 9020 Klagenfurt</a></div>
     </div>
     <div class="legal mono"><span>© 2026 Trojan Performance</span><span class="rechtliches"><a href="#">Impressum</a><a href="#">AGB</a><a href="#">Datenschutz</a></span></div>
   </div>
@@ -616,13 +628,14 @@ function registerZeichnen(termine){
   const sortiert=[...zaehl].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'de'));
   document.getElementById('kursreg').innerHTML=sortiert.map(([name,n],i)=>
     `<a class="rrow" href="#plan"><span class="n">${String(i+1).padStart(2,'0')}</span>`+
-    `<h3>${name}</h3><span class="wie mono">${n}× pro Woche</span>`+
-    `<span class="arw">→</span></a>`).join('');
+    `<h3>${esc(name)}</h3><span class="wie mono">${n}× pro Woche</span>`+
+    `<span class="arw" aria-hidden="true">→</span></a>`).join('');
 }
 
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const marke=(t)=>{
   const voll=t.max>0&&t.gebucht>=t.max;
-  return `<div class="slot ${PLAN_KAT[t.name]||'o'}${voll?' voll':''}">${t.name}`+
+  return `<div class="slot ${PLAN_KAT[t.name]||'o'}${voll?' voll':''}">${esc(t.name)}`+
          (voll?'<small>ausgebucht</small>':'')+`</div>`;
 };
 
@@ -655,11 +668,11 @@ function planListe(termine,tage){
   for(const tag of tage){
     const heute=termine.filter(t=>t.tag===tag).sort((a,b)=>a.zeit.localeCompare(b.zeit));
     if(!heute.length) continue;
-    html+=`<section class="ptag"><h4>${PLAN_TAGE[tag]}</h4>`+
+    html+=`<section class="ptag"><h3>${PLAN_TAGE[tag]}</h3>`+
       heute.map(t=>`<div class="peinheit"><b class="mono">${t.zeit}</b>${marke(t)}</div>`).join('')+
       `</section>`;
   }
-  return html+`<section class="ptag"><h4>Täglich</h4>`+
+  return html+`<section class="ptag"><h3>Täglich</h3>`+
     `<div class="peinheit"><b class="mono">06—22</b>`+
     `<div class="slot open">Open Gym · separat buchbar</div></div></section>`;
 }

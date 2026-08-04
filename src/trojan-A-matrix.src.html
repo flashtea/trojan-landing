@@ -11,6 +11,7 @@
      Host laden sie sofort und parallel. -->
 <link rel="preload" href="../assets/fonts/archivo-black.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/plexmono-400.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 /* Variabler Schnitt: deckt 500 bis 800 mit einer Datei ab */
 @font-face{font-family:'Archivo';src:url('../assets/fonts/archivo-var.woff2') format('woff2');
@@ -51,12 +52,25 @@ body{background:var(--void);color:var(--white);font-family:'Archivo',system-ui,s
 :focus-visible{outline:2px solid var(--blue-hi);outline-offset:3px}
 .rv{opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.2,.7,.3,1),transform .8s cubic-bezier(.2,.7,.3,1)}
 .rv.in{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+/* Der Block deckte nur .rv ab. Gemessen liefen scroll-behavior und jede
+   Hover-Transformation weiter — die Zusage stand im Kommentar, nicht im CSS. */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rv{opacity:1;transform:none}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+/* Ohne Sprunglink beginnt jeder Tastaturdurchlauf mit fünf Navigationsstopps. */
+.skip{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;
+  z-index:200;background:var(--blue);color:#fff;font-weight:800;font-size:13px;letter-spacing:.1em;
+  text-transform:uppercase;text-decoration:none}
+.skip:focus{width:auto;height:auto;overflow:visible;clip-path:none;left:12px;top:12px;padding:14px 20px}
 
 /* NAV */
 header{position:sticky;top:0;z-index:80;background:rgba(8,9,11,.86);backdrop-filter:blur(16px);border-bottom:1px solid var(--edge)}
 .nav{display:flex;align-items:center;justify-content:space-between;height:76px;gap:30px}
 .logo{height:30px;width:auto;filter:brightness(0) invert(1)}
+.nav>a:first-child,.nav .brand{display:inline-flex;align-items:center;min-height:44px}
 .links{display:flex;gap:34px;list-style:none}
 .links a{color:var(--dim);text-decoration:none;font-size:12.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;transition:color .2s}
 .links a:hover{color:var(--white)}
@@ -72,7 +86,6 @@ header{position:sticky;top:0;z-index:80;background:rgba(8,9,11,.86);backdrop-fil
   /* Nicht scrollen, sondern verteilen: die vier Punkte passen auf 360px,
      sie klebten nur am linken Rand und liessen rechts eine tote Fläche. */
   .links{order:3;flex-basis:100%;justify-content:space-between;gap:10px}
-  .links::-webkit-scrollbar{display:none}
   .links li{white-space:nowrap}
   html{scroll-padding-top:132px}
 }
@@ -129,7 +142,12 @@ h2 .bl{color:var(--blue-hi)}
 .mlegend{display:none;grid-column:1/-1;list-style:none;
   grid-template-columns:1fr 1fr;gap:6px 16px;margin-top:18px;
   padding-top:16px;border-top:1px solid var(--edge)}
-.mlegend li{display:flex;gap:9px;align-items:baseline;padding:13px 0;cursor:pointer}
+.mlegend li{display:flex}
+/* Auf schmalen Geräten liegen zwei Punkte 3,9px auseinander — dort ist die
+   Legende die Bedienung, nicht das Diagramm. Also echte Schaltflächen mit
+   voller Trefferfläche statt <li> mit Klick-Zuhörer. */
+.mlegend button{display:flex;gap:9px;align-items:baseline;width:100%;min-height:44px;
+  padding:11px 0;background:none;border:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
 .mlegend b{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--blue-hi);font-weight:400;flex:none}
 .mlegend span{font-size:12.5px;color:#AEB7C3;line-height:1.3}
 .mlegend li.on span{color:var(--white);font-weight:700}
@@ -236,7 +254,7 @@ h2 .bl{color:var(--blue-hi)}
 .pricenote{margin-top:clamp(28px,3.2vw,42px);border-top:1px solid var(--edge);
   padding-top:clamp(24px,2.6vw,32px);display:grid;gap:clamp(22px,2.6vw,36px);
   grid-template-columns:repeat(auto-fit,minmax(min(285px,100%),1fr))}
-.pricenote h4{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.19em;
+.pricenote h3{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.19em;
   text-transform:uppercase;color:var(--blue-hi);font-weight:400;margin-bottom:13px}
 .pricenote ul{list-style:none;display:grid;gap:8px}
 .pricenote li{color:#AEB7C3;font-size:14.5px;line-height:1.45}
@@ -250,13 +268,30 @@ h2 .bl{color:var(--blue-hi)}
 @media(max-width:860px){.two{grid-template-columns:1fr}}
 .panel{padding:var(--pad);background:var(--steel);box-shadow:inset 0 0 0 1px var(--edge)}
 .panel h3{font-weight:800;text-transform:uppercase;letter-spacing:.05em;font-size:13px;margin-bottom:20px;color:var(--dim)}
+/* WOCHENPLAN — Tage als Zeilen, Termine als umbrechende Marken. Ein Raster aus
+   Zeit gegen Tag bräuchte auf schmalen Geräten Querscrollen; so bleibt der Plan
+   in einer Spalte lesbar und wächst nach unten statt zur Seite. */
+.plan{display:grid;gap:1px;background:var(--edge);box-shadow:inset 0 0 0 1px var(--edge)}
+.ptag{display:grid;grid-template-columns:104px minmax(0,1fr);gap:14px;
+  background:var(--steel);padding:15px clamp(14px,2vw,22px)}
+@media(max-width:640px){.ptag{grid-template-columns:1fr;gap:9px}}
+.ptag .d{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.19em;
+  text-transform:uppercase;color:var(--blue-hi);padding-top:5px}
+.pein{display:flex;flex-wrap:wrap;gap:7px}
+.pein span{display:inline-flex;align-items:baseline;gap:9px;background:var(--steel-2);
+  box-shadow:inset 0 0 0 1px var(--edge);padding:9px 12px;font-size:13px;color:#C3CAD4}
+.pein b{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--white);font-weight:400}
+.pein span.voll{color:var(--dim)}
+.pein em{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue-hi)}
+.planquelle{margin-top:16px;color:var(--dim);font-size:12px;letter-spacing:.08em}
+
 .daybar{position:relative;height:46px}
 .daybar .track{position:absolute;left:0;right:0;top:15px;height:2px;background:rgba(255,255,255,.14)}
 .daybar b{position:absolute;top:8px;height:16px;background:var(--blue);
   left:calc((var(--s) - 6)/16*100%);width:calc((var(--e) - var(--s))/16*100%)}
 .daybar span{position:absolute;top:31px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:var(--dim)}
 .hrow{display:flex;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid var(--edge);font-size:14.5px}
-.hrow:last-child{border-bottom:0}
 .hrow span{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#AEB7C3;text-align:right}
 .addr{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;font-size:clamp(20px,2.5vw,30px);text-transform:uppercase;letter-spacing:-.028em;line-height:1.18}
 
@@ -269,7 +304,7 @@ h2 .bl{color:var(--blue-hi)}
 footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
 .fgrid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:32px}
 @media(max-width:700px){.fgrid{grid-template-columns:1fr}}
-.fgrid h4{color:var(--dim);margin-bottom:14px}
+.fgrid h3{color:var(--dim);margin-bottom:14px}
 .fgrid p{color:#BFC7D1;font-size:14px;margin-bottom:7px;line-height:1.6}
 .fgrid a{color:#BFC7D1;font-size:14px;text-decoration:none;display:block;padding-block:6px;line-height:1.55}
 .fgrid a:hover{color:var(--blue-hi)}
@@ -279,9 +314,9 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
    Fussbereich 34px ohne Abstand zueinander — als Ziel für einen Daumen zu klein.
    Das Polster kommt auf den Link selbst, nicht auf sein Elternelement. */
 .links a{display:block;padding-block:14px}
-.fgrid a{padding-block:11px}
+.fgrid a{display:inline-flex;align-items:center;min-height:44px;padding-block:11px}
 .rechtliches{display:flex;gap:20px}
-.rechtliches a{color:inherit;text-decoration:none;padding-block:10px}
+.rechtliches a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;color:inherit;text-decoration:none;padding-block:10px}
 .rechtliches a:hover{color:var(--white)}
 @media(max-width:980px){.nav{padding-block:2px}}
 /* Bei 30px Schriftgrad sind 0,93 nur 27,9px Zeilenabstand, nötig sind 27,0 —
@@ -291,13 +326,14 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
 </style>
 </head>
 <body>
+<a class="skip" href="#inhalt">Zum Inhalt</a>
 
 <header>
   <div class="wrap nav">
-    <a href="#"><img class="logo" src="__LOGO__" alt="Trojan Performance" loading="lazy"></a>
+    <a href="#"><img class="logo" src="__LOGO__" alt="Trojan Performance"></a>
     <ul class="links">
       <li><a href="#kurse">Kurse</a></li>
-      <li><a href="#coaches">Coaches</a></li>
+      <li><a href="#plan">Wochenplan</a></li>
       <li><a href="#preise">Preise</a></li>
       <li><a href="#zeiten">Zeiten</a></li>
     </ul>
@@ -305,13 +341,13 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
   </div>
 </header>
 
-<div class="hero">
-  <div class="bg" fetchpriority="high"><img src="__PH_HERO__" alt="Trainingsfläche Trojan Performance"></div>
+<div class="hero" id="inhalt">
+  <div class="bg"><img fetchpriority="high" src="__PH_HERO__" alt="Trainingsfläche Trojan Performance"></div>
   <div class="wrap hero-inner">
     <div class="kick mono"><i></i>Klagenfurt · Erster offizieller HYROX Training Club in Kärnten</div>
     <h1>Acht Kurse.<br>Einer passt<br><span class="bl">zu dir.</span></h1>
     <div class="hero-foot">
-      <p>Jeder Kurs dauert 75 Minuten, in jedem steht ein Coach mit auf der Fläche. Unterschiedlich ist nur die Mischung aus Kraft, Ausdauer und Technik.</p>
+      <p>Die Kurse dauern 75 Minuten, Mama reloaded 45. In jedem steht ein Coach mit dir auf der Fläche, 12 bis 24 Plätze je nach Kurs.</p>
       <div class="hero-actions">
         <a class="btn" href="#kurse">Kurse vergleichen</a>
         <a class="btn gh" href="#start">Probetraining</a>
@@ -350,27 +386,21 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
     <b style="color:#AEB7C3;font-weight:700">Mama reloaded</b> — dreimal pro Woche, 45 Minuten.</span>
   </p>
 </section>
-
-<section id="coaches" class="wrap matrix-sec" style="padding-top:0">
+<section id="plan" class="wrap matrix-sec" style="padding-top:0">
   <div class="mhead rv">
-    <h2>Vier Coaches.<br>In <span class="bl">jeder</span> Einheit einer.</h2>
+    <h2>Passt das in <span class="bl">deine Woche?</span></h2>
+    <span class="mono">Diese Woche · direkt aus dem Buchungssystem</span>
   </div>
-  <div class="coaches">
-    <a class="coach rv" href="#"><img src="__PH_COACHMIKE__" alt="Coach Mike" loading="lazy"><span class="veil"></span>
-      <div class="body"><h3>Mike</h3><p>Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien. Hat das Gym 2017 mit seinem Bruder Dominik aufgemacht.</p></div></a>
-    <a class="coach rv" href="#"><img src="__PH_COACHDOMINIK__" alt="Coach Dominik" loading="lazy"><span class="veil"></span>
-      <div class="body"><h3>Dominik</h3><p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor für die olympischen Züge.</p></div></a>
-    <a class="coach rv" href="#"><img src="__PH_COACHDIEGO__" alt="Coach Diego" loading="lazy"><span class="veil"></span>
-      <div class="body"><h3>Diego</h3><p>Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf regionaler Ebene Wettkämpfe bestritten hat.</p></div></a>
-    <a class="coach rv" href="#"><img src="__PH_COACHBENNI__" alt="Coach Benni" loading="lazy"><span class="veil"></span>
-      <div class="body"><h3>Benni</h3><p>Aktiver Eishockeyspieler, studiert Lehramt für Bewegung und Sport in Klagenfurt. Schwerpunkt Konditionstraining.</p></div></a>
+  <div class="plan rv" id="mplan" aria-busy="true">
+    <div class="ptag"><span class="d">Kurse werden geladen</span></div>
   </div>
+  <p class="mono planquelle" id="mplanquelle"></p>
 </section>
 
 <section id="preise" class="wrap matrix-sec" style="padding-top:0">
   <div class="mhead rv">
     <h2>Nicht das<br>billigste Gym der Stadt.</h2>
-    <span class="mono">Zwölf bis sechzehn Leute pro Kurs, ein Coach auf der Fläche, 75 Minuten. Dafür zahlst du.</span>
+    <span class="mono">Die meisten Kurse sind bei 16 Leuten voll, die kleinsten bei 12. Immer mit Coach, immer 75 Minuten.</span>
   </div>
   <div class="tiers">
     <div class="tier rv"><span class="mono">2 Einheiten / Woche</span>
@@ -388,14 +418,14 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
   </div>
   <div class="pricenote rv">
     <div>
-      <h4>In jedem Tarif</h4>
+      <h3>In jedem Tarif</h3>
       <ul>
         <li>Keine Einschreibgebühr</li>
         <li>Eigener Kraftaufbauplan</li>
       </ul>
     </div>
     <div>
-      <h4>Vertrag</h4>
+      <h3>Vertrag</h3>
       <ul>
         <li>Bindung 1, 6 oder 12 Monate</li>
         <li>Pause: bei 6 Monaten einmal, bei 12 Monaten zweimal — je bis 4 Wochen</li>
@@ -403,7 +433,7 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
       </ul>
     </div>
     <div>
-      <h4>Ohne Bindung</h4>
+      <h3>Ohne Bindung</h3>
       <ul>
         <li><b>15 €</b> Probetraining</li>
         <li><b>25 €</b> Drop-in</li>
@@ -416,20 +446,33 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
       für jeden Tarif außer Open Gym, und für den 10er-Block.</p>
   </div>
 </section>
-
+<section id="coaches" class="wrap matrix-sec" style="padding-top:0">
+  <div class="mhead rv">
+    <h2>Vier Coaches.<br>In <span class="bl">jeder</span> Einheit einer.</h2>
+  </div>
+  <div class="coaches">
+    <a class="coach rv" href="#"><img src="__PH_COACHMIKE__" alt="Coach Mike" loading="lazy"><span class="veil"></span>
+      <div class="body"><h3>Mike</h3><p>Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien. Hat das Gym 2017 mit seinem Bruder Dominik aufgemacht.</p></div></a>
+    <a class="coach rv" href="#"><img src="__PH_COACHDOMINIK__" alt="Coach Dominik" loading="lazy"><span class="veil"></span>
+      <div class="body"><h3>Dominik</h3><p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor für die olympischen Züge.</p></div></a>
+    <a class="coach rv" href="#"><img src="__PH_COACHDIEGO__" alt="Coach Diego" loading="lazy"><span class="veil"></span>
+      <div class="body"><h3>Diego</h3><p>Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf regionaler Ebene Wettkämpfe bestritten hat.</p></div></a>
+    <a class="coach rv" href="#"><img src="__PH_COACHBENNI__" alt="Coach Benni" loading="lazy"><span class="veil"></span>
+      <div class="body"><h3>Benni</h3><p>Aktiver Eishockeyspieler, studiert Lehramt für Bewegung und Sport in Klagenfurt. Schwerpunkt Konditionstraining.</p></div></a>
+  </div>
+</section>
 <section id="zeiten" class="wrap matrix-sec" style="padding-top:0">
   <div class="two">
     <div class="panel rv">
       <h3>Kurszeiten</h3>
       <div class="daybar">
         <i class="track"></i>
-        <b style="--s:6;--e:11.5"></b><b style="--s:16;--e:19.75"></b>
         <span style="left:0">06</span><span style="left:37.5%">12</span><span style="left:75%">18</span><span style="right:0">22</span>
       </div>
-      <div class="hrow" style="margin-top:22px"><b>Montag – Freitag</b><span>06:00–11:30 · 16:00–19:45</span></div>
-      <div class="hrow"><b>Samstag</b><span>08:15–10:45</span></div>
+      <div class="hrow" style="margin-top:22px"><b>Montag – Freitag</b><span id="zMoFr">—</span></div>
+      <div class="hrow"><b>Samstag</b><span id="zSa">—</span></div>
       <div class="hrow"><b>Open Gym, eigener Tarif</b><span>Mo–So 06:00–22:00</span></div>
-      <p class="mono" style="margin-top:14px;color:var(--dim);font-size:12px;letter-spacing:.06em">Frühkurs 06:00 — Dienstag und Donnerstag.</p>
+      <p class="mono" style="margin-top:14px;color:var(--dim);font-size:12px;letter-spacing:.06em">Belegte Fenster, nicht durchgehend · genaue Zeiten im <a href="#plan" style="color:var(--blue-hi)">Wochenplan</a></p>
     </div>
     <div class="panel rv">
       <h3>Standort</h3>
@@ -440,16 +483,20 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
     </div>
   </div>
 </section>
-
 <section id="start" class="wrap" style="padding-top:0">
   <div class="final rv">
     <h2>Komm einmal vorbei, trainier eine Einheit mit und schau, ob es passt.</h2>
     <a class="btn" href="#">Probetraining buchen — 15 €</a>
-    <p style="margin:22px auto 0;max-width:44ch;color:#AEB7C3;font-size:14.5px">Vorkenntnisse brauchst du keine.
-      In jeder Einheit steht ein Coach auf der Fläche, und die Gruppe ist auf zwölf bis sechzehn Leute begrenzt.</p>
-    <p class="mono" style="margin-top:16px;color:var(--dim);font-size:12px;letter-spacing:.08em">Keine Einschreibgebühr · Tarife ab 110 €/Monat</p>
+    <p style="margin:22px auto 0;max-width:46ch;color:#AEB7C3;font-size:14.5px">Vorkenntnisse brauchst du keine.
+      In jeder Einheit steht ein Coach auf der Fläche, und die Gruppe ist je nach Kurs auf 12 bis 24 Leute begrenzt.
+      Mitbringen: Handtuch, Trinkflasche, Hallenschuhe mit sauberer Sohle.</p>
+    <p class="mono" style="margin-top:16px;color:var(--dim);font-size:12px;letter-spacing:.08em">Keine Einschreibgebühr · Kurstarife ab 110 €/Monat</p>
   </div>
 </section>
+
+
+
+
 
 <footer>
   <div class="wrap">
@@ -458,17 +505,17 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
         <img class="logo" src="__LOGO__" alt="Trojan Performance" style="height:32px;margin-bottom:15px" loading="lazy">
         <p style="color:var(--dim);max-width:30ch">Performance Center in Klagenfurt. Erster offizieller HYROX Training Club in Kärnten.</p>
       </div>
-      <div><h4 class="mono">Seite</h4><a href="#kurse">Kurse</a><a href="#coaches">Coaches</a><a href="#preise">Preise</a><a href="#zeiten">Zeiten</a></div>
-      <div><h4 class="mono">Kontakt</h4><a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a><a href="tel:+4367682277302">+43 676 8227 7302</a><a href="#">Sebastiangasse 1, 9020 Klagenfurt</a></div>
+      <div><h3 class="mono">Seite</h3><a href="#kurse">Kurse</a><a href="#plan">Wochenplan</a><a href="#coaches">Coaches</a><a href="#preise">Preise</a><a href="#zeiten">Zeiten</a></div>
+      <div><h3 class="mono">Kontakt</h3><a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a><a href="tel:+4367682277302">+43 676 8227 7302</a><a href="#">Sebastiangasse 1, 9020 Klagenfurt</a></div>
     </div>
     <div class="legal mono"><span>© 2026 Trojan Performance</span><span class="rechtliches"><a href="#">Impressum</a><a href="#">AGB</a><a href="#">Datenschutz</a></span></div>
   </div>
 </footer>
 
 <script>
-/* Werte von den Kursseiten des Kunden. Für zwei Kurse gibt es keine —
-   sie sind aus den zusammengelegten Kursen abgeleitet und im Diagramm
-   gestrichelt gezeichnet (geschaetzt:1).
+/* Werte von den Kursseiten des Kunden. Für FBB/Strength & Power gibt es
+   keine; der Wert ist abgeleitet und im Diagramm gestrichelt gezeichnet
+   (geschaetzt:1).
    Team-WOD, Performance und Community TeamWOD haben dasselbe Profil und
    damit dieselbe Koordinate; sie teilen sich eine Marke. */
 const KURSE=[
@@ -613,9 +660,13 @@ diagrammSetzen();
 const ml=document.getElementById('mlegend');
 KURSE.forEach((c,i)=>{
   const li=document.createElement('li');
-  li.innerHTML=`<b>${String(i+1).padStart(2,'0')}</b><span>${c.n}`+
+  const b=document.createElement('button');
+  b.type='button';
+  b.setAttribute('aria-label',`${c.n} im Diagramm zeigen`);
+  b.innerHTML=`<b>${String(i+1).padStart(2,'0')}</b><span>${c.n}`+
     (c.geschaetzt?` <i>abgeleitet</i>`:'')+`</span>`;
-  li.addEventListener('click',()=>show(i));
+  b.addEventListener('click',()=>show(i));
+  li.appendChild(b);
   ml.appendChild(li);
 });
 const lis=[...ml.children];
@@ -636,6 +687,110 @@ show(3,false);
 
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.rv').forEach((el,i)=>{el.style.transitionDelay=(Math.min(i,6)*55)+'ms';io.observe(el)});
+
+/* ---- Wochenplan ----------------------------------------------------------
+   Das Diagramm sagt, wie sich ein Kurs anfühlt, nie wann er läuft. Der Plan
+   kommt aus derselben öffentlichen Schnittstelle, aus der auch die App bucht,
+   und speist zugleich den Tagesbalken weiter unten — die beiden Bänder waren
+   von Hand gesetzt und behaupteten für Donnerstag Vormittagsbetrieb.
+   Fällt die Abfrage aus, greift der eingefrorene Stand. */
+const PLAN_STAND=[
+  [1,'06:00',75,'Performance',16],   [3,'06:00',75,'Performance',16],
+  [0,'08:15',75,'FBB/Strength & Power',16], [1,'08:15',75,'Performance',16],
+  [2,'08:15',75,'FBB/Strength & Power',16], [4,'08:15',75,'Performance',16],
+  [5,'08:15',75,'FBB/Strength & Power',16], [5,'09:30',75,'Community TeamWOD',24],
+  [4,'09:45',45,'Mama reloaded',0],   [2,'10:00',45,'Mama reloaded',0],
+  [4,'10:45',45,'Mama reloaded',0],
+  [2,'16:00',75,'Powercircle',24],    [4,'16:00',75,'FBB/Strength & Power',16],
+  [0,'17:15',75,'Powercircle',24],    [0,'17:15',75,'Performance',12],
+  [1,'17:15',75,'FBB/Strength & Power',16], [2,'17:15',75,'Team-WOD',16],
+  [3,'17:15',75,'Performance',16],    [4,'17:15',75,'Hyrox',24],
+  [0,'18:30',75,'FBB/Strength & Power',16], [1,'18:30',75,'Performance',16],
+  [2,'18:30',75,'Hyrox',24],          [3,'18:30',75,'FBB',12],
+  [3,'18:30',75,'Powercircle',24]
+].map(([tag,zeit,dauer,name,max])=>({tag,zeit,dauer,name,max,gebucht:0}));
+
+const TAGE=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
+// Der Kursname kommt aus einer API, die diese Seite nicht kontrolliert.
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const min=z=>+z.slice(0,2)*60+ +z.slice(3,5);
+const uhr=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+
+// Zusammenlegen, was sich berührt. Eine Viertelstunde Pause bleibt eine Lücke —
+// sonst behauptet der Balken Betrieb, der nicht stattfindet.
+function bloecke(termine){
+  const roh=termine.map(t=>[min(t.zeit),min(t.zeit)+t.dauer]).sort((a,b)=>a[0]-b[0]);
+  const aus=[];
+  for(const [von,bis] of roh){
+    const l=aus[aus.length-1];
+    if(l&&von<=l[1]) l[1]=Math.max(l[1],bis); else aus.push([von,bis]);
+  }
+  return aus;
+}
+
+function planWoche(){
+  const jetzt=new Date(), versatz=(jetzt.getDay()+6)%7;
+  const mo=new Date(jetzt.getFullYear(),jetzt.getMonth(),jetzt.getDate()-versatz);
+  const so=new Date(mo.getFullYear(),mo.getMonth(),mo.getDate()+7);
+  const f=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}T00:00:00.000Z`;
+  return [f(mo),f(so),mo];
+}
+
+function planZeichnen(termine,live,montag){
+  const tage=[0,1,2,3,4,5].filter(t=>termine.some(x=>x.tag===t));
+  document.getElementById('mplan').innerHTML=tage.map(tag=>{
+    const heute=termine.filter(t=>t.tag===tag).sort((a,b)=>a.zeit.localeCompare(b.zeit));
+    return `<div class="ptag"><span class="d">${TAGE[tag]}</span><div class="pein">`+
+      heute.map(t=>{
+        const voll=t.max>0&&t.gebucht>=t.max;
+        return `<span${voll?' class="voll"':''}><b>${t.zeit}</b>${esc(t.name)}`+
+               (voll?' <em>ausgebucht</em>':'')+`</span>`;
+      }).join('')+`</div></div>`;
+  }).join('');
+  document.getElementById('mplan').removeAttribute('aria-busy');
+
+  // Tagesbalken: die belegten Fenster von Montag bis Freitag, aus denselben Daten
+  const bar=document.querySelector('.daybar');
+  bar.querySelectorAll('b').forEach(b=>b.remove());
+  const woche=bloecke(termine.filter(t=>t.tag<5));
+  for(const [von,bis] of woche){
+    const b=document.createElement('b');
+    b.style.setProperty('--s',(von/60).toFixed(3));
+    b.style.setProperty('--e',(bis/60).toFixed(3));
+    bar.appendChild(b);
+  }
+  const sa=bloecke(termine.filter(t=>t.tag===5));
+  const text=l=>l.map(([v,b])=>`${uhr(v)}–${uhr(b)}`).join(' · ');
+  document.getElementById('zMoFr').textContent=text(woche)||'keine Kurse';
+  document.getElementById('zSa').textContent=text(sa)||'keine Kurse';
+
+  const ende=new Date(montag.getFullYear(),montag.getMonth(),montag.getDate()+5);
+  const f=x=>x.toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit'});
+  document.getElementById('mplanquelle').textContent=live
+    ? `Live aus dem Buchungssystem · ${f(montag)}–${f(ende)}`
+    : 'Letzter bekannter Stand';
+}
+
+(async()=>{
+  const [von,bis,montag]=planWoche();
+  try{
+    const r=await fetch(`https://gymkloud.com/api/public/course-event/trojan_performance`+
+      `?from=${von}&to=${bis}&groupNames=Kurse`);
+    if(!r.ok) throw new Error(r.status);
+    const d=await r.json();
+    if(!Array.isArray(d)||!d.length) throw new Error('leer');
+    planZeichnen(d.map(e=>({
+      tag:(new Date(e.startTime).getDay()+6)%7,
+      zeit:e.startTime.slice(11,16),
+      dauer:Math.round((new Date(e.endTime)-new Date(e.startTime))/60000)||75,
+      name:(e.course&&e.course.name||'').trim(),
+      max:e.maxParticipants||0,
+      gebucht:e.bookingCount||0
+    })),true,montag);
+  }catch(_){
+    planZeichnen(PLAN_STAND,false,montag);
+  }
+})();
 </script>
 </body>
 </html>
