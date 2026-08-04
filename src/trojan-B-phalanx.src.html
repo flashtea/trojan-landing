@@ -86,7 +86,11 @@ header{position:sticky;top:0;z-index:70;background:var(--paper);border-bottom:2p
 .btn.out:hover{background:var(--ink);color:var(--paper)}
 /* Links nicht verstecken — es gibt keinen Ersatz-Trigger. Stattdessen umbrechen. */
 @media(max-width:1060px){
-  .nav{flex-wrap:wrap;height:auto;align-items:center;padding-block:14px}
+  /* Aussen mehr Luft als innen — sonst klebt die Leiste am Bildschirmrand.
+     Unten trägt die Linkzeile ihr eigenes Polster, deshalb asymmetrisch.
+     Knopf und Logo auf dieselbe Höhe, damit ihre Oberkanten fluchten. */
+  .nav{flex-wrap:wrap;height:auto;align-items:center;padding-block:16px 8px;row-gap:12px}
+  .nav .btn.sm{min-height:44px;padding-block:0}
   /* Fünf Punkte, davon zwei lange, passen auf 360px nicht nebeneinander —
      scrollen wäre die falsche Antwort. Coaches und Einstieg entfallen hier;
      beide Abschnitte stehen im Fussbereich und liegen einen Scroll entfernt,
@@ -98,7 +102,7 @@ header{position:sticky;top:0;z-index:70;background:var(--paper);border-bottom:2p
   .nav .cta{border-left:0;padding-left:0;margin-left:auto}
   /* Die Leiste ist umgebrochen und damit höher — ohne das schneidet jeder
      Ankersprung die erste Zeile der Überschrift ab. */
-  html{scroll-padding-top:124px}
+  html{scroll-padding-top:136px}
 }
 
 /* HERO */
@@ -367,7 +371,7 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
 .rechtliches{display:flex;gap:20px}
 .rechtliches a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;color:inherit;text-decoration:none;padding-block:10px}
 .rechtliches a:hover{color:var(--blue)}
-@media(max-width:1060px){.links li{padding-block:0}.nav{padding-block:8px}}
+@media(max-width:1060px){.links li{padding-block:0}}
 /* Bei 30px Schriftgrad sind 0,93 nur 27,9px Zeilenabstand, nötig sind 27,0 —
    und die Konturschrift nimmt davon noch einen halben Pixel. Auf schmalen
    Viewports zählt jeder Zehntel, also hier grosszügiger. */
