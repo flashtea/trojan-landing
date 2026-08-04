@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Trojan Performance — Arena</title>
+<title>Trojan Performance — Performance Center Klagenfurt</title>
+<meta name="description" content="Acht Kurse, 75 Minuten pro Einheit, in jedem Kurs ein Coach auf der Fläche. Erster offizieller HYROX Training Club in Kärnten, Sebastiangasse 1, Klagenfurt. Probetraining 15 €.">
 <!-- Schriften liegen neben der Seite. Über Google Fonts wären es zwei
      zusätzliche Origins mit DNS und TLS, und die Schriftdateien könnten erst
      starten, nachdem das CSS von fonts.googleapis.com da ist. Vom eigenen
@@ -120,7 +121,7 @@ header.stuck{background:rgba(6,8,11,.88);backdrop-filter:blur(16px);border-botto
 .kick{align-items:flex-start}
 .kick i{width:6px;height:6px;border-radius:50%;background:var(--blue-hi);display:block;flex:none;margin-top:.42em;box-shadow:0 0 0 4px rgba(111,170,240,.24)}
 @media(max-width:430px){h1{font-size:clamp(34px,10.6vw,46px)}.kick{font-size:10px;letter-spacing:.14em}}
-h1{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;letter-spacing:-.042em;line-height:0.93;font-size:clamp(46px,8.8vw,128px)}
+h1{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;letter-spacing:-.042em;line-height:.95;font-size:clamp(46px,8.8vw,128px)}
 h1 .bl{color:var(--blue-hi)}
 .hero-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;flex-wrap:wrap;margin-top:clamp(20px,2.6vw,32px)}
 .hero-foot p{max-width:34ch;text-wrap:balance;color:#B3BCC7;font-size:clamp(15px,1.5vw,17.5px)}
@@ -142,7 +143,7 @@ h1 .bl{color:var(--blue-hi)}
 /* SECTIONS */
 section.wrap{padding-block:clamp(56px,7.8vw,116px)}
 .sechead{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:clamp(26px,3.8vw,50px)}
-h2{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;letter-spacing:-.038em;line-height:0.93;font-size:clamp(28px,4.9vw,68px)}
+h2{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;letter-spacing:-.038em;line-height:.95;font-size:clamp(28px,4.9vw,68px)}
 h2 .bl{color:var(--blue-hi)}
 .sechead .mono{color:var(--dim)}
 
@@ -252,7 +253,7 @@ h2 .bl{color:var(--blue-hi)}
 .beat:nth-child(even)>div{margin-left:auto}
 .beat .mono{color:var(--blue-hi);display:block;margin-bottom:14px}
 .beat h3{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;letter-spacing:-.038em;
-  line-height:.94;font-size:clamp(26px,3.9vw,54px);text-wrap:balance}
+  line-height:.95;font-size:clamp(26px,3.9vw,54px);text-wrap:balance}
 .beat p{margin-top:16px;color:#C2CAD4;font-size:clamp(15px,1.6vw,18px)}
 @media(max-width:760px){
   .beat{min-height:82svh}
@@ -357,7 +358,7 @@ h2 .bl{color:var(--blue-hi)}
 /* dünne Spur: Zusatzoption, nicht das Angebot */
 .bar i.open{top:50%;height:2px;transform:translateY(-50%);background:rgba(255,255,255,.16)}
 /* volle Fläche: die betreuten Kurse */
-.bar i.coach{top:0;bottom:0;background:var(--blue-hi)}
+.bar i.kurs{top:0;bottom:0;background:var(--blue-hi)}
 .wlegend{display:flex;gap:20px;flex-wrap:wrap;margin-top:18px;color:var(--dim)}
 .wlegend span{display:inline-flex;align-items:center;gap:8px}
 .wlegend i{width:12px;height:12px;display:block}
@@ -432,10 +433,10 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
   </div>
   <div class="wedge"></div>
   <div class="wrap hero-inner">
-    <div class="kick mono"><i></i>Klagenfurt · 1. offizieller HYROX Training Club in Kärnten</div>
+    <div class="kick mono"><i></i>Klagenfurt · Erster offizieller HYROX Training Club in Kärnten</div>
     <h1>Die Startlinie<br>ist <span class="bl">hier.</span></h1>
     <div class="hero-foot">
-      <p>75 Minuten pro Einheit, feste Struktur, in jedem Kurs ein Coach mit dir auf der Fläche.</p>
+      <p>75 Minuten pro Einheit. In jedem Kurs steht ein Coach mit dir auf der Fläche, zwölf bis sechzehn Leute pro Gruppe.</p>
       <div class="hero-actions">
         <a class="btn" href="#start">Probetraining buchen</a>
         <a class="btn gh" href="#programme">Kurse ansehen</a>
@@ -463,7 +464,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
   <div class="stage">
     <figure class="frame is-on"><div class="duo"><img src="__PH_BRUEDER__" alt="Mike und Dominik, die beiden Inhaber" loading="lazy"><div class="tint"></div><div class="mul"></div></div></figure>
     <figure class="frame"><div class="duo"><img src="__PH_VORMACHEN__" alt="Coach macht vor, die Gruppe zieht mit" loading="lazy"><div class="tint"></div><div class="mul"></div></div></figure>
-    <figure class="frame"><div class="duo"><img src="__PH_RINGE__" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div></figure>
+    <figure class="frame"><div class="duo"><img src="__PH_RINGE__" alt="Turnringe über der Trainingsfläche" loading="lazy"><div class="tint"></div><div class="mul"></div></div></figure>
     <span class="shade"></span>
     <span class="startline"></span>
   </div>
@@ -471,17 +472,17 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
     <li class="beat" data-frame="0"><div>
       <span class="mono">Zu den Preisen</span>
       <h3>Nicht das billigste Gym der Stadt.</h3>
-      <p>Und wir hoffen, dass „billig“ nicht das ist, wonach du suchst. Wir sparen nicht an Betreuung, nicht an Zeit und nicht an Platz im Kurs.</p>
+      <p>Wir sparen nicht an Betreuung, nicht an Zeit und nicht an Platz im Kurs. Deshalb kostet die Einheit im 3er-Tarif zehn Euro und nicht fünf.</p>
     </div></li>
     <li class="beat" data-frame="1"><div>
       <span class="mono">Betreuung</span>
       <h3>In jedem Kurs steht ein Coach.</h3>
-      <p>Die kleinsten Kurse sind bei zwölf Leuten voll, die meisten bei sechzehn. Dort wird korrigiert, nicht nur angesagt.</p>
+      <p>Die kleinsten Kurse sind bei 12 Leuten voll, die meisten bei 16. Der Coach korrigiert dich. Er sagt nicht nur an.</p>
     </div></li>
     <li class="beat" data-frame="2"><div>
       <span class="mono">Zeit</span>
       <h3>75 Minuten. Nicht 45.</h3>
-      <p>Genug für Aufwärmen, Technik und Arbeitsteil. Dazu bekommst du einen eigenen Kraftaufbauplan — nicht nur einen Platz im Kurs.</p>
+      <p>Genug für Aufwärmen, Technik und das eigentliche Workout. Dazu bekommst du einen eigenen Kraftaufbauplan — nicht nur einen Platz im Kurs.</p>
       <a class="btn" href="#start" style="margin-top:26px">Probetraining buchen — 15 €</a>
     </div></li>
   </ol>
@@ -491,32 +492,34 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 
 <section id="preise" class="wrap">
   <div class="sechead rv">
-    <h2>Drei Tarife.<br>Je öfter, desto <span class="bl">günstiger.</span></h2>
+    <!-- Kein "günstiger" in der dritten Zeile: bei 390px stand das Komma von
+         "kommst," genau über dem Ü und schnitt 4,6px hinein. -->
+    <h2>Drei Tarife.<br>Je öfter du kommst,<br>desto weniger kostet <span class="bl">die Einheit.</span></h2>
     <span class="mono">Preis pro Monat · Bindung 1, 6 oder 12 Monate</span>
   </div>
   <div class="tarife">
     <div class="tarif rv">
-      <span class="mono">2 Trainings / Woche</span>
+      <span class="mono">2 Einheiten / Woche</span>
       <div class="preis">130 €<em>/ Monat</em></div>
-      <p>9 Einheiten im Monat, frei einteilbar.</p>
-      <ul><li>6 Monate → 120 €</li><li>12 Monate → 110 €</li></ul>
+      <p>9 Einheiten im Monat, frei einteilbar. 14,44 € pro Einheit.</p>
+      <ul><li>6 Monate Bindung → 120 €/Mon.</li><li>12 Monate Bindung → 110 €/Mon.</li></ul>
     </div>
     <div class="tarif key rv">
-      <span class="mono">3 Trainings / Woche</span>
+      <span class="mono">3 Einheiten / Woche</span>
       <div class="preis">150 €<em>/ Monat</em></div>
-      <p>13 Einheiten im Monat. Das ist der Einstieg, den wir empfehlen.</p>
-      <ul><li>6 Monate → 140 €</li><li>12 Monate → 130 €</li></ul>
+      <p>13 Einheiten im Monat. Das ist der Einstieg, den wir empfehlen. 11,54 € pro Einheit — mit 12 Monaten Bindung genau 10,00 €.</p>
+      <ul><li>6 Monate Bindung → 140 €/Mon.</li><li>12 Monate Bindung → 130 €/Mon.</li></ul>
     </div>
     <div class="tarif rv">
-      <span class="mono">6 Trainings / Woche</span>
+      <span class="mono">6 Einheiten / Woche</span>
       <div class="preis">170 €<em>/ Monat</em></div>
-      <p>26 Einheiten, Montag bis Samstag.</p>
-      <ul><li>6 Monate → 160 €</li><li>12 Monate → 150 €</li></ul>
+      <p>26 Einheiten, Montag bis Samstag. 6,54 € pro Einheit.</p>
+      <ul><li>6 Monate Bindung → 160 €/Mon.</li><li>12 Monate Bindung → 150 €/Mon.</li></ul>
     </div>
   </div>
   <div class="tarifnote rv">
     <div>
-      <h4>Enthalten</h4>
+      <h4>In jedem Tarif</h4>
       <ul>
         <li>Keine Einschreibgebühr</li>
         <li>Eigener Kraftaufbauplan</li>
@@ -531,7 +534,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
       </ul>
     </div>
     <div>
-      <h4>Einzeln</h4>
+      <h4>Ohne Bindung</h4>
       <ul>
         <li><b>15 €</b> Probetraining</li>
         <li><b>25 €</b> Drop-in</li>
@@ -540,8 +543,8 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
         <li><b>60 €</b> Open Gym, monatlich kündbar</li>
       </ul>
     </div>
-    <p class="svs">Selbstständig und SVS-versichert? Für jeden Tarif außer Open Gym und für den
-      10er-Block überweist dir die SVS <b>100 €</b> aufs Konto.</p>
+    <p class="svs">Selbstständig und SVS-versichert? Dann überweist dir die SVS <b>100 €</b> aufs Konto —
+      für jeden Tarif außer Open Gym, und für den 10er-Block.</p>
   </div>
 </section>
 
@@ -551,9 +554,9 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
   </div>
   <div class="coaches">
     <a class="coach rv" href="#"><div class="duo"><img src="__PH_COACHMIKE__" alt="Coach Mike" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
-      <div class="body"><h3>Mike</h3><p>Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien. Hat die Box 2017 mit seinem Bruder aufgemacht.</p></div></a>
+      <div class="body"><h3>Mike</h3><p>Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien. Hat das Gym 2017 mit seinem Bruder aufgemacht.</p></div></a>
     <a class="coach rv" href="#"><div class="duo"><img src="__PH_COACHDOMINIK__" alt="Coach Dominik" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
-      <div class="body"><h3>Dominik</h3><p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor.</p></div></a>
+      <div class="body"><h3>Dominik</h3><p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor für die olympischen Züge.</p></div></a>
     <a class="coach rv" href="#"><div class="duo"><img src="__PH_COACHDIEGO__" alt="Coach Diego" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
       <div class="body"><h3>Diego</h3><p>Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf regionaler Ebene Wettkämpfe bestritten hat.</p></div></a>
     <a class="coach rv" href="#"><div class="duo"><img src="__PH_COACHBENNI__" alt="Coach Benni" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
@@ -564,7 +567,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 <section id="programme" class="wrap" style="padding-top:0">
   <div class="sechead rv">
     <h2>Acht Kurse.<br>Einer passt <span class="bl">zu dir.</span></h2>
-    <span class="mono">Wie oft er läuft, wie viele Plätze</span>
+    <span class="mono">Wie oft jeder läuft und wie viele Plätze er hat.</span>
   </div>
   <div class="rail rv">
     <a class="card" href="#plan">
@@ -611,8 +614,8 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
   <div class="track rv"><i></i></div>
   <p class="rv" style="max-width:64ch;margin-top:clamp(24px,2.8vw,36px);color:#A8B2BF;font-size:clamp(15px,1.5vw,17px)">
     Wenn du neu anfängst, empfehlen wir drei Einheiten pro Woche: zwei für die Kraft
-    (Kraft, Functional Bodybuilding) und eine für die Ausdauer (HYROX, Powercircle).
-    Schaffst du das noch nicht — jedes Training ist besser als keines.
+    (FBB, FBB/Strength &amp; Power — FBB heißt Functional Bodybuilding) und eine für die
+    Ausdauer (Hyrox, Powercircle). Und wenn drei nicht gehen: zwei gehen auch.
   </p>
 </section>
 
@@ -621,7 +624,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
     <div class="duo" style="position:absolute;inset:0"><img src="__PH_KETTLE__" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
     <span class="veil"></span>
     <div class="sechead">
-      <h2><span class="ol">HYROX:</span><br>zweimal pro Woche.</h2>
+      <h2><span class="ol">Acht Stationen,</span><br>acht Kilometer.</h2>
     </div>
     <ol class="stations">
       <li><span class="mono">01</span><b>1000 m SkiErg</b></li>
@@ -633,7 +636,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
       <li><span class="mono">07</span><b>100 m Sandbag Lunges</b></li>
       <li><span class="mono">08</span><b>100 Wall Balls</b></li>
     </ol>
-    <p class="foot mono">Das offizielle Rennformat: vor jeder der acht Stationen 1 km Laufen.</p>
+    <p class="foot mono">Das offizielle Rennformat: vor jeder der acht Stationen 1 km Laufen. Wir trainieren es zweimal pro Woche.</p>
   </div>
 </section>
 
@@ -641,18 +644,20 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
   <div class="two">
     <div class="panel rv">
       <h3>Kurszeiten</h3>
+      <!-- Achse 06–22, nicht 00–24: davor und danach steht nichts im Plan, und die
+           leere Viertelbreite fehlte der schmalsten Einheit (45 Minuten). -->
       <div class="ticks mono">
-        <span style="left:25%">06</span><span style="left:50%">12</span>
-        <span style="left:75%">18</span><span style="left:91.7%">22</span>
+        <span style="left:0;transform:none">06</span><span style="left:37.5%">12</span>
+        <span style="left:75%">18</span><span style="right:0;left:auto;transform:none">22</span>
       </div>
       <div class="week">
-        <div class="wrow"><span class="d mono">MO</span><div class="bar"><i class="open" style="--a:25%;--b:66.7%"></i><i class="coach" style="--a:33.3%;--b:7.3%"></i><i class="coach" style="--a:70.8%;--b:12.5%"></i></div></div>
-        <div class="wrow"><span class="d mono">DI</span><div class="bar"><i class="open" style="--a:25%;--b:66.7%"></i><i class="coach" style="--a:33.3%;--b:7.3%"></i><i class="coach" style="--a:70.8%;--b:12.5%"></i></div></div>
-        <div class="wrow"><span class="d mono">MI</span><div class="bar"><i class="open" style="--a:25%;--b:66.7%"></i><i class="coach" style="--a:33.3%;--b:7.3%"></i><i class="coach" style="--a:70.8%;--b:12.5%"></i></div></div>
-        <div class="wrow"><span class="d mono">DO</span><div class="bar"><i class="open" style="--a:25%;--b:66.7%"></i><i class="coach" style="--a:33.3%;--b:7.3%"></i><i class="coach" style="--a:70.8%;--b:12.5%"></i></div></div>
-        <div class="wrow"><span class="d mono">FR</span><div class="bar"><i class="open" style="--a:25%;--b:66.7%"></i><i class="coach" style="--a:33.3%;--b:7.3%"></i><i class="coach" style="--a:70.8%;--b:12.5%"></i></div></div>
-        <div class="wrow"><span class="d mono">SA</span><div class="bar"><i class="open" style="--a:25%;--b:66.7%"></i><i class="coach" style="--a:33.3%;--b:12.5%"></i></div></div>
-        <div class="wrow"><span class="d mono">SO</span><div class="bar"><i class="open" style="--a:25%;--b:66.7%"></i></div></div>
+        <div class="wrow"><span class="d mono">MO</span><div class="bar"><i class="open" style="--a:0%;--b:100%"></i><i class="kurs" style="--a:14.1%;--b:7.8%"></i><i class="kurs" style="--a:70.3%;--b:15.6%"></i></div></div>
+        <div class="wrow"><span class="d mono">DI</span><div class="bar"><i class="open" style="--a:0%;--b:100%"></i><i class="kurs" style="--a:0%;--b:7.8%"></i><i class="kurs" style="--a:14.1%;--b:7.8%"></i><i class="kurs" style="--a:70.3%;--b:15.6%"></i></div></div>
+        <div class="wrow"><span class="d mono">MI</span><div class="bar"><i class="open" style="--a:0%;--b:100%"></i><i class="kurs" style="--a:14.1%;--b:7.8%"></i><i class="kurs" style="--a:25%;--b:4.7%"></i><i class="kurs" style="--a:62.5%;--b:23.4%"></i></div></div>
+        <div class="wrow"><span class="d mono">DO</span><div class="bar"><i class="open" style="--a:0%;--b:100%"></i><i class="kurs" style="--a:0%;--b:7.8%"></i><i class="kurs" style="--a:70.3%;--b:15.6%"></i></div></div>
+        <div class="wrow"><span class="d mono">FR</span><div class="bar"><i class="open" style="--a:0%;--b:100%"></i><i class="kurs" style="--a:14.1%;--b:20.3%"></i><i class="kurs" style="--a:62.5%;--b:15.6%"></i></div></div>
+        <div class="wrow"><span class="d mono">SA</span><div class="bar"><i class="open" style="--a:0%;--b:100%"></i><i class="kurs" style="--a:14.1%;--b:15.6%"></i></div></div>
+        <div class="wrow"><span class="d mono">SO</span><div class="bar"><i class="open" style="--a:0%;--b:100%"></i></div></div>
       </div>
       <div class="wlegend mono">
         <span><i style="background:var(--blue-hi)"></i>Betreute Kurse</span>
@@ -662,7 +667,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
     <div class="panel rv">
       <h3>Standort</h3>
       <p class="addr">Sebastiangasse 1<br>9020 Klagenfurt<br>am Wörthersee</p>
-      <p style="margin-top:16px;color:#B3BCC7;font-size:14px;max-width:34ch">Gratis Parkplätze rund ums Gebäude. In den Garderoben jeweils ein eigener Duschraum mit drei Duschen — kostet keinen Euro extra.</p>
+      <p style="margin-top:16px;color:#B3BCC7;font-size:14px;max-width:34ch">Gratis Parkplätze rund ums Gebäude. In beiden Garderoben je ein Duschraum mit drei Duschen.</p>
       <a class="btn" style="margin-top:26px" href="#">Route öffnen</a>
     </div>
   </div>
@@ -674,7 +679,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
     <span class="veil"></span>
     <div class="inner">
       <h2>Einmal <span class="bl">mittrainieren.</span></h2>
-      <p>Eine Einheit, ein Coach, 75 Minuten. Handtuch, Trinkflasche, Sportschuhe mit sauberer Sohle — mehr brauchst du nicht.</p>
+      <p>Eine Einheit, ein Coach, 75 Minuten. Vorkenntnisse brauchst du keine. Handtuch, Trinkflasche, Hallenschuhe mit sauberer Sohle — mehr braucht es nicht.</p>
       <a class="btn" href="#">Probetraining buchen</a>
       <p class="mono" style="margin:22px auto 0;color:var(--dim)">Probetraining 15 € · Keine Einschreibgebühr · Tarife ab 110 €/Monat</p>
     </div>
@@ -689,7 +694,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
         <img class="logo" src="__LOGO__" alt="Trojan Performance" style="height:32px;margin-bottom:15px" loading="lazy">
         <p style="color:var(--dim);max-width:30ch">Performance Center in Klagenfurt. Erster offizieller HYROX Training Club in Kärnten.</p>
       </div>
-      <div><h4 class="mono">Training</h4><a href="#">Kursangebot</a><a href="#">Wochenplan</a><a href="#">Tarife</a><a href="#">Coaches</a></div>
+      <div><h4 class="mono">Seite</h4><a href="#programme">Kurse</a><a href="#preise">Preise</a><a href="#coaches">Coaches</a><a href="#zeiten">Zeiten</a></div>
       <div><h4 class="mono">Kontakt</h4><a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a><a href="tel:+4367682277302">+43 676 8227 7302</a><a href="#">Sebastiangasse 1, 9020 Klagenfurt</a></div>
     </div>
     <div class="legal mono"><span>© 2026 Trojan Performance</span><span class="rechtliches"><a href="#">Impressum</a><a href="#">AGB</a><a href="#">Datenschutz</a></span></div>
