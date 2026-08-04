@@ -268,22 +268,42 @@ h2 .bl{color:var(--blue-hi)}
 @media(max-width:860px){.two{grid-template-columns:1fr}}
 .panel{padding:var(--pad);background:var(--steel);box-shadow:inset 0 0 0 1px var(--edge)}
 .panel h3{font-weight:800;text-transform:uppercase;letter-spacing:.05em;font-size:13px;margin-bottom:20px;color:var(--dim)}
-/* WOCHENPLAN — Tage als Zeilen, Termine als umbrechende Marken. Ein Raster aus
-   Zeit gegen Tag bräuchte auf schmalen Geräten Querscrollen; so bleibt der Plan
-   in einer Spalte lesbar und wächst nach unten statt zur Seite. */
-.plan{display:grid;gap:1px;background:var(--edge);box-shadow:inset 0 0 0 1px var(--edge)}
-.ptag{display:grid;grid-template-columns:104px minmax(0,1fr);gap:14px;
-  background:var(--steel);padding:15px clamp(14px,2vw,22px)}
-@media(max-width:640px){.ptag{grid-template-columns:1fr;gap:9px}}
-.ptag .d{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.19em;
-  text-transform:uppercase;color:var(--blue-hi);padding-top:5px}
-.pein{display:flex;flex-wrap:wrap;gap:7px}
-.pein span{display:inline-flex;align-items:baseline;gap:9px;background:var(--steel-2);
-  box-shadow:inset 0 0 0 1px var(--edge);padding:9px 12px;font-size:13px;color:#C3CAD4}
-.pein b{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--white);font-weight:400}
-.pein span.voll{color:var(--dim)}
-.pein em{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:10px;
-  letter-spacing:.12em;text-transform:uppercase;color:var(--blue-hi)}
+/* WOCHENPLAN — auf dieser Seite wörtlich eine Matrix: Zeit gegen Wochentag.
+   Erste Fassung waren gepolsterte Marken untereinander; die sahen aus wie
+   Schaltflächen, waren keine, und sagten nichts, was die Uhrzeit nicht schon
+   sagte. Jetzt trägt das Raster die Aussage und die Fläche die Auslastung. */
+.pgrid{display:grid;gap:1px;background:var(--edge);box-shadow:inset 0 0 0 1px var(--edge);
+  grid-template-columns:74px repeat(var(--tage,6),minmax(0,1fr))}
+.pgrid>*{background:var(--steel);padding:11px 10px}
+.pgrid .kopf{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);padding-block:10px}
+.pgrid .zeit{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--blue-hi);letter-spacing:.04em}
+.pgrid .zelle{display:flex;flex-direction:column;gap:5px}
+/* leere Zelle einen Hauch dunkler: so liest sich die Woche als Muster,
+   nicht als Tabelle mit Lücken */
+.pgrid .zelle:empty{background:#101317}
+.pgrid .zelle b{font-weight:600;font-size:12.5px;color:#C6CDD7;line-height:1.22;display:block}
+.pgrid .zelle b i{display:block;font-style:normal;font-family:'IBM Plex Mono',monospace;
+  font-size:10px;font-weight:400;color:var(--dim);margin-top:2px}
+.pgrid .zelle b.voll{color:var(--dim)}
+.pgrid .zelle b.voll i{color:var(--blue-hi)}
+
+/* Schmal: sechs Spalten sind hier nicht zu haben, und Querscrollen wäre die
+   falsche Antwort. Dieselben Daten als Tagesabschnitte auf Haarlinien —
+   dieselbe Sprache wie die Zeilen im Zeiten-Abschnitt. */
+.plist{display:grid;gap:1px;background:var(--edge);box-shadow:inset 0 0 0 1px var(--edge)}
+.ptag{background:var(--steel);padding:0 clamp(14px,3vw,20px) 6px}
+.ptag .d{display:block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--blue-hi);padding:14px 0 4px}
+.prow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:baseline;
+  padding:11px 0;border-top:1px solid var(--edge)}
+.prow .t{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--white);letter-spacing:.02em;white-space:nowrap}
+.prow .n{font-size:13.5px;color:#C6CDD7;line-height:1.3;text-wrap:pretty}
+/* Belegung statt Platzzahl: dieselbe Breite, aber sie beantwortet die Frage,
+   die vor dem Buchen steht. Kommt aus derselben Abfrage wie die Zeiten. */
+.prow .b{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);white-space:nowrap}
+.prow.voll .n{color:var(--dim)}
+.prow.voll .b{color:var(--blue-hi)}
 .planquelle{margin-top:16px;color:var(--dim);font-size:12px;letter-spacing:.08em}
 
 .daybar{position:relative;height:46px}
@@ -391,8 +411,8 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
     <h2>Passt das in <span class="bl">deine Woche?</span></h2>
     <span class="mono">Diese Woche · direkt aus dem Buchungssystem</span>
   </div>
-  <div class="plan rv" id="mplan" aria-busy="true">
-    <div class="ptag"><span class="d">Kurse werden geladen</span></div>
+  <div class="plan plist rv" id="mplan" aria-busy="true">
+    <div class="ptag"><span class="d">Kurse werden geladen …</span></div>
   </div>
   <p class="mono planquelle" id="mplanquelle"></p>
 </section>
@@ -736,18 +756,61 @@ function planWoche(){
   return [f(mo),f(so),mo];
 }
 
+const KURZ=['Mo','Di','Mi','Do','Fr','Sa','So'];
+const bis=t=>uhr(min(t.zeit)+t.dauer);
+const istVoll=t=>t.max>0&&t.gebucht>=t.max;
+
+// Breit: Zeit gegen Wochentag. Gleiche Startzeiten teilen sich eine Zeile.
+function planRaster(termine,tage){
+  const zeiten=[...new Set(termine.map(t=>t.zeit))].sort();
+  let html=`<div class="kopf"></div>`+tage.map(t=>`<div class="kopf">${TAGE[t]}</div>`).join('');
+  for(const z of zeiten){
+    html+=`<div class="zeit">${z}</div>`;
+    for(const tag of tage){
+      html+=`<div class="zelle">`+termine.filter(t=>t.zeit===z&&t.tag===tag)
+        .map(t=>`<b${istVoll(t)?' class="voll"':''}>${esc(t.name)}`+
+          (t.max?`<i>${istVoll(t)?'ausgebucht':t.gebucht+'/'+t.max}</i>`:'')+`</b>`).join('')+`</div>`;
+    }
+  }
+  return html;
+}
+
+// Schmal: nach Tagen, mit Anfang und Ende — daran sieht man auch, dass
+// Mama reloaded 45 Minuten dauert und nicht 75.
+function planListe(termine,tage){
+  return tage.map(tag=>{
+    const heute=termine.filter(t=>t.tag===tag).sort((a,b)=>a.zeit.localeCompare(b.zeit));
+    return `<div class="ptag"><span class="d">${TAGE[tag]}</span>`+heute.map(t=>
+      `<div class="prow${istVoll(t)?' voll':''}">`+
+      `<span class="t">${t.zeit}–${bis(t)}</span>`+
+      `<span class="n">${esc(t.name)}</span>`+
+      `<span class="b">${t.max?(istVoll(t)?'voll':t.gebucht+'/'+t.max):''}</span>`+
+      `</div>`).join('')+`</div>`;
+  }).join('');
+}
+
+let planDaten=null, planSchmal=null;
+const PLAN_UMBRUCH=900;
+
+function planFormAuffrischen(){
+  if(!planDaten) return;
+  const schmal=innerWidth<PLAN_UMBRUCH;
+  if(schmal===planSchmal) return;
+  planSchmal=schmal;
+  const {termine,tage}=planDaten;
+  const el=document.getElementById('mplan');
+  el.className='plan rv in '+(schmal?'plist':'pgrid');
+  el.style.setProperty('--tage',tage.length);
+  el.innerHTML=schmal?planListe(termine,tage):planRaster(termine,tage);
+  el.removeAttribute('aria-busy');
+}
+let planTimer;
+addEventListener('resize',()=>{clearTimeout(planTimer);planTimer=setTimeout(planFormAuffrischen,150)});
+
 function planZeichnen(termine,live,montag){
   const tage=[0,1,2,3,4,5].filter(t=>termine.some(x=>x.tag===t));
-  document.getElementById('mplan').innerHTML=tage.map(tag=>{
-    const heute=termine.filter(t=>t.tag===tag).sort((a,b)=>a.zeit.localeCompare(b.zeit));
-    return `<div class="ptag"><span class="d">${TAGE[tag]}</span><div class="pein">`+
-      heute.map(t=>{
-        const voll=t.max>0&&t.gebucht>=t.max;
-        return `<span${voll?' class="voll"':''}><b>${t.zeit}</b>${esc(t.name)}`+
-               (voll?' <em>ausgebucht</em>':'')+`</span>`;
-      }).join('')+`</div></div>`;
-  }).join('');
-  document.getElementById('mplan').removeAttribute('aria-busy');
+  planDaten={termine,tage}; planSchmal=null;
+  planFormAuffrischen();
 
   // Tagesbalken: die belegten Fenster von Montag bis Freitag, aus denselben Daten
   const bar=document.querySelector('.daybar');
