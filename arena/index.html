@@ -187,7 +187,8 @@ h2 .bl{color:var(--blue-hi)}
 .rail::-webkit-scrollbar{display:none}
 .rail::-webkit-scrollbar-thumb{background:var(--blue)}
 .rail::-webkit-scrollbar-track{background:rgba(255,255,255,.08)}
-.card{position:relative;flex:0 0 clamp(238px,20vw,286px);scroll-snap-align:start;aspect-ratio:3/4;
+.card{appearance:none;border:0;padding:0;font:inherit;color:inherit;text-align:left;
+  position:relative;flex:0 0 clamp(238px,20vw,286px);scroll-snap-align:start;aspect-ratio:3/4;
   text-decoration:none;color:var(--white);overflow:hidden;
   clip-path:polygon(0 0,100% 0,100% calc(100% - 20px),calc(100% - 20px) 100%,0 100%);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
@@ -368,6 +369,31 @@ h2 .bl{color:var(--blue-hi)}
 .stations b{font-weight:700;font-size:clamp(14.5px,1.5vw,17px);letter-spacing:-.005em}
 .hyrox .foot{margin-top:clamp(22px,3vw,34px);color:var(--dim)}
 
+/* KURSDETAIL — Arena erzählt in Vollbildern, also tritt das Detail als Tafel
+   davor und nicht als aufklappende Zeile. <dialog> bringt Esc und Fokusfang mit. */
+.kdlg{border:0;padding:0;margin:auto;background:var(--deep);color:var(--white);
+  width:min(520px,calc(100vw - 32px));max-height:calc(100vh - 64px);
+  box-shadow:inset 0 0 0 1px var(--line),0 40px 90px -30px #000;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 22px),calc(100% - 22px) 100%,0 100%)}
+.kdlg::backdrop{background:rgba(4,7,11,.74)}
+.kdlg .kinner{padding:clamp(22px,4vw,32px)}
+.kdlg .kkopf{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.kdlg h3{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;
+  font-size:clamp(23px,4.4vw,32px);letter-spacing:-.03em;line-height:1;text-wrap:balance}
+.kdlg .zu{appearance:none;border:0;background:none;color:var(--dim);font-size:26px;line-height:1;
+  min-width:44px;min-height:44px;margin:-10px -10px 0 0;cursor:pointer}
+.kdlg .zu:hover{color:var(--white)}
+.kdlg .kprof{margin-top:10px;color:var(--blue-hi)}
+.kdlg .kbesch{margin-top:clamp(14px,2vw,18px);color:#C2CAD4;font-size:clamp(14.5px,1.6vw,16px)}
+.kdlg .kprofil{margin-top:clamp(18px,2.6vw,24px);display:grid;gap:12px}
+.kdlg .kprofil div{display:grid;gap:6px}
+.kdlg .kprofil b{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);font-weight:400}
+.kdlg .kprofil b em{font-style:normal;color:var(--white)}
+.kdlg .kprofil i{display:block;height:3px;background:rgba(255,255,255,.1)}
+.kdlg .kprofil i span{display:block;height:100%;background:var(--blue-hi)}
+.kdlg .kfuss{margin-top:clamp(18px,2.6vw,24px);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+
 /* WOCHENPLAN — Tagesspalten statt Zeitraster. Ein Raster aus Zeit gegen Tag
    braucht auf schmalen Geräten Querscrollen; sechs Spalten, die auf eine
    klappen, lesen sich in einem Zug. */
@@ -505,46 +531,46 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
     <span class="mono">Wie oft jeder läuft und wie viele Plätze er hat.</span>
   </div>
   <div class="rail rv">
-    <a class="card" href="#plan">
+    <button class="card" type="button" data-kurs="Performance">
       <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-perf.webp"><img src="../assets/o-perf.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">01</span><h3>Performance</h3><p class="mono prof">7× pro Woche · 12–16 Plätze</p></div>
-    </a>
-    <a class="card" href="#plan">
+    </button>
+    <button class="card" type="button" data-kurs="FBB/Strength &amp; Power">
       <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-kraft.webp"><img src="../assets/o-kraft.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">02</span><h3>FBB/Strength &amp; Power</h3><p class="mono prof">6× pro Woche · 16 Plätze</p></div>
-    </a>
-    <a class="card" href="#plan">
+    </button>
+    <button class="card" type="button" data-kurs="Powercircle">
       <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-power.webp"><img src="../assets/o-power.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">03</span><h3>Powercircle</h3><p class="mono prof">3× pro Woche · 24 Plätze</p></div>
-    </a>
-    <a class="card" href="#plan">
+    </button>
+    <button class="card" type="button" data-kurs="Mama reloaded">
       <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-gym.webp"><img src="../assets/o-gym.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">04</span><h3>Mama reloaded</h3><p class="mono prof">3× pro Woche · 45 Minuten</p></div>
-    </a>
-    <a class="card" href="#plan">
+    </button>
+    <button class="card" type="button" data-kurs="Hyrox">
       <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-hyrox.webp"><img src="../assets/o-hyrox.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
       <span class="tag mono">Training Club</span><span class="veil"></span>
       <div class="body"><span class="n mono">05</span><h3>Hyrox</h3><p class="mono prof">2× pro Woche · 24 Plätze</p></div>
-    </a>
-    <a class="card" href="#plan">
+    </button>
+    <button class="card" type="button" data-kurs="Team-WOD">
       <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-teamwod.webp"><img src="../assets/o-teamwod.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">06</span><h3>Team-WOD</h3><p class="mono prof">1× pro Woche · 16 Plätze</p></div>
-    </a>
-    <a class="card" href="#plan">
+    </button>
+    <button class="card" type="button" data-kurs="FBB">
       <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-fbb.webp"><img src="../assets/o-fbb.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">07</span><h3>FBB</h3><p class="mono prof">1× pro Woche · 12 Plätze</p></div>
-    </a>
-    <a class="card" href="#plan">
+    </button>
+    <button class="card" type="button" data-kurs="Community TeamWOD">
       <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-fans.webp"><img src="../assets/o-fans.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">08</span><h3>Community TeamWOD</h3><p class="mono prof">1× pro Woche · 24 Plätze</p></div>
-    </a>
+    </button>
   </div>
   <div class="track rv"><i></i></div>
   <p class="rv" style="max-width:64ch;margin-top:clamp(24px,2.8vw,36px);color:#A8B2BF;font-size:clamp(15px,1.5vw,17px)">
@@ -740,6 +766,22 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 
 
 
+<dialog class="kdlg" id="kursdlg" aria-labelledby="kdName">
+  <div class="kinner">
+    <div class="kkopf">
+      <h3 id="kdName"></h3>
+      <button class="zu" type="button" aria-label="Schliessen">&times;</button>
+    </div>
+    <p class="kprof mono" id="kdProf"></p>
+    <p class="kbesch" id="kdBesch"></p>
+    <div class="kprofil" id="kdProfil"></div>
+    <div class="kfuss">
+      <a class="btn" href="#">Probetraining buchen</a>
+      <a class="mono" href="#plan" style="color:var(--dim)">Ganze Woche</a>
+    </div>
+  </div>
+</dialog>
+
 <footer>
   <div class="wrap">
     <div class="fgrid">
@@ -785,6 +827,7 @@ const TAGE=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Son
 // die diese Seite nicht kontrolliert.
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const minuten=z=>+z.slice(0,2)*60+ +z.slice(3,5);
+const uhr=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
 
 function planWoche(){
   const jetzt=new Date(), versatz=(jetzt.getDay()+6)%7;
@@ -794,8 +837,41 @@ function planWoche(){
   return [f(mo),f(so),mo];
 }
 
+/* Kursdetail. Die Karten zeigten auf den Wochenplan — man tippte einen Kurs an
+   und bekam die ganze Woche. Jetzt zeigt jede Karte, was sie verspricht: den
+   Kurs. Die Termine stammen aus derselben Abfrage wie der Plan. */
+/* Kursprofile und Beschreibungen. PLATZHALTER für den Entwurf — weder die
+   Werte auf der Kraft-/Ausdauer-/Technik-Skala noch die Texte stammen vom
+   Betreiber. Sie zeigen, wohin diese Angaben gehören. */
+const KURSINFO={
+ 'Performance':{k:55,a:60,t:70,d:'Der Allrounder. Kraftteil, Technik und ein kurzer Arbeitsblock in einer Einheit — die Mischung wechselt täglich, damit nichts zur Routine wird.'},
+ 'FBB/Strength & Power':{k:95,a:25,t:50,d:'Schwere Grundübungen nach festem Satz- und Wiederholungsschema. Hier wird über Wochen aufgebaut, nicht jede Stunde neu erfunden.'},
+ 'Powercircle':{k:40,a:90,t:35,d:'Stationen im Wechsel, kurze Pausen, hoher Puls. Wenig Technik, viel Ausdauer — der Weg zurück in Form.'},
+ 'Mama reloaded':{k:35,a:50,t:40,d:'Wiedereinstieg nach der Schwangerschaft. Beckenboden, Rumpf und Kraft in einem Tempo, das sich an den Tag anpasst.'},
+ 'Hyrox':{k:30,a:100,t:40,d:'Das Rennformat im Training: Laufen im Wechsel mit den acht Wettkampfstationen. Vorbereitung auf den Bewerb, auch ohne Startnummer.'},
+ 'Team-WOD':{k:60,a:65,t:60,d:'Zu zweit oder zu dritt, geteilte Arbeit, gemeinsames Ergebnis. Härter als es klingt, und die Einheit, aus der man am meisten redend rausgeht.'},
+ 'FBB':{k:85,a:35,t:55,d:'Functional Bodybuilding: kontrollierte Wiederholungen, saubere Ausführung, Muskel statt Uhr. Die ruhigste Einheit im Programm.'},
+ 'Community TeamWOD':{k:45,a:60,t:55,d:'Der Samstagvormittag. Große Gruppe, lange Einheit, Anspruch bewusst niedriger — Training zum Wochenausklang.'}
+};
+const ACHSEN=[['Kraft','k'],['Ausdauer','a'],['Koordination & Technik','t']];
+const dlg=document.getElementById('kursdlg');
+function kursOeffnen(name,prof){
+  const i=KURSINFO[name]||{d:'',k:0,a:0,t:0};
+  document.getElementById('kdName').textContent=name;
+  document.getElementById('kdProf').textContent=prof||'';
+  document.getElementById('kdBesch').textContent=i.d;
+  document.getElementById('kdProfil').innerHTML=ACHSEN.map(([label,key])=>
+    `<div><b>${label}<em>${i[key]}</em></b><i><span style="width:${i[key]}%"></span></i></div>`).join('');
+  dlg.showModal();
+}
+document.querySelectorAll('.card[data-kurs]').forEach(k=>k.addEventListener('click',()=>
+  kursOeffnen(k.dataset.kurs, k.querySelector('.prof').textContent)));
+dlg.querySelector('.zu').addEventListener('click',()=>dlg.close());
+dlg.addEventListener('click',e=>{ if(e.target===dlg) dlg.close(); });
+dlg.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',()=>dlg.close()));
+
 function planZeichnen(termine,live,montag){
-  const tage=[0,1,2,3,4,5].filter(t=>termine.some(x=>x.tag===t));
+  const tage=[0,1,2,3,4,5,6].filter(t=>termine.some(x=>x.tag===t));
   document.getElementById('wplan').innerHTML=tage.map(tag=>{
     const heute=termine.filter(t=>t.tag===tag).sort((a,b)=>a.zeit.localeCompare(b.zeit));
     return `<div class="wtag"><h3 class="mono">${TAGE[tag]}</h3>`+heute.map(t=>{

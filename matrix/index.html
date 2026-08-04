@@ -214,6 +214,7 @@ h2 .bl{color:var(--blue-hi)}
   letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:400;margin-bottom:7px}
 .bar i{display:block;height:6px;background:rgba(255,255,255,.08)}
 .bar i span{display:block;height:100%;background:var(--blue-hi);width:0;transition:width .5s cubic-bezier(.2,.7,.3,1)}
+.readout .rbesch{margin-top:18px;color:#AEB7C3;font-size:13.5px;line-height:1.45}
 .readout .hint{margin-top:auto;padding-top:20px;color:var(--dim)}
 @media(max-width:1100px){
   .matrix{grid-template-columns:auto 1fr}
@@ -375,7 +376,7 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
 <section id="kurse" class="wrap matrix-sec">
   <div class="mhead rv">
     <h2>Wähl nicht nach Namen.<br><span class="bl">Wähl nach Wirkung.</span></h2>
-    <span class="mono">Ring = Technikanteil · gestrichelt = geschätzt</span>
+    <span class="mono">Ring = Technikanteil · Profile sind Beispielwerte</span>
   </div>
 
   <div class="matrix rv" id="matrix">
@@ -390,7 +391,8 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
         <div class="bar"><b>Ausdauer <span id="vA">100</span></b><i><span id="bA"></span></i></div>
         <div class="bar"><b>Koordination &amp; Technik <span id="vT">40</span></b><i><span id="bT"></span></i></div>
       </div>
-      <p class="hint mono">12–16 Plätze, bei Powercircle und Hyrox bis 24.</p>
+      <p class="rbesch" id="rBesch"></p>
+      <p class="hint mono" id="rWie"></p>
     </div>
   </div>
   <p class="rv" style="max-width:62ch;margin-top:clamp(22px,2.6vw,34px);color:#AEB7C3;font-size:clamp(15px,1.5vw,17px)">
@@ -487,6 +489,7 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
       </div>
       <div class="hrow" style="margin-top:22px"><b>Montag – Freitag</b><span id="zMoFr">—</span></div>
       <div class="hrow"><b>Samstag</b><span id="zSa">—</span></div>
+      <div class="hrow" id="zSoZeile" hidden><b>Sonntag</b><span id="zSo">—</span></div>
       <div class="hrow"><b>Open Gym, eigener Tarif</b><span>Mo–So 06:00–22:00</span></div>
       <p class="mono" style="margin-top:14px;color:var(--dim);font-size:12px;letter-spacing:.06em">Belegte Fenster, nicht durchgehend · genaue Zeiten im <a href="#plan" style="color:var(--blue-hi)">Wochenplan</a></p>
     </div>
@@ -529,22 +532,31 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
 </footer>
 
 <script>
-/* Werte von den Kursseiten des Kunden. Für FBB/Strength & Power gibt es
-   keine; der Wert ist abgeleitet und im Diagramm gestrichelt gezeichnet
-   (geschaetzt:1).
-   Team-WOD, Performance und Community TeamWOD haben dasselbe Profil und
-   damit dieselbe Koordinate; sie teilen sich eine Marke. */
+/* Kursprofile und Beschreibungen. PLATZHALTER für den Entwurf — die Werte auf
+   der Kraft-/Ausdauer-/Technik-Skala und die Texte stammen nicht vom Betreiber.
+   Sie zeigen, wohin diese Angaben gehören; ersetzt werden müssen sie alle. */
 const KURSE=[
- {n:'Hyrox',k:30,a:100,t:40},
- {n:'Powercircle',k:40,a:90,t:40},
- {n:'Team-WOD, Performance & Community',k:50,a:50,t:70},
- {n:'FBB',k:90,a:40,t:50},
- {n:'FBB/Strength & Power',k:95,a:25,t:50,geschaetzt:1}
+ {n:'Performance',k:55,a:60,t:70,w:'7× pro Woche · 12–16 Plätze',
+  d:'Der Allrounder. Kraftteil, Technik und ein kurzer Arbeitsblock in einer Einheit — die Mischung wechselt täglich, damit nichts zur Routine wird.'},
+ {n:'FBB/Strength & Power',k:95,a:25,t:50,w:'6× pro Woche · 16 Plätze',
+  d:'Schwere Grundübungen nach festem Satz- und Wiederholungsschema. Hier wird über Wochen aufgebaut, nicht jede Stunde neu erfunden.'},
+ {n:'Powercircle',k:40,a:90,t:35,w:'3× pro Woche · 24 Plätze',
+  d:'Stationen im Wechsel, kurze Pausen, hoher Puls. Wenig Technik, viel Ausdauer — der Weg zurück in Form.'},
+ {n:'Mama reloaded',k:35,a:50,t:40,w:'3× pro Woche · 45 Minuten',
+  d:'Wiedereinstieg nach der Schwangerschaft. Beckenboden, Rumpf und Kraft in einem Tempo, das sich an den Tag anpasst.'},
+ {n:'Hyrox',k:30,a:100,t:40,w:'2× pro Woche · 24 Plätze',
+  d:'Das Rennformat im Training: Laufen im Wechsel mit den acht Wettkampfstationen. Vorbereitung auf den Bewerb, auch ohne Startnummer.'},
+ {n:'Team-WOD',k:60,a:65,t:60,w:'1× pro Woche · 16 Plätze',
+  d:'Zu zweit oder zu dritt, geteilte Arbeit, gemeinsames Ergebnis. Härter als es klingt, und die Einheit, aus der man am meisten redend rausgeht.'},
+ {n:'FBB',k:85,a:35,t:55,w:'1× pro Woche · 12 Plätze',
+  d:'Functional Bodybuilding: kontrollierte Wiederholungen, saubere Ausführung, Muskel statt Uhr. Die ruhigste Einheit im Programm.'},
+ {n:'Community TeamWOD',k:45,a:60,t:55,w:'1× pro Woche · 24 Plätze',
+  d:'Der Samstagvormittag. Große Gruppe, lange Einheit, Anspruch bewusst niedriger — Training zum Wochenausklang.'}
 ];
 const plot=document.getElementById('plot');
 KURSE.forEach((c,i)=>{
   const el=document.createElement('button');
-  el.className='pt'+(c.geschaetzt?' est':'');
+  el.className='pt';
   el.type='button';
   // Position = Ausdauer × Kraft, Ringgröße = Technik
   // Punkt steht exakt auf seinem Wert; nur die Beschriftung weicht aus
@@ -680,7 +692,7 @@ KURSE.forEach((c,i)=>{
   b.type='button';
   b.setAttribute('aria-label',`${c.n} im Diagramm zeigen`);
   b.innerHTML=`<b>${String(i+1).padStart(2,'0')}</b><span>${c.n}`+
-    (c.geschaetzt?` <i>abgeleitet</i>`:'')+`</span>`;
+    `</span>`;
   b.addEventListener('click',()=>show(i));
   li.appendChild(b);
   ml.appendChild(li);
@@ -693,6 +705,8 @@ function show(i,fokus=true){
   pts.forEach((p,n)=>p.classList.toggle('on',n===i));
   lis.forEach((l,n)=>l.classList.toggle('on',n===i));
   rName.textContent=c.n;
+  document.getElementById('rBesch').textContent=c.d;
+  document.getElementById('rWie').textContent=c.w;
   [['K',c.k],['A',c.a],['T',c.t]].forEach(([key,v])=>{
     document.getElementById('v'+key).textContent=v;
     document.getElementById('b'+key).style.width=v+'%';
@@ -800,7 +814,7 @@ let planTimer;
 addEventListener('resize',()=>{clearTimeout(planTimer);planTimer=setTimeout(planFormAuffrischen,150)});
 
 function planZeichnen(termine,live,montag){
-  const tage=[0,1,2,3,4,5].filter(t=>termine.some(x=>x.tag===t));
+  const tage=[0,1,2,3,4,5,6].filter(t=>termine.some(x=>x.tag===t));
   planDaten={termine,tage}; planSchmal=null;
   planFormAuffrischen();
 
@@ -818,6 +832,9 @@ function planZeichnen(termine,live,montag){
   const text=l=>l.map(([v,b])=>`${uhr(v)}–${uhr(b)}`).join(' · ');
   document.getElementById('zMoFr').textContent=text(woche)||'keine Kurse';
   document.getElementById('zSa').textContent=text(sa)||'keine Kurse';
+  const so=bloecke(termine.filter(t=>t.tag===6));
+  document.getElementById('zSoZeile').hidden=!so.length;
+  document.getElementById('zSo').textContent=text(so);
 
   const ende=new Date(montag.getFullYear(),montag.getMonth(),montag.getDate()+5);
   const f=x=>x.toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit'});

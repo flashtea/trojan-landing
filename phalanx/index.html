@@ -170,7 +170,8 @@ section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 .reg{border-top:2px solid var(--ink)}
 /* minmax(0,1fr) statt 1fr: sonst setzt der Kursname die Mindestbreite der Spalte
    und schiebt bei "FBB/Strength & Power" den Pfeil aus der Zeile. */
-.rrow{display:grid;grid-template-columns:84px minmax(0,1fr) auto 44px;align-items:center;gap:16px;
+.rrow{appearance:none;background:none;border:0;border-bottom:1px solid var(--hair);width:100%;font:inherit;text-align:left;cursor:pointer;
+  display:grid;grid-template-columns:84px minmax(0,1fr) auto 44px;align-items:center;gap:16px;
   padding:clamp(14px,1.9vw,23px) 0;border-bottom:1px solid var(--hair);text-decoration:none;color:var(--ink);
   position:relative;transition:color .24s;overflow:hidden}
 .rrow::before{content:"";position:absolute;inset:0;background:var(--ink);transform:scaleY(0);transform-origin:bottom;transition:transform .3s cubic-bezier(.2,.7,.3,1);z-index:0}
@@ -185,6 +186,22 @@ section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 .rrow .arw{text-align:right;font-size:20px;color:var(--dim)}
 .rrow .wie{color:var(--dim);white-space:nowrap;text-align:right}
 .rrow:hover .wie{color:rgba(239,239,236,.7)}
+/* KURSDETAIL — Phalanx ist ein Aushang, also klappt die Zeile auf, statt eine
+   Tafel davorzuschieben. Der Pfeil dreht sich, mehr Signal braucht es nicht. */
+.rrow[aria-expanded="true"]{border-bottom-color:transparent}
+.rrow[aria-expanded="true"] .arw{transform:rotate(90deg)}
+.rrow .arw{transition:transform .3s cubic-bezier(.2,.7,.3,1),color .24s}
+.rdetail[hidden]{display:none}
+.rdetail{border-bottom:1px solid var(--hair);padding:0 0 clamp(18px,2.4vw,26px) 84px;
+  display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(18px,3vw,40px)}
+@media(max-width:700px){.rdetail{padding-left:44px;grid-template-columns:1fr;gap:16px}}
+.rdetail p{font-size:clamp(14.5px,1.6vw,16.5px);color:#2E3135;max-width:46ch}
+.rdetail .achse{display:grid;gap:5px;margin-top:10px}
+.rdetail .achse b{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;
+  font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);font-weight:400}
+.rdetail .achse b em{font-style:normal;color:var(--ink)}
+.rdetail .achse i{display:block;height:4px;background:var(--paper-2)}
+.rdetail .achse i span{display:block;height:100%;background:var(--blue)}
 /* Die Häufigkeit war die einzige Unterscheidung der Zeilen und verschwand */
 @media(max-width:560px){.rrow{grid-template-columns:44px minmax(0,1fr) auto 28px;gap:10px}
   .rrow h3{overflow-wrap:anywhere}
@@ -597,23 +614,39 @@ document.querySelectorAll('.rv').forEach((el,i)=>{el.style.transitionDelay=(i%4)
    Fällt die Abfrage aus, greift der eingefrorene Stand darunter. Eine leere
    Tabelle wäre im Zweifel schlimmer als eine, die eine Woche alt ist. */
 const PLAN_STAND=[
-  [1,'06:00','Performance',16],[3,'06:00','Performance',16],
-  [0,'08:15','FBB/Strength & Power',16],[1,'08:15','Performance',16],
-  [2,'08:15','FBB/Strength & Power',16],[4,'08:15','Performance',16],
-  [5,'08:15','FBB/Strength & Power',16],[5,'09:30','Community TeamWOD',24],
-  [4,'09:45','Mama reloaded',0],[2,'10:00','Mama reloaded',0],[4,'10:45','Mama reloaded',0],
-  [2,'16:00','Powercircle',24],[4,'16:00','FBB/Strength & Power',16],
-  [0,'17:15','Powercircle',24],[0,'17:15','Performance',12],
-  [1,'17:15','FBB/Strength & Power',16],[2,'17:15','Team-WOD',16],
-  [3,'17:15','Performance',16],[4,'17:15','Hyrox',24],
-  [0,'18:30','FBB/Strength & Power',16],[1,'18:30','Performance',16],
-  [2,'18:30','Hyrox',24],[3,'18:30','FBB',12],[3,'18:30','Powercircle',24]
-].map(([tag,zeit,name])=>({tag,zeit,name}));
+  [1,'06:00',75,'Performance'],   [3,'06:00',75,'Performance'],
+  [0,'08:15',75,'FBB/Strength & Power'], [1,'08:15',75,'Performance'],
+  [2,'08:15',75,'FBB/Strength & Power'], [4,'08:15',75,'Performance'],
+  [5,'08:15',75,'FBB/Strength & Power'], [5,'09:30',75,'Community TeamWOD'],
+  [4,'09:45',45,'Mama reloaded'], [2,'10:00',45,'Mama reloaded'], [4,'10:45',45,'Mama reloaded'],
+  [2,'16:00',75,'Powercircle'],   [4,'16:00',75,'FBB/Strength & Power'],
+  [0,'17:15',75,'Powercircle'],   [0,'17:15',75,'Performance'],
+  [1,'17:15',75,'FBB/Strength & Power'], [2,'17:15',75,'Team-WOD'],
+  [3,'17:15',75,'Performance'],   [4,'17:15',75,'Hyrox'],
+  [0,'18:30',75,'FBB/Strength & Power'], [1,'18:30',75,'Performance'],
+  [2,'18:30',75,'Hyrox'],         [3,'18:30',75,'FBB'],
+  [3,'18:30',75,'Powercircle']
+].map(([tag,zeit,dauer,name])=>({tag,zeit,dauer,name}));
 
 // Alles, was nicht eindeutig Kraft oder Ausdauer ist, bleibt neutral — lieber
 // keine Aussage als eine erfundene, wenn ein neuer Kurs dazukommt.
 const PLAN_KAT={'FBB/Strength & Power':'k','FBB':'k','Powercircle':'b','Hyrox':'b'};
 const PLAN_TAGE=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
+/* Kursprofile und Beschreibungen. PLATZHALTER für den Entwurf — weder die
+   Werte auf der Kraft-/Ausdauer-/Technik-Skala noch die Texte stammen vom
+   Betreiber. Sie zeigen, wohin diese Angaben gehören. */
+const KURSINFO={
+ 'Performance':{k:55,a:60,t:70,d:'Der Allrounder. Kraftteil, Technik und ein kurzer Arbeitsblock in einer Einheit — die Mischung wechselt täglich, damit nichts zur Routine wird.'},
+ 'FBB/Strength & Power':{k:95,a:25,t:50,d:'Schwere Grundübungen nach festem Satz- und Wiederholungsschema. Hier wird über Wochen aufgebaut, nicht jede Stunde neu erfunden.'},
+ 'Powercircle':{k:40,a:90,t:35,d:'Stationen im Wechsel, kurze Pausen, hoher Puls. Wenig Technik, viel Ausdauer — der Weg zurück in Form.'},
+ 'Mama reloaded':{k:35,a:50,t:40,d:'Wiedereinstieg nach der Schwangerschaft. Beckenboden, Rumpf und Kraft in einem Tempo, das sich an den Tag anpasst.'},
+ 'Hyrox':{k:30,a:100,t:40,d:'Das Rennformat im Training: Laufen im Wechsel mit den acht Wettkampfstationen. Vorbereitung auf den Bewerb, auch ohne Startnummer.'},
+ 'Team-WOD':{k:60,a:65,t:60,d:'Zu zweit oder zu dritt, geteilte Arbeit, gemeinsames Ergebnis. Härter als es klingt, und die Einheit, aus der man am meisten redend rausgeht.'},
+ 'FBB':{k:85,a:35,t:55,d:'Functional Bodybuilding: kontrollierte Wiederholungen, saubere Ausführung, Muskel statt Uhr. Die ruhigste Einheit im Programm.'},
+ 'Community TeamWOD':{k:45,a:60,t:55,d:'Der Samstagvormittag. Große Gruppe, lange Einheit, Anspruch bewusst niedriger — Training zum Wochenausklang.'}
+};
+const ACHSEN=[['Kraft','k'],['Ausdauer','a'],['Koordination & Technik','t']];
+
 
 function planWoche(){
   const jetzt=new Date(), versatz=(jetzt.getDay()+6)%7;
@@ -629,10 +662,29 @@ function registerZeichnen(termine){
   const zaehl=new Map();
   for(const t of termine) zaehl.set(t.name,(zaehl.get(t.name)||0)+1);
   const sortiert=[...zaehl].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'de'));
-  document.getElementById('kursreg').innerHTML=sortiert.map(([name,n],i)=>
-    `<a class="rrow" href="#plan"><span class="n">${String(i+1).padStart(2,'0')}</span>`+
-    `<h3>${esc(name)}</h3><span class="wie mono">${n}× pro Woche</span>`+
-    `<span class="arw" aria-hidden="true">→</span></a>`).join('');
+  document.getElementById('kursreg').innerHTML=sortiert.map(([name,n],i)=>{
+    const id='k'+i;
+    const info=KURSINFO[name]||{d:'',k:0,a:0,t:0};
+    return `<button class="rrow" type="button" aria-expanded="false" aria-controls="${id}">`+
+      `<span class="n">${String(i+1).padStart(2,'0')}</span>`+
+      `<h3>${esc(name)}</h3><span class="wie mono">${n}× pro Woche</span>`+
+      `<span class="arw" aria-hidden="true">→</span></button>`+
+      `<div class="rdetail" id="${id}" hidden><p>${info.d}</p><div>`+
+      ACHSEN.map(([label,key])=>
+        `<div class="achse"><b>${label}<em>${info[key]}</em></b><i><span style="width:${info[key]}%"></span></i></div>`).join('')+
+      `</div></div>`;
+  }).join('');
+  /* Nur eine Zeile offen: das Register soll ein Register bleiben und nicht
+     zu einer Wand aus Terminen werden. */
+  document.querySelectorAll('#kursreg .rrow').forEach(b=>b.addEventListener('click',()=>{
+    const offen=b.getAttribute('aria-expanded')==='true';
+    document.querySelectorAll('#kursreg .rrow').forEach(x=>{
+      x.setAttribute('aria-expanded','false');
+      document.getElementById(x.getAttribute('aria-controls')).hidden=true;
+    });
+    if(!offen){ b.setAttribute('aria-expanded','true');
+      document.getElementById(b.getAttribute('aria-controls')).hidden=false; }
+  }));
 }
 
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -713,6 +765,7 @@ addEventListener('resize',()=>{clearTimeout(planTimer);planTimer=setTimeout(()=>
     planZeichnen(d.map(e=>({
       tag:(new Date(e.startTime).getDay()+6)%7,
       zeit:e.startTime.slice(11,16),
+      dauer:Math.round((new Date(e.endTime)-new Date(e.startTime))/60000)||75,
       name:(e.course&&e.course.name||'').trim(),
     })),true,montag);
   }catch(_){
