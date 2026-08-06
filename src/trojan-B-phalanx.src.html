@@ -94,14 +94,14 @@ header{position:sticky;top:0;z-index:70;background:var(--paper);border-bottom:2p
      Knopf und Logo auf dieselbe Höhe, damit ihre Oberkanten fluchten. */
   .nav{flex-wrap:wrap;height:auto;align-items:center;padding-block:16px 8px;row-gap:12px}
   .nav .btn.sm{min-height:44px;padding-block:0}
-  /* Fünf Punkte, davon zwei lange, passen auf 360px nicht nebeneinander —
-     scrollen wäre die falsche Antwort. Coaches und Einstieg entfallen hier;
-     beide Abschnitte stehen im Fussbereich und liegen einen Scroll entfernt,
-     und für den Einstieg gibt es die Schaltfläche daneben. */
+  /* Nicht scrollen, sondern verteilen: die vier Punkte belegen zusammen
+     281px und passen damit auf 375px nebeneinander. Vorher waren es fünf,
+     davon zwei lange — dafür stand hier eine Regel, die den dritten und
+     fünften Punkt ausblendete. Die ist mit dem vierten Punkt hinfällig, und
+     nach dem Umsortieren hätte sie ohnehin den falschen getroffen. */
   .links{order:3;flex-basis:100%;margin-left:0;justify-content:space-between;
     border-top:1px solid var(--hair);padding-top:2px}
   .links li{border-left:0;padding:10px 0;white-space:nowrap}
-  .links li:nth-child(3),.links li:nth-child(5){display:none}
   .nav .cta{border-left:0;padding-left:0;margin-left:auto}
   /* Die Leiste ist umgebrochen und damit höher — ohne das schneidet jeder
      Ankersprung die erste Zeile der Überschrift ab. */
@@ -484,9 +484,8 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
     <ul class="links">
       <li><a href="#programme">Kurse</a></li>
       <li><a href="#plan">Wochenplan</a></li>
-      <li><a href="#coaches">Coaches</a></li>
       <li><a href="#preise">Preise</a></li>
-      <li><a href="#einstieg">Einstieg</a></li>
+      <li><a href="#coaches">Coaches</a></li>
       
     </ul>
     <div class="cta"><a class="btn sm" href="#start">Probetraining</a></div>
@@ -713,7 +712,7 @@ const PLAN_TAGE=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'
 const KURSINFO={
  'Performance':{k:55,a:60,t:70,d:'Der Allrounder. Kraftteil, Technik und ein kurzer Arbeitsblock in einer Einheit — die Mischung wechselt täglich, damit nichts zur Routine wird.'},
  'FBB/Strength & Power':{k:95,a:25,t:50,d:'Schwere Grundübungen nach festem Satz- und Wiederholungsschema. Hier wird über Wochen aufgebaut, nicht jede Stunde neu erfunden.'},
- 'Powercircle':{k:40,a:90,t:35,d:'Stationen im Wechsel, kurze Pausen, hoher Puls. Wenig Technik, viel Ausdauer — der Weg zurück in Form.'},
+ 'Powercircle':{k:40,a:90,t:35,d:'Airbike, SkiErg, Schlitten, Jump-Box, Battle-Rope, Wallballs im Wechsel. Kurze harte Intervalle, kurze Pausen. Technisch anspruchslos, deshalb auch für Einsteiger geeignet.'},
  'Mama reloaded':{k:35,a:50,t:40,d:'Wiedereinstieg nach der Schwangerschaft. Beckenboden, Rumpf und Kraft in einem Tempo, das sich an den Tag anpasst.'},
  'Hyrox':{k:30,a:100,t:40,d:'Das Rennformat im Training: Laufen im Wechsel mit den acht Wettkampfstationen. Vorbereitung auf den Bewerb, auch ohne Startnummer.'},
  'Team-WOD':{k:60,a:65,t:60,d:'Zu zweit oder zu dritt, geteilte Arbeit, gemeinsames Ergebnis. Härter als es klingt, und die Einheit, aus der man am meisten redend rausgeht.'},
