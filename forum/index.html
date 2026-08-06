@@ -140,24 +140,21 @@ h2{font-size:clamp(30px,4.4vw,62px);font-variation-settings:'opsz' 144,'wght' 31
    Browser rechnet die Fortschrittsposition selbst.
    Die Bühne ist zweieinhalb Bildschirme hoch, der Auftakt darin klebt; über
    diese Strecke fährt das Bild langsam heran und der Text taucht auf. */
-.buehne{position:relative;height:250svh;view-timeline-name:--kap;view-timeline-axis:block}
-.buehne.erste .inhalt,.buehne.erste .unterzeile{animation:none!important;opacity:1;transform:none}
+.buehne{position:relative;height:250svh}
+/* Die erste Bühne steht beim Laden schon am Anschlag — dort darf der Text
+   nicht erst einblenden. */
+.buehne.erste{--t:1!important;--u:1!important}
 .buehne .auftakt{position:sticky;top:0;height:100svh;min-height:0;overflow:clip}
 @media(max-width:700px){.buehne{height:190svh}}
 
-@supports (animation-timeline:view()){
-  .buehne .bild img{animation:fahrt linear both;animation-timeline:--kap;
-    animation-range:contain 0% contain 100%;will-change:transform}
-  .buehne .inhalt{animation:auftauchen linear both;animation-timeline:--kap;
-    animation-range:contain 2% contain 30%}
-  .buehne .unterzeile{animation:auftauchen linear both;animation-timeline:--kap;
-    animation-range:contain 10% contain 40%}
-}
-@keyframes fahrt{from{transform:scale(1.24) translateY(-2.2%)}to{transform:scale(1.02) translateY(2.2%)}}
-@keyframes auftauchen{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
-@media(prefers-reduced-motion:reduce){
-  .buehne .bild img,.buehne .inhalt,.buehne .unterzeile{animation:none}
-}
+/* Der Fortschritt kommt aus dem Skript, nicht aus animation-timeline: das
+   unterstützt derzeit im Wesentlichen nur Chrome, und die Fahrt ist der Kern
+   dieses Entwurfs — sie darf nicht vom Browser abhängen. Ohne Skript stehen
+   alle Werte auf 1, also im Endzustand. */
+.buehne{--p:1;--t:1;--u:1}
+.buehne .bild img{transform:scale(calc(1.24 - .22*var(--p))) translateY(calc(-2.2% + 4.4%*var(--p)))}
+.buehne .inhalt{opacity:var(--t);transform:translateY(calc(26px*(1 - var(--t))))}
+.buehne .unterzeile{opacity:var(--u);transform:translateY(calc(26px*(1 - var(--u))))}
 
 /* ---- Inhaltsflächen ----------------------------------------------------- */
 .feld{padding:clamp(56px,9vw,140px) var(--rand);position:relative;z-index:5;background:var(--blau)}
@@ -471,6 +468,34 @@ const spurBeobachter=new IntersectionObserver(es=>es.forEach(e=>{
   punkte.forEach((p,n)=>p.classList.toggle('an',n===i));
 }),{rootMargin:'-45% 0px -45% 0px',threshold:0});
 kapitel.forEach(k=>spurBeobachter.observe(k));
+
+/* ---- Kamerafahrt ---------------------------------------------------------
+   Das Vorbild spult eine Sequenz aus 235 Einzelbildern am Scrollrad ab. Hier
+   fährt stattdessen ein einzelnes Bild: über die Länge des Kapitels wandert der
+   Massstab von 1,24 auf 1,02, Überschrift und Vorspann tauchen versetzt auf.
+   Gerechnet wird nur für Bühnen im Bild und höchstens einmal pro Bildwechsel. */
+const buehnen=[...document.querySelectorAll('.buehne')];
+const stufe=(p,a,b)=>Math.min(1,Math.max(0,(p-a)/(b-a)));
+let angefordert=false;
+function fahrt(){
+  angefordert=false;
+  for(const b of buehnen){
+    const r=b.getBoundingClientRect();
+    if(r.bottom<-200||r.top>innerHeight+200) continue;
+    const weg=b.offsetHeight-innerHeight;
+    const p=weg>0?Math.min(1,Math.max(0,-r.top/weg)):1;
+    b.style.setProperty('--p',p.toFixed(4));
+    if(!b.classList.contains('erste')){
+      b.style.setProperty('--t',stufe(p,.02,.30).toFixed(3));
+      b.style.setProperty('--u',stufe(p,.10,.42).toFixed(3));
+    }
+  }
+}
+if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+  addEventListener('scroll',()=>{if(!angefordert){angefordert=true;requestAnimationFrame(fahrt)}},{passive:true});
+  addEventListener('resize',fahrt,{passive:true});
+  fahrt();
+}
 
 /* Kursprofile und Beschreibungen. PLATZHALTER für den Entwurf — weder die
    Werte auf der Kraft-/Ausdauer-/Technik-Skala noch die Texte stammen vom
