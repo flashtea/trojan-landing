@@ -250,10 +250,6 @@ h2 .bl{color:var(--blue-hi)}
 .coach{position:relative;overflow:hidden;display:block;color:var(--white);
   aspect-ratio:4/5;box-shadow:inset 0 0 0 1px var(--line);
   clip-path:polygon(0 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%)}
-/* 3/2 war für eine Spalte gerechnet. Im Zweispalter ist die Kachel 169px
-   breit und damit 113px hoch — der Text darin braucht 242px und wurde oben
-   abgeschnitten. Also unter 600px wirklich einspaltig, dann stimmt beides. */
-@media(max-width:600px){.coaches{grid-template-columns:1fr}.coach{aspect-ratio:3/2}}
 .coach .duo{position:absolute;inset:0;--tintA:.62}
 .coach .tint{transition:opacity .5s cubic-bezier(.2,.7,.3,1)}
 .coach:hover .tint{opacity:.06}
@@ -261,6 +257,17 @@ h2 .bl{color:var(--blue-hi)}
 .coach:hover img{transform:scale(1.05)}
 .coach .veil{position:absolute;inset:0;z-index:6;background:linear-gradient(to top,rgba(4,7,11,.93) 5%,rgba(4,7,11,.04) 60%)}
 .coach .body{position:absolute;left:0;right:0;bottom:0;z-index:8;padding:20px}
+
+/* Festes Seitenverhältnis und variabler Text vertragen sich hier nicht.
+   3/2 liess vom Hochformat 41% der Bildhöhe übrig — die Quellfotos haben
+   0,62 bis 0,75. Ein passendes Verhältnis wäre bei 390px 0,67, bei 360px
+   aber schon wieder zu knapp, weil der Text in der schmaleren Spalte höher
+   wird. Also bestimmt der Text die Höhe und das Foto füllt sie: dann wird
+   höchstens seitlich beschnitten, nie mehr quer durchs Gesicht. */
+@media(max-width:600px){
+  .coach{aspect-ratio:auto;min-height:62vw;display:flex;flex-direction:column;justify-content:flex-end}
+  .coach .body{position:relative}
+}
 .coach h3{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;font-size:21px;letter-spacing:-.025em}
 .coach p{color:#B3BCC7;font-size:12.5px;margin-top:6px;line-height:1.45}
 
