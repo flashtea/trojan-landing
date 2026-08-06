@@ -41,7 +41,10 @@
    ein zusätzlicher Inline-Kasten zwischen Flex-/Grid-Container und Bild. */
 picture{display:contents}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:90px}
-body{background:var(--paper);color:var(--ink);font-family:'Archivo',system-ui,sans-serif;font-weight:500;font-size:16px;line-height:1.5;overflow-x:hidden}
+body{background:var(--paper);color:var(--ink);font-family:'Archivo',system-ui,sans-serif;font-weight:500;font-size:16px;line-height:1.5;
+  /* clip statt hidden: hidden macht den Körper zum Scrollbereich und der
+     Überschuss des randbündigen Bildes erzeugte 8px Querlauf. */
+  overflow-x:clip}
 /* Verhindert einzelne Wörter in der letzten Zeile */
 p,.meta{text-wrap:pretty}
 .metabar div{text-wrap:balance}
@@ -140,7 +143,49 @@ h1 .bl{color:var(--blue)}
 .hero-foot p{color:#33363A;font-size:clamp(15px,1.6vw,17.5px);max-width:42ch}
 
 /* BILDBAND — ein Bild, randlos */
+/* ERSTER BILDSCHIRM — ein Raster, nicht drei gestapelte Blöcke.
+   Die anderen beiden Entwürfe legen die Typo auf ein vollflächiges Foto; hier
+   standen Papier und Bild untereinander, und der erste Bildschirm bestand zu
+   grossen Teilen aus Weiss. Ab 1000px stehen Überschrift und Bild nebeneinander:
+   links die Plakatzeile auf Papier, rechts das Foto randbündig bis zur
+   Bildschirmkante. Darunter bleibt alles wie es war.
+   --gutter hält die linke Kante auf derselben Linie wie den Rest der Seite,
+   auch wenn das Raster über die 1400px-Spalte hinaus randbündig läuft. */
+/* Der Raster liegt in der normalen Spalte, damit die linke Textkante exakt
+   auf der Linie des restlichen Seiteninhalts sitzt. Nur das Bild tritt heraus.
+   Über 100vw gerechnet wäre die Kante 8px daneben — 100vw zählt die
+   Scrollleiste mit, die zentrierte Spalte nicht. Beim Bild ist derselbe
+   Überschuss harmlos: er läuft unter overflow-x:hidden ins Leere. */
+:root{--rand:clamp(24px,3vw,44px);
+      --bleed:max(var(--rand),calc((100vw - 1400px)/2 + var(--rand)))}
+.erste{display:grid;grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr) auto;
+  min-height:calc(100svh - var(--kopf,72px))}
+.heroseite{display:flex;flex-direction:column;justify-content:center}
+.erste>.band{margin-inline:calc(-1 * var(--bleed))}
 .band{position:relative;border-block:2px solid var(--ink);height:var(--band,clamp(240px,34vw,460px));overflow:hidden}
+
+@media(min-width:1000px){
+  .erste{grid-template-columns:minmax(0,1fr) minmax(0,.74fr);
+    grid-template-rows:auto minmax(0,1fr);
+    min-height:calc(100svh - var(--kopf,72px))}
+  .erste>.metabar{grid-column:1/-1}
+  .heroseite{container-type:inline-size;
+    padding-right:clamp(34px,3.6vw,64px);padding-block:clamp(24px,3vw,48px)}
+  .erste>.band{margin-left:0}
+  .heroseite .hero{padding:0}
+  /* Die Plakatzeile war auf Viewport-Breite bemessen und lief ins Foto.
+     Jetzt misst sie sich an ihrer Spalte — cqw statt vw. */
+  .heroseite h1{font-size:clamp(40px,12.6cqw,132px)}
+  /* Text und Knöpfe nebeneinander wird in der schmaleren Spalte eng:
+     der Knopf brach auf zwei Zeilen. Also untereinander. */
+  .heroseite .hero-foot{grid-template-columns:1fr;gap:clamp(18px,2.2vw,28px)}
+  .heroseite .hero-foot .txt,.heroseite .hero-foot .act{grid-column:1}
+  .heroseite .hero-foot .act{justify-content:flex-start}
+  /* Das Bild trägt die rechte Kante, also keine waagrechten Linien mehr —
+     stattdessen die senkrechte, die es vom Papier trennt. */
+  .erste>.band{height:auto;border-block:0;border-left:2px solid var(--ink)}
+  .erste>.band img{object-position:52% 42%}
+}
 /* Die Falz nicht dem Zufall überlassen. Der Bildstreifen ist fest hoch, der
    Block darüber wächst mit dem Text — je nach Gerätehöhe landete der Schnitt
    irgendwo im Foto, bei 360x740 gemessen genau in der Mitte, und das blaue
@@ -155,17 +200,9 @@ h1 .bl{color:var(--blue)}
    saubere Zustände statt eines zufälligen dazwischen: hohe Schirme zeigen einen
    festen Streifen, niedrige enden auf der Papierkante und das Bild beginnt
    genau an der Falz. */
-@media(min-width:821px) and (max-height:879px){
-  :root{--kopf:72px}
-  #inhalt{min-height:calc(100svh - var(--kopf));display:flex;flex-direction:column}
-  #inhalt .hero{flex:1;display:flex;flex-direction:column;justify-content:center}
-}
+@media(min-width:821px){:root{--kopf:72px}}
 
-@media(max-width:820px){
-  :root{--kopf:129px;--band:clamp(150px,21svh,240px)}
-  #inhalt{min-height:calc(100svh - var(--kopf) - var(--band));display:flex;flex-direction:column}
-  #inhalt .hero{flex:1;display:flex;flex-direction:column;justify-content:center}
-}
+@media(max-width:820px){:root{--kopf:129px;--band:clamp(150px,21svh,240px)}}
 /* Auf niedrigen Geräten fehlten gemessen 48px, damit das Bild ganz auf den
    ersten Bildschirm passt. Sie kommen aus den drei grosszügigsten Stellen —
    nicht aus der Schriftgrösse, und nur dort, wo die Höhe knapp ist. */
@@ -447,28 +484,29 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
   </div>
 </header>
 
-<div class="wrap" id="inhalt">
+<div class="wrap erste" id="inhalt">
   <div class="metabar">
     <div class="mono">Klagenfurt am Wörthersee</div>
     <div class="mono">Erster offizieller HYROX Training Club in Kärnten</div>
     <div class="mono">Keine Einschreibgebühr · Probetraining 15 €</div>
   </div>
-  <div class="hero">
-    <div class="kick mono"><b></b>Performance Center</div>
-    <h1>Nie<br><span class="ol">allein auf</span><br><span class="bl">der Fläche.</span></h1>
-    <div class="hero-foot">
-      <div class="txt"><p>In jedem Kurs steht ein Coach mit dir auf der Fläche. Wie lange, wie viele und wie hart — das steht im Plan.</p></div>
-      <div class="act">
-        <a class="btn" href="#start">Probetraining buchen</a>
-        <a class="btn out" href="#plan">Wochenplan</a>
+  <div class="heroseite">
+    <div class="hero">
+      <div class="kick mono"><b></b>Performance Center</div>
+      <h1>Nie<br><span class="ol">allein auf</span><br><span class="bl">der Fläche.</span></h1>
+      <div class="hero-foot">
+        <div class="txt"><p>In jedem Kurs steht ein Coach mit dir auf der Fläche. Wie lange, wie viele und wie hart — das steht im Plan.</p></div>
+        <div class="act">
+          <a class="btn" href="#start">Probetraining buchen</a>
+          <a class="btn out" href="#plan">Wochenplan</a>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-<div class="band">
-  <img src="__PH_KURSGRUPPE__" alt="Kurs auf der Trainingsfläche" fetchpriority="high">
-  <span class="tag mono">Sebastiangasse 1 · Klagenfurt</span>
+  <div class="band">
+    <img src="__PH_KURSGRUPPE__" alt="Kurs auf der Trainingsfläche" fetchpriority="high">
+    <span class="tag mono">Sebastiangasse 1 · Klagenfurt</span>
+  </div>
 </div>
 
 <section id="programme" class="wrap">
