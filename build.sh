@@ -34,7 +34,6 @@ SEITEN = {
     'trojan-A-matrix.src.html':  'matrix',
     'trojan-B-phalanx.src.html': 'phalanx',
     'trojan-C-arena.src.html':   'arena',
-    'trojan-D-forum.src.html':   'forum',
 }
 
 FEST = {
