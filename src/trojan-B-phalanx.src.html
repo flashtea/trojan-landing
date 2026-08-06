@@ -551,14 +551,14 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
     <div class="meta mono">In jeder Einheit steht einer mit auf der Fläche.</div>
   </div>
   <div class="coaches">
-    <a class="coach rv" href="#"><img src="__PH_COACHMIKE__" alt="Coach Mike" loading="lazy">
-      <div class="body"><h3>Mike</h3><p>Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien. Hat das Gym 2017 mit seinem Bruder Dominik aufgemacht.</p></div></a>
-    <a class="coach rv" href="#"><img src="__PH_COACHDOMINIK__" alt="Coach Dominik" loading="lazy">
-      <div class="body"><h3>Dominik</h3><p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor für die olympischen Züge.</p></div></a>
-    <a class="coach rv" href="#"><img src="__PH_COACHDIEGO__" alt="Coach Diego" loading="lazy">
-      <div class="body"><h3>Diego</h3><p>Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf regionaler Ebene Wettkämpfe bestritten hat.</p></div></a>
-    <a class="coach rv" href="#"><img src="__PH_COACHBENNI__" alt="Coach Benni" loading="lazy">
-      <div class="body"><h3>Benni</h3><p>Aktiver Eishockeyspieler, studiert Lehramt für Bewegung und Sport in Klagenfurt. Schwerpunkt Konditionstraining.</p></div></a>
+    <figure class="coach rv"><img src="__PH_COACHMIKE__" alt="Coach Mike" loading="lazy">
+      <div class="body"><h3>Mike</h3><p>Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien. Hat das Gym 2017 mit seinem Bruder Dominik aufgemacht.</p></div></figure>
+    <figure class="coach rv"><img src="__PH_COACHDOMINIK__" alt="Coach Dominik" loading="lazy">
+      <div class="body"><h3>Dominik</h3><p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor für die olympischen Züge.</p></div></figure>
+    <figure class="coach rv"><img src="__PH_COACHDIEGO__" alt="Coach Diego" loading="lazy">
+      <div class="body"><h3>Diego</h3><p>Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf regionaler Ebene Wettkämpfe bestritten hat.</p></div></figure>
+    <figure class="coach rv"><img src="__PH_COACHBENNI__" alt="Coach Benni" loading="lazy">
+      <div class="body"><h3>Benni</h3><p>Aktiver Eishockeyspieler, studiert Lehramt für Bewegung und Sport in Klagenfurt. Schwerpunkt Konditionstraining.</p></div></figure>
   </div>
 </section>
 
@@ -841,6 +841,10 @@ addEventListener('resize',()=>{clearTimeout(planTimer);planTimer=setTimeout(()=>
     planZeichnen(PLAN_STAND,false,montag);
   }
 })();
+/* Platzhalter-Links: dahinter liegt noch kein Ziel. Ein Sprung an den
+   Seitenanfang ist die falscheste Antwort darauf — also passiert nichts. */
+document.querySelectorAll('a[href="#"]').forEach(a=>
+  a.addEventListener('click',e=>e.preventDefault()));
 </script>
 </body>
 </html>

@@ -379,7 +379,7 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
 
 <section id="kurse" class="wrap matrix-sec">
   <div class="mhead rv">
-    <h2>Wähl nicht nach Namen.<br><span class="bl">Wähl nach Wirkung.</span></h2>
+    <h2>Wähl nicht nach Namen.<br><span class="bl">Wähl nach Ziel.</span></h2>
     <span class="mono">Ring = Technikanteil · Profile sind Beispielwerte</span>
   </div>
 
@@ -465,17 +465,18 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
 </section>
 <section id="coaches" class="wrap matrix-sec" style="padding-top:0">
   <div class="mhead rv">
-    <h2>Vier Coaches.<br>In <span class="bl">jeder</span> Einheit einer.</h2>
+    <h2>Vier Coaches.<br>Zwei davon <span class="bl">Brüder.</span></h2>
+    <span class="mono">In jeder Einheit steht einer mit dir auf der Fläche.</span>
   </div>
   <div class="coaches">
-    <a class="coach rv" href="#"><picture><source type="image/webp" srcset="../assets/o-coachmike.webp"><img src="../assets/o-coachmike.jpg" alt="Coach Mike" loading="lazy"></picture><span class="veil"></span>
-      <div class="body"><h3>Mike</h3><p>Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien. Hat das Gym 2017 mit seinem Bruder Dominik aufgemacht.</p></div></a>
-    <a class="coach rv" href="#"><picture><source type="image/webp" srcset="../assets/o-coachdominik.webp"><img src="../assets/o-coachdominik.jpg" alt="Coach Dominik" loading="lazy"></picture><span class="veil"></span>
-      <div class="body"><h3>Dominik</h3><p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor für die olympischen Züge.</p></div></a>
-    <a class="coach rv" href="#"><picture><source type="image/webp" srcset="../assets/o-coachdiego.webp"><img src="../assets/o-coachdiego.jpg" alt="Coach Diego" loading="lazy"></picture><span class="veil"></span>
-      <div class="body"><h3>Diego</h3><p>Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf regionaler Ebene Wettkämpfe bestritten hat.</p></div></a>
-    <a class="coach rv" href="#"><picture><source type="image/webp" srcset="../assets/o-coachbenni.webp"><img src="../assets/o-coachbenni.jpg" alt="Coach Benni" loading="lazy"></picture><span class="veil"></span>
-      <div class="body"><h3>Benni</h3><p>Aktiver Eishockeyspieler, studiert Lehramt für Bewegung und Sport in Klagenfurt. Schwerpunkt Konditionstraining.</p></div></a>
+    <figure class="coach rv"><picture><source type="image/webp" srcset="../assets/o-coachmike.webp"><img src="../assets/o-coachmike.jpg" alt="Coach Mike" loading="lazy"></picture><span class="veil"></span>
+      <div class="body"><h3>Mike</h3><p>Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien. Hat das Gym 2017 mit seinem Bruder Dominik aufgemacht.</p></div></figure>
+    <figure class="coach rv"><picture><source type="image/webp" srcset="../assets/o-coachdominik.webp"><img src="../assets/o-coachdominik.jpg" alt="Coach Dominik" loading="lazy"></picture><span class="veil"></span>
+      <div class="body"><h3>Dominik</h3><p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor für die olympischen Züge.</p></div></figure>
+    <figure class="coach rv"><picture><source type="image/webp" srcset="../assets/o-coachdiego.webp"><img src="../assets/o-coachdiego.jpg" alt="Coach Diego" loading="lazy"></picture><span class="veil"></span>
+      <div class="body"><h3>Diego</h3><p>Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf regionaler Ebene Wettkämpfe bestritten hat.</p></div></figure>
+    <figure class="coach rv"><picture><source type="image/webp" srcset="../assets/o-coachbenni.webp"><img src="../assets/o-coachbenni.jpg" alt="Coach Benni" loading="lazy"></picture><span class="veil"></span>
+      <div class="body"><h3>Benni</h3><p>Aktiver Eishockeyspieler, studiert Lehramt für Bewegung und Sport in Klagenfurt. Schwerpunkt Konditionstraining.</p></div></figure>
   </div>
 </section>
 <section id="zeiten" class="wrap matrix-sec" style="padding-top:0">
@@ -859,6 +860,10 @@ function planZeichnen(termine,live,montag){
     planZeichnen(PLAN_STAND,false,montag);
   }
 })();
+/* Platzhalter-Links: dahinter liegt noch kein Ziel. Ein Sprung an den
+   Seitenanfang ist die falscheste Antwort darauf — also passiert nichts. */
+document.querySelectorAll('a[href="#"]').forEach(a=>
+  a.addEventListener('click',e=>e.preventDefault()));
 </script>
 </body>
 </html>
