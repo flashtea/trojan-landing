@@ -114,6 +114,10 @@ h1 .bl{color:var(--blue-hi)}
 .mhead{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:clamp(26px,3.6vw,48px)}
 h2{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;letter-spacing:-.034em;line-height:.98;font-size:clamp(28px,4.8vw,64px);text-wrap:balance}
 h2 .bl{color:var(--blue-hi)}
+/* Empfehlung zum Kombinieren. Die Kursnamen standen in Klammern im Satz —
+   sie stehen ohnehin daneben, mit Profil und Beschreibung. */
+.empfehlung{max-width:56ch;margin-top:clamp(24px,3vw,38px);font-size:clamp(15px,1.6vw,17px)}
+.empfehlung{color:#AEB7C3}
 
 .matrix{position:relative;display:grid;grid-template-columns:auto 1fr;grid-template-rows:1fr auto;
   gap:14px;background:var(--steel);box-shadow:inset 0 0 0 1px var(--edge);padding:clamp(18px,2.6vw,34px)}
@@ -395,14 +399,9 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
       <p class="hint mono" id="rWie"></p>
     </div>
   </div>
-  <p class="rv" style="max-width:62ch;margin-top:clamp(22px,2.6vw,34px);color:#AEB7C3;font-size:clamp(15px,1.5vw,17px)">
-    Wenn du neu anfängst, empfehlen wir drei Einheiten pro Woche: zwei aus der Kraftecke
-    (FBB/Strength &amp; Power — FBB heißt Functional Bodybuilding) und eine aus der
-    Ausdauerecke (Powercircle, Hyrox). Dazu bekommst du einen eigenen Kraftaufbauplan.
-    Und wenn drei nicht gehen: zwei gehen auch.<br><br>
-    <span style="color:var(--dim);font-size:.92em">Nicht im Diagramm, aber im Plan:
-    <b style="color:#AEB7C3;font-weight:700">Mama reloaded</b> — dreimal pro Woche, 45 Minuten.</span>
-  </p>
+  <p class="empfehlung rv">Wenn du neu anfängst, empfehlen wir drei Einheiten pro Woche:
+    zwei aus der Kraftecke, eine aus der Ausdauerecke. Dazu bekommst du einen eigenen
+    Kraftaufbauplan. Und wenn drei nicht gehen: zwei gehen auch.</p>
 </section>
 <section id="plan" class="wrap matrix-sec" style="padding-top:0">
   <div class="mhead rv">

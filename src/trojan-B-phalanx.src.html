@@ -254,6 +254,9 @@ section.wrap{padding-block:clamp(52px,7.4vw,110px)}
 .rrow h3{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;font-size:clamp(19px,2.9vw,38px);letter-spacing:-.032em;line-height:1}
 .rrow .arw{text-align:right;font-size:20px;color:var(--dim)}
 .rrow .wie{color:var(--dim);white-space:nowrap;text-align:right}
+/* Empfehlung zum Kombinieren — steht beim Register, nicht beim Plan */
+.empfehlung{max-width:56ch;margin-top:clamp(24px,3vw,38px);color:#33363A;
+  font-size:clamp(15px,1.6vw,17px)}
 .rrow:hover .wie{color:rgba(239,239,236,.7)}
 /* KURSDETAIL — Phalanx ist ein Aushang, also klappt die Zeile auf, statt eine
    Tafel davorzuschieben. Der Pfeil dreht sich, mehr Signal braucht es nicht. */
@@ -516,18 +519,14 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
   </div>
   <!-- Wird aus denselben Kursdaten gefüllt wie der Wochenplan weiter unten -->
   <div class="reg" id="kursreg"></div>
+  <p class="empfehlung rv">Drei Einheiten pro Woche sind die Basis: zwei für die Kraft,
+    eine für die Ausdauer. Und wenn drei nicht gehen: zwei gehen auch.</p>
 </section>
 
 <section id="plan" class="wrap" style="padding-top:0">
   <div class="sechead rv">
     <h2><span class="ol">Passt das</span><br>in <span class="bl">deine Woche?</span></h2>
-    <div class="meta mono">Montag bis Samstag</div>
   </div>
-  <p class="rv" style="max-width:64ch;margin-bottom:22px;color:#33363A;font-size:15.5px">
-    Drei Einheiten pro Woche sind die Basis: zwei für die Kraft (FBB/Strength &amp; Power —
-    FBB heißt Functional Bodybuilding), eine für die Ausdauer (Powercircle, Hyrox).
-    Und wenn drei nicht gehen: zwei gehen auch.
-  </p>
   <div class="planhint mono rv">→ seitlich wischen</div>
   <div class="planbleed"><div class="planwrap rv">
     <div class="plan" id="plangrid" aria-busy="true">
