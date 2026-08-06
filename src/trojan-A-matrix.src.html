@@ -416,7 +416,7 @@ footer{border-top:1px solid var(--edge);padding:clamp(42px,5.4vw,68px) 0 26px}
 <section id="preise" class="wrap matrix-sec" style="padding-top:0">
   <div class="mhead rv">
     <h2>Nicht das<br>billigste Gym der Stadt.</h2>
-    <span class="mono">Die meisten Kurse sind bei 16 Leuten voll, die kleinsten bei 12. Immer mit Coach.</span>
+    <span class="mono">Dafür: in jeder Einheit ein Coach auf der Fläche, und Gruppen von 12 bis 24 Leuten.</span>
   </div>
   <div class="tiers">
     <div class="tier rv"><span class="mono">2 Einheiten / Woche</span>
@@ -836,9 +836,8 @@ function planZeichnen(termine,live,montag){
 
   const ende=new Date(montag.getFullYear(),montag.getMonth(),montag.getDate()+5);
   const f=x=>x.toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit'});
-  document.getElementById('mplanquelle').textContent=live
-    ? `Live aus dem Buchungssystem · ${f(montag)}–${f(ende)}`
-    : 'Letzter bekannter Stand';
+  // Steht schon in der Abschnittszeile — hier nur der Ausnahmefall.
+  document.getElementById('mplanquelle').textContent=live?'':'Letzter bekannter Stand';
 }
 
 (async()=>{
