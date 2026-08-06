@@ -1,6 +1,6 @@
-# Trojan Performance — drei Entwürfe
+# Trojan Performance — vier Entwürfe
 
-Drei Startseiten-Entwürfe für [trojanperformance.at](https://www.trojanperformance.at/),
+Vier Startseiten-Entwürfe für [trojanperformance.at](https://www.trojanperformance.at/),
 statisch gehostet auf GitHub Pages.
 
 | | Entwurf | Charakter |
@@ -8,6 +8,7 @@ statisch gehostet auf GitHub Pages.
 | A | [`matrix/`](matrix/) | dunkel, sachlich — Kursangebot als Streudiagramm statt Kartenliste |
 | B | [`phalanx/`](phalanx/) | hell, plakativ — der Wochenplan steht im Zentrum |
 | C | [`arena/`](arena/) | dunkel, filmisch — Vollbild-Bühne, dann Zahlen, Preise, Coaches, Kurse |
+| D | [`forum/`](forum/) | blaues Farbfeld, Serifenschrift — jedes Kapitel eine scroll-getriebene Kamerafahrt |
 
 ## Bauen
 
@@ -16,7 +17,7 @@ statisch gehostet auf GitHub Pages.
 ```
 
 Ersetzt in `src/*.src.html` die Bildplatzhalter (`__LOGO__`, `__MONOA__`, `__PH_XXX__`)
-durch Pfade nach `assets/` und schreibt das Ergebnis nach `matrix/`, `phalanx/`, `arena/`.
+durch Pfade nach `assets/` und schreibt das Ergebnis nach `matrix/`, `phalanx/`, `arena/`, `forum/`.
 Fehlt ein Bild oder bleibt ein Platzhalter stehen, bricht der Build ab.
 
 Bearbeitet wird immer `src/`, nie die generierten `index.html`.
@@ -33,7 +34,7 @@ python3 -m http.server 8099
 src/          Quellen mit Platzhaltern — hier wird editiert
 assets/       Fotos und Logo von trojanperformance.at, Vorschaubilder
 build.sh      Platzhalter -> Pfade
-index.html    Übersicht mit Links auf die drei Entwürfe
+index.html    Übersicht mit Links auf die vier Entwürfe
 ```
 
 Jeder Entwurf ist eine einzelne HTML-Datei mit eingebettetem CSS und JS. Keine Build-Kette,
