@@ -115,12 +115,18 @@ header{position:sticky;top:0;z-index:70;background:var(--paper);border-bottom:2p
 /* Auf dem Handy stapelten sich hier drei Fakten in zwei Spalten, von denen
    einer über drei Zeilen lief — viel Fläche vor der ersten Aussage. Der Ort
    entfällt, er steht direkt darunter am Bildband. */
+/* Am Handy bleibt von der Leiste eine Angabe übrig. Nebeneinander trägt sie
+   drei; untereinander wurden daraus drei Blöcke Kleinschrift zwischen
+   Navigation und Überschrift — zusammen mit der Navigation und dem Kicker
+   vier Blöcke, bevor die erste Aussage kommt.
+   Es bleibt der HYROX-Anspruch, weil er als einziger sonst nirgends weit oben
+   steht: Der Ort klebt am Bildband direkt unter der Falz, die Konditionen
+   stehen im Preisabschnitt. Er ist auf „Offizieller HYROX Training Club"
+   gekürzt — 269 px statt 426 px, damit einzeilig auch auf einem iPhone SE. */
 @media(max-width:760px){
   .metabar{grid-template-columns:1fr}
-  /* Sperrung zurücknehmen, sonst bricht jede Zeile mit einem einzelnen Wort um */
-  .metabar div{border-left:0;padding:8px 0;letter-spacing:.1em}
-  .metabar div:first-child{display:none}
-  .metabar div+div{border-top:1px solid var(--hair)}
+  .metabar div{border-left:0;padding:11px 0}
+  .metabar div:first-child,.metabar div:last-child{display:none}
 }
 .hero{padding:clamp(28px,4.2vw,58px) 0 clamp(24px,3.4vw,44px)}
 .kick{display:inline-flex;align-items:center;gap:11px;color:var(--blue);margin-bottom:clamp(14px,2.2vw,24px)}
@@ -490,7 +496,7 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
 <div class="wrap erste" id="inhalt">
   <div class="metabar">
     <div class="mono">Klagenfurt am Wörthersee</div>
-    <div class="mono">Erster offizieller HYROX Training Club in Kärnten</div>
+    <div class="mono">Offizieller HYROX Training Club</div>
     <div class="mono">Keine Einschreibgebühr · Probetraining 15 €</div>
   </div>
   <div class="heroseite">
