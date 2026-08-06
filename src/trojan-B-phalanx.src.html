@@ -147,6 +147,26 @@ h1 .bl{color:var(--blue)}
    Ortsschild an der Unterkante lag darunter. Jetzt füllen Kopf, Metazeile,
    Hero und Bildstreifen zusammen genau einen Bildschirm: der Schnitt liegt auf
    der Unterkante des Bildes, also auf einer Linie, die ohnehin da ist. */
+/* Auf breiten Schirmen dieselbe Ursache, andere Ausprägung: gemessen waren vom
+   Bild 0px bei 1280x720, 4px bei 1366x768, 135px bei 1440x900, 303px bei
+   1920x1080. Der Splitter bei 768 sieht nach Fehler aus.
+   Die Plakatzeile ist bei 720px Höhe allein 368px hoch — sie und der
+   Bildstreifen passen dort nicht beide auf den ersten Bildschirm. Also zwei
+   saubere Zustände statt eines zufälligen dazwischen: hohe Schirme zeigen einen
+   festen Streifen, niedrige enden auf der Papierkante und das Bild beginnt
+   genau an der Falz. */
+@media(min-width:821px){
+  :root{--kopf:72px}
+  #inhalt{display:flex;flex-direction:column}
+  #inhalt .hero{flex:1;display:flex;flex-direction:column;justify-content:center}
+}
+@media(min-width:821px) and (min-height:880px){
+  #inhalt{min-height:calc(100svh - var(--kopf) - 132px)}
+}
+@media(min-width:821px) and (max-height:879px){
+  #inhalt{min-height:calc(100svh - var(--kopf))}
+}
+
 @media(max-width:820px){
   :root{--kopf:129px;--band:clamp(150px,21svh,240px)}
   #inhalt{min-height:calc(100svh - var(--kopf) - var(--band));display:flex;flex-direction:column}
