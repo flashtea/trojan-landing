@@ -256,15 +256,16 @@ h2 .bl{color:var(--blue-hi)}
 .coach .veil{position:absolute;inset:0;z-index:6;background:linear-gradient(to top,rgba(4,7,11,.93) 5%,rgba(4,7,11,.04) 60%)}
 .coach .body{position:absolute;left:0;right:0;bottom:0;z-index:8;padding:20px}
 
-/* Festes Seitenverhältnis und variabler Text vertragen sich hier nicht.
-   3/2 liess vom Hochformat 41% der Bildhöhe übrig — die Quellfotos haben
-   0,62 bis 0,75. Ein passendes Verhältnis wäre bei 390px 0,67, bei 360px
-   aber schon wieder zu knapp, weil der Text in der schmaleren Spalte höher
-   wird. Also bestimmt der Text die Höhe und das Foto füllt sie: dann wird
-   höchstens seitlich beschnitten, nie mehr quer durchs Gesicht. */
+/* Auf zwei schmalen Spalten deckt die Biografie die halbe Kachel zu, und ein
+   Seitenverhältnis, das beides trägt, gibt es nicht: 3/2 liess vom Hochformat
+   41% der Bildhöhe übrig, 0,67 passte bei 390px und bei 360px nicht mehr.
+   Also wie in Phalanx: Bild oben im Hochformat, Text darunter auf eigener
+   Fläche. Dann ist weder das Gesicht angeschnitten noch der Text im Weg. */
 @media(max-width:600px){
-  .coach{aspect-ratio:auto;min-height:62vw;display:flex;flex-direction:column;justify-content:flex-end}
-  .coach .body{position:relative}
+  .coach{aspect-ratio:auto;display:flex;flex-direction:column;background:var(--deep)}
+  .coach .duo{position:relative;inset:auto;aspect-ratio:4/5}
+  .coach .veil{display:none}
+  .coach .body{position:relative;padding:14px 14px 16px}
 }
 .coach h3{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;font-size:21px;letter-spacing:-.025em}
 .coach p{color:#B3BCC7;font-size:12.5px;margin-top:6px;line-height:1.45}
