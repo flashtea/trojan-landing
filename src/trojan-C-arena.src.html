@@ -1004,8 +1004,6 @@ function planZeichnen(termine,live,montag){
   document.getElementById('zSoZeile').hidden=!sonntag;
   document.getElementById('zSo').textContent=sonntag;
 
-  const bis=new Date(montag.getFullYear(),montag.getMonth(),montag.getDate()+5);
-  const f=x=>x.toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit'});
   // Im Betrieb steht die Quelle schon in der Abschnittszeile darüber.
   document.getElementById('wquelle').textContent=live?'':'Letzter bekannter Stand';
 }

@@ -569,7 +569,11 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
 <section id="programme" class="wrap">
   <div class="sechead rv">
     <h2><span class="ol">Einer davon</span><br>passt <span class="bl">zu dir.</span></h2>
-    <div class="meta mono">12–16 Plätze · Powercircle und Hyrox bis 24</div>
+    <!-- Stand als "12–16 Plätze · Powercircle und Hyrox bis 24". Umständlich,
+         und falsch: drei Kurse haben 24 Plätze, nicht zwei — Community TeamWOD
+         fehlte. Die Spanne sagt dasselbe in weniger Worten, und jeder Kurs
+         nennt seine Zahl ohnehin selbst. -->
+    <div class="meta mono">12 bis 24 Plätze, je nach Kurs</div>
   </div>
   <!-- Wird aus denselben Kursdaten gefüllt wie der Wochenplan weiter unten -->
   <div class="reg" id="kursreg"></div>
@@ -941,17 +945,18 @@ function planZeichnen(termine,live,montag){
   const schmal=innerWidth<PLAN_UMBRUCH;
   if(schmal===planSchmal&&!termine) return;      // Form unverändert, nichts zu tun
   planSchmal=schmal;
-  const {termine:d,live:l,montag:mo}=planDaten;
+  const {termine:d,live:l}=planDaten;
   zeitenSetzen(d);
   const tage=[0,1,2,3,4,5].concat(d.some(t=>t.tag===6)?[6]:[]);
   const gitter=document.getElementById('plangrid');
   gitter.classList.toggle('liste',schmal);
   gitter.innerHTML=schmal?planListe(d,tage):planGitter(d,tage);
   gitter.removeAttribute('aria-busy');
-  const bis=new Date(mo.getFullYear(),mo.getMonth(),mo.getDate()+5);
-  const f=x=>x.toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit'});
+  // Ohne Datumsspanne: dass es die laufende Woche ist, steht in der
+  // Abschnittsüberschrift, und zwei Datumsangaben nebeneinander lesen sich
+  // wie eine Einschränkung.
   document.getElementById('planquelle').textContent=l
-    ? `Live aus dem Buchungssystem · ${f(mo)}–${f(bis)}`
+    ? 'Live aus dem Buchungssystem'
     : 'Letzter bekannter Stand';
 }
 let planTimer;
