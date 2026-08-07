@@ -39,6 +39,13 @@
   --blue:#3971B7; --blue-hi:#63A0EA;
   --white:#EEF2F6; --dim:#7F8894;
   --pad:clamp(28px,3.6vw,48px);
+  /* Höhe der Kopfzeile. Der Hero zieht sie von 100svh ab, damit er genau auf
+     der Falz endet. Stand hier als feste 76 gerechnet — das stimmt nur am
+     Desktop; am Handy bricht die Leiste um und ist 128px hoch, der Hero ragte
+     also auf jedem Telefon 52px über den Bildschirm und schnitt den zweiten
+     Knopf ab. Die Media Query unten deckt den Regelfall ab, das Skript misst
+     danach exakt nach. */
+  --kopf:76px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 /* Der Build hüllt jedes Bild in <picture>. Ohne display:contents wäre das
@@ -84,6 +91,7 @@ header{position:sticky;top:0;z-index:80;background:rgba(8,9,11,.86);backdrop-fil
 .btn.gh{background:transparent;box-shadow:inset 0 0 0 1px var(--edge-2);color:var(--white)}
 .btn.gh:hover{background:var(--steel-2)}
 @media(max-width:980px){
+  :root{--kopf:128px}
   .nav{flex-wrap:wrap;height:auto;padding-block:16px 8px;gap:12px 30px}
   /* Nicht scrollen, sondern verteilen: die vier Punkte passen auf 360px,
      sie klebten nur am linken Rand und liessen rechts eine tote Fläche. */
@@ -93,7 +101,7 @@ header{position:sticky;top:0;z-index:80;background:rgba(8,9,11,.86);backdrop-fil
 }
 
 /* HERO */
-.hero{position:relative;min-height:calc(100svh - 76px);display:flex;align-items:flex-end;padding-bottom:clamp(40px,6vw,80px);overflow:hidden}
+.hero{position:relative;min-height:calc(100svh - var(--kopf));display:flex;align-items:flex-end;padding-bottom:clamp(40px,6vw,80px);overflow:hidden}
 .hero .bg{position:absolute;inset:0;z-index:0}
 .hero .bg img{width:100%;height:100%;object-fit:cover;object-position:50% 40%;filter:grayscale(.5) contrast(1.05) brightness(.72)}
 .hero .bg::after{content:"";position:absolute;inset:0;
@@ -205,7 +213,9 @@ h2 .bl{color:var(--blue-hi)}
 .pt.est{box-shadow:none;border:1.5px dashed rgba(99,160,234,.55)}
 .pt.est:hover,.pt.est:focus-visible{box-shadow:0 0 24px -4px rgba(99,160,234,.55);
   border-color:var(--blue-hi)}
-.matrix.dim .pt{opacity:.28}
+/* .28 war zu wenig: auf diesem Schwarz verschwanden die nicht gewählten Punkte
+   fast ganz — also genau der Vergleich, für den das Diagramm da ist. */
+.matrix.dim .pt{opacity:.45}
 .matrix.dim .pt.on{opacity:1}
 
 /* Auslese-Feld */
@@ -677,6 +687,20 @@ function ziffernSetzen(){
     if((gut||kandidaten[0]).nl) pt.classList.add('nl');
   });
 }
+/* Kopfhöhe nachmessen. Die Media Query im Stylesheet trifft den Regelfall,
+   aber die Leiste bricht je nach Schriftgrösse und Wortbreite unterschiedlich
+   um — und der Hero zieht diesen Wert von 100svh ab. Ein ResizeObserver hält
+   ihn richtig, ohne dass jemand ihn pflegen muss. */
+const kopf=document.querySelector('header');
+function kopfMessen(){
+  document.documentElement.style.setProperty('--kopf',
+    Math.round(kopf.getBoundingClientRect().height)+'px');
+}
+if(window.ResizeObserver) new ResizeObserver(kopfMessen).observe(kopf);
+else addEventListener('resize',kopfMessen);
+kopfMessen();
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(kopfMessen);
+
 function diagrammSetzen(){ fahnenSetzen(); ziffernSetzen(); }
 // Archivo Black kommt asynchron — vorher gemessene Breiten sind zu klein
 if(document.fonts&&document.fonts.ready) document.fonts.ready.then(diagrammSetzen);
@@ -713,7 +737,35 @@ function show(i,fokus=true){
   });
 }
 M.addEventListener('mouseleave',()=>{M.classList.remove('dim');pts.forEach(p=>p.classList.remove('on'))});
-show(3,false);
+
+/* Trefferfläche. Die Punkte sind 22 bis 37px gross — unter dem Mindestmass von
+   44px — und sie stehen exakt auf ihrem Wert, also können zwei Kurse dicht
+   beieinander liegen: Performance und Team-WOD trennen am Handy 18,6px
+   Mittenabstand. Ein Tipp auf Performance landete deshalb bei Team-WOD,
+   ausgerechnet beim Kurs, der siebenmal die Woche läuft.
+   Die Punkte auseinanderzuschieben wäre gelogen — das Diagramm behauptet ja,
+   exakt zu sein. Stattdessen fängt die Zeichenfläche den Klick im Capture-Lauf
+   ab und wählt den nächstgelegenen Punkt. Damit ist beides erledigt: jeder
+   Punkt ist erreichbar, und getroffen werden muss nicht mehr der Punkt,
+   sondern nur seine Umgebung.
+   stopPropagation verhindert, dass danach der Button unter dem Finger seinen
+   eigenen Index nachschiebt und die Wahl wieder überschreibt. Bei detail===0
+   kam der Klick von der Tastatur — dort ist der Button selbst gemeint. */
+plot.addEventListener('click',e=>{
+  if(e.detail===0) return;
+  let nah=-1,dist=Infinity;
+  pts.forEach((p,i)=>{
+    const b=p.getBoundingClientRect();
+    const d=Math.hypot(e.clientX-(b.left+b.width/2),e.clientY-(b.top+b.height/2));
+    if(d<dist){dist=d;nah=i}
+  });
+  if(nah>=0){e.stopPropagation();show(nah)}
+},true);
+
+/* Beim Laden stand hier Kurs 4 — „Mama reloaded". Das grosse Feld behauptete
+   damit beim ersten Blick, das sei der Kern des Gyms. Performance ist der
+   Allrounder und läuft am häufigsten. */
+show(0,false);
 
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.rv').forEach((el,i)=>{el.style.transitionDelay=(Math.min(i,6)*55)+'ms';io.observe(el)});
