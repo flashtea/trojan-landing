@@ -511,10 +511,17 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
 .khinweis.warn{color:var(--blue)}
 @media(max-width:640px){.kform{grid-template-columns:1fr}}
 
-/* Social: für ein Gym der laufende Lebensbeweis. Fehlte bisher ganz. */
-.sozial{display:flex;flex-wrap:wrap;gap:2px 18px;margin-top:10px}
-.sozial a{display:inline-flex;align-items:center;min-height:44px;
-  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase}
+/* Social: für ein Gym der laufende Lebensbeweis. Fehlte bisher ganz.
+   Als Icons statt als Wörter — im Fuss stehen schon acht Textlinks, drei
+   weitere Wörter gehen darin unter. Die Zeichen sind geometrisch
+   nachgezeichnet, nicht als Markenlogos eingebettet: eine Linienstärke, und
+   über currentColor färben sie sich mit dem Entwurf mit. */
+.sozial{display:flex;gap:10px;margin-top:14px}
+.sozial a{display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;min-height:44px;padding:0;margin:0;
+  border:1px solid var(--rule);color:#2E3135;transition:color .2s,border-color .2s}
+.sozial a:hover{color:var(--blue);border-color:var(--blue)}
+.sozial svg{width:19px;height:19px;display:block}
 </style>
 </head>
 <body>
@@ -745,10 +752,10 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
       <div>
         <img class="logo" src="__LOGO__" alt="Trojan Performance" style="height:30px;margin-bottom:15px" loading="lazy">
         <p style="color:var(--dim);max-width:30ch">Performance Center in Klagenfurt, Sebastiangasse 1. Erster offizieller HYROX Training Club in Kärnten.</p>
-        <div class="sozial mono">
-          <a href="https://www.instagram.com/trojan.performance/" target="_blank" rel="noopener">Instagram</a>
-          <a href="https://www.facebook.com/trojanperformanceofficial" target="_blank" rel="noopener">Facebook</a>
-          <a href="https://www.youtube.com/channel/UChUZebvjDwrWEdOCa86xNiA" target="_blank" rel="noopener">YouTube</a>
+        <div class="sozial">
+          <a href="https://www.instagram.com/trojan.performance/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5.2" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor"/></svg></a>
+          <a href="https://www.facebook.com/trojanperformanceofficial" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M13.4 21v-8.2h2.75l.41-3.19H13.4V7.57c0-.92.26-1.55 1.58-1.55h1.69V3.17A22.6 22.6 0 0 0 14.2 3.05c-2.44 0-4.11 1.49-4.11 4.22v2.34H7.33v3.19h2.76V21z"/></svg></a>
+          <a href="https://www.youtube.com/channel/UChUZebvjDwrWEdOCa86xNiA" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2.6" y="5.6" width="18.8" height="12.8" rx="4" fill="none" stroke="currentColor" stroke-width="1.9"/><path fill="currentColor" d="M10.4 8.9 15.6 12l-5.2 3.1z"/></svg></a>
         </div>
       </div>
       <div><h3 class="mono">Seite</h3><a href="#programme">Kurse</a><a href="#plan">Wochenplan</a><a href="#coaches">Coaches</a><a href="#preise">Preise</a><a href="#einstieg">Einstieg</a></div>
