@@ -688,10 +688,14 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
 <section class="wrap" style="padding-top:0">
   <div class="two rv">
     <div class="half">
-      <div class="hrow"><b>Kurse Mo – Fr</b><span>06:00–11:30 · 16:00–19:45</span></div>
-      <div class="hrow"><b>Kurse Samstag</b><span>08:15–10:45</span></div>
+      <!-- Kommt aus derselben Abfrage wie der Wochenplan darüber. Stand vorher
+           fest im Markup und wäre bei der ersten verschobenen Kurszeit falsch
+           geworden — ohne dass es jemandem auffällt. -->
+      <div class="hrow"><b>Kurse Mo – Fr</b><span id="zMoFr">—</span></div>
+      <div class="hrow"><b>Kurse Samstag</b><span id="zSa">—</span></div>
+      <div class="hrow" id="zSoZeile" hidden><b>Kurse Sonntag</b><span id="zSo">—</span></div>
       <div class="hrow key"><b>Open Gym · täglich</b><span>06:00–22:00</span></div>
-      <div class="hrow"><b>Frühkurs 06:00</b><span>Dienstag und Donnerstag</span></div>
+      <div class="hrow" id="zFruehZeile" hidden><b>Frühkurs 06:00</b><span id="zFrueh">—</span></div>
     </div>
     <div class="half pad">
       <span class="mono" style="color:var(--dim)">Standort</span>
@@ -895,6 +899,42 @@ function planListe(termine,tage){
 let planDaten=null, planSchmal=null;
 const PLAN_UMBRUCH=820;
 
+/* Öffnungszeiten aus denselben Terminen. Die Toleranz von 150 Minuten legt
+   zusammen, was nur durch eine Mittagspause getrennt ist — übrig bleiben
+   Vormittag und Abend statt einer Kette aus sechs Blöcken. Wer es genau
+   braucht, findet den Wochenplan darüber. */
+function zeitenSetzen(termine){
+  const LUECKE=150;
+  const min=z=>+z.slice(0,2)*60 + +z.slice(3,5);
+  const uhr=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+  const fenster=tage=>{
+    const roh=termine.filter(t=>tage.includes(t.tag))
+      .map(t=>[min(t.zeit),min(t.zeit)+t.dauer]).sort((a,b)=>a[0]-b[0]);
+    const aus=[];
+    for(const [von,bis] of roh){
+      const l=aus[aus.length-1];
+      if(l&&von<=l[1]+LUECKE) l[1]=Math.max(l[1],bis); else aus.push([von,bis]);
+    }
+    return aus.map(([v,b])=>`${uhr(v)}–${uhr(b)}`).join(' · ');
+  };
+  document.getElementById('zMoFr').textContent=fenster([0,1,2,3,4])||'keine Kurse';
+  document.getElementById('zSa').textContent=fenster([5])||'keine Kurse';
+  const so=fenster([6]);
+  document.getElementById('zSoZeile').hidden=!so;
+  document.getElementById('zSo').textContent=so;
+
+  /* Auch der Frühkurs stand fest im Markup. An welchen Tagen es um sechs
+     losgeht, weiss der Plan ohnehin. */
+  const frueh=[...new Set(termine.filter(t=>min(t.zeit)<7*60).map(t=>t.tag))].sort();
+  const zeile=document.getElementById('zFruehZeile');
+  zeile.hidden=!frueh.length;
+  if(frueh.length){
+    const namen=frueh.map(t=>PLAN_TAGE[t]);
+    document.getElementById('zFrueh').textContent=
+      namen.length>1 ? namen.slice(0,-1).join(', ')+' und '+namen.at(-1) : namen[0];
+  }
+}
+
 function planZeichnen(termine,live,montag){
   if(termine){ planDaten={termine,live,montag}; registerZeichnen(termine); }
   if(!planDaten) return;
@@ -902,6 +942,7 @@ function planZeichnen(termine,live,montag){
   if(schmal===planSchmal&&!termine) return;      // Form unverändert, nichts zu tun
   planSchmal=schmal;
   const {termine:d,live:l,montag:mo}=planDaten;
+  zeitenSetzen(d);
   const tage=[0,1,2,3,4,5].concat(d.some(t=>t.tag===6)?[6]:[]);
   const gitter=document.getElementById('plangrid');
   gitter.classList.toggle('liste',schmal);
