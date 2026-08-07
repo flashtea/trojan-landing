@@ -319,6 +319,9 @@ h2 .bl{color:var(--blue-hi)}
 .daybar span{position:absolute;top:31px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:var(--dim)}
 .hrow{display:flex;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid var(--edge);font-size:14.5px}
 .hrow span{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#AEB7C3;text-align:right}
+/* Der Tag bleibt zusammen, nur die Uhrzeit bricht um — sonst franst die
+   Zeile auf schmalen Geräten beidseitig aus. */
+.hrow b{white-space:nowrap}
 .addr{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;font-size:clamp(20px,2.5vw,30px);text-transform:uppercase;letter-spacing:-.028em;line-height:1.18}
 
 /* SCHLUSS */
