@@ -475,6 +475,48 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
    und die Konturschrift nimmt davon noch einen halben Pixel. Auf schmalen
    Viewports zählt jeder Zehntel, also hier grosszügiger. */
 @media(max-width:820px){h1,h2,.sechead h2,.final h2{line-height:.98}}
+
+/* ---- Kontakt ---------------------------------------------------------------
+   Bisher gab es auf der Seite keinen Weg, eine Frage zu stellen, ausser einer
+   Mailadresse im Fuss. Die Betreffauswahl übernimmt die vier Fälle, die der
+   Kunde auf seiner eigenen Seite führt — Firmentraining ist dabei ein zweites
+   Standbein, das sonst nirgends vorkam. */
+.kkopf{margin-bottom:clamp(20px,2.6vw,32px)}
+/* Dieser Entwurf gestaltet nur .sechead h2, nicht h2 allein — ohne diese
+   Zeile stünde die Überschrift in der Grundschrift statt in der Plakatschrift. */
+.kkopf h2{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;
+  letter-spacing:-.038em;line-height:.95;font-size:clamp(30px,5.4vw,76px)}
+.kunter{margin-top:12px;color:var(--dim);font-size:clamp(14.5px,1.5vw,16.5px);max-width:52ch}
+.kunter a{color:var(--blue);text-decoration:none;border-bottom:1px solid currentColor;
+  display:inline-block;padding-block:4px}
+.kform{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;max-width:720px}
+.kfeld{display:flex;flex-direction:column;gap:7px;min-width:0}
+.kfeld.voll{grid-column:1/-1}
+.kfeld label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim)}
+.kfeld input,.kfeld select,.kfeld textarea{
+  font-family:inherit;font-size:15.5px;line-height:1.4;color:var(--ink);
+  background:var(--paper);border:2px solid var(--ink);border-radius:0;
+  padding:13px 14px;min-height:48px;width:100%;
+  -webkit-appearance:none;appearance:none}
+/* appearance:none nimmt dem Auswahlfeld auch den Pfeil — hier einer zurück,
+   damit man sieht, dass es aufklappt. */
+.kfeld select{padding-right:40px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%233971B7' stroke-width='1.8'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 15px center}
+.kfeld textarea{min-height:124px;resize:vertical}
+.kfeld input:focus-visible,.kfeld select:focus-visible,.kfeld textarea:focus-visible{
+  outline:2px solid var(--blue);outline-offset:2px}
+.kform .btn{grid-column:1/-1;justify-self:start}
+.khinweis{grid-column:1/-1;margin:0;color:var(--dim);min-height:1.4em;line-height:1.5;
+  letter-spacing:.1em}
+.khinweis.warn{color:var(--blue)}
+@media(max-width:640px){.kform{grid-template-columns:1fr}}
+
+/* Social: für ein Gym der laufende Lebensbeweis. Fehlte bisher ganz. */
+.sozial{display:flex;flex-wrap:wrap;gap:2px 18px;margin-top:10px}
+.sozial a{display:inline-flex;align-items:center;min-height:44px;
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase}
 </style>
 </head>
 <body>
@@ -665,12 +707,51 @@ footer{border-top:2px solid var(--ink);padding:clamp(40px,5.4vw,66px) 0 24px}
   </div>
 </section>
 
+
+<section id="kontakt" class="wrap" style="padding-top:0">
+  <div class="kkopf rv">
+    <h2>Schreib uns.</h2>
+    <p class="kunter">Wir melden uns am selben Tag, wenn du bis 18 Uhr schreibst.
+      Lieber telefonisch? <a href="tel:+4367682277302">+43 676 8227 7302</a></p>
+  </div>
+  <form class="kform rv" id="kform" novalidate>
+    <div class="kfeld voll">
+      <label for="k-betreff">Worum geht es?</label>
+      <select id="k-betreff" name="betreff">
+        <option>Probetraining</option>
+        <option>Allgemeine Anfrage</option>
+        <option>1:1 Coaching</option>
+        <option>Firmentraining</option>
+      </select>
+    </div>
+    <div class="kfeld">
+      <label for="k-name">Name</label>
+      <input id="k-name" name="name" type="text" autocomplete="name" required>
+    </div>
+    <div class="kfeld">
+      <label for="k-mail">E-Mail</label>
+      <input id="k-mail" name="mail" type="email" autocomplete="email" required>
+    </div>
+    <div class="kfeld voll">
+      <label for="k-text">Nachricht</label>
+      <textarea id="k-text" name="text" rows="4"></textarea>
+    </div>
+    <button class="btn" type="submit">Anfrage senden</button>
+    <p class="khinweis mono" id="khinweis" role="status" aria-live="polite"></p>
+  </form>
+</section>
+
 <footer>
   <div class="wrap">
     <div class="fgrid">
       <div>
         <img class="logo" src="../assets/logo.png" alt="Trojan Performance" style="height:30px;margin-bottom:15px" loading="lazy">
         <p style="color:var(--dim);max-width:30ch">Performance Center in Klagenfurt, Sebastiangasse 1. Erster offizieller HYROX Training Club in Kärnten.</p>
+        <div class="sozial mono">
+          <a href="https://www.instagram.com/trojan.performance/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.facebook.com/trojanperformanceofficial" target="_blank" rel="noopener">Facebook</a>
+          <a href="https://www.youtube.com/channel/UChUZebvjDwrWEdOCa86xNiA" target="_blank" rel="noopener">YouTube</a>
+        </div>
       </div>
       <div><h3 class="mono">Seite</h3><a href="#programme">Kurse</a><a href="#plan">Wochenplan</a><a href="#coaches">Coaches</a><a href="#preise">Preise</a><a href="#einstieg">Einstieg</a></div>
       <div><h3 class="mono">Kontakt</h3><a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a><a href="tel:+4367682277302">+43 676 8227 7302</a><a href="#">Sebastiangasse 1, 9020 Klagenfurt</a></div>
@@ -852,6 +933,29 @@ addEventListener('resize',()=>{clearTimeout(planTimer);planTimer=setTimeout(()=>
    Seitenanfang ist die falscheste Antwort darauf — also passiert nichts. */
 document.querySelectorAll('a[href="#"]').forEach(a=>
   a.addEventListener('click',e=>e.preventDefault()));
+
+/* ---- Kontaktformular -------------------------------------------------------
+   Entwurf: es gibt keinen Empfänger. Statt die Anfrage ins Leere laufen zu
+   lassen, sagt das Formular das hin und nennt die Adresse, an die im Betrieb
+   zugestellt würde. Ein Formular, das scheinbar absendet und nichts tut, wäre
+   die schlechtere Lösung — der Interessent wartet dann auf eine Antwort. */
+(() => {
+  const f = document.getElementById('kform');
+  if (!f) return;
+  const hinweis = document.getElementById('khinweis');
+  f.addEventListener('submit', e => {
+    e.preventDefault();
+    const fehlend = [...f.querySelectorAll('[required]')].filter(x => !x.value.trim());
+    if (fehlend.length) {
+      fehlend[0].focus();
+      hinweis.textContent = 'Bitte Name und E-Mail ausfüllen.';
+      hinweis.classList.add('warn');
+      return;
+    }
+    hinweis.classList.remove('warn');
+    hinweis.textContent = 'Entwurf — im Betrieb ginge diese Anfrage an office@trojanperformance.at.';
+  });
+})();
 </script>
 </body>
 </html>

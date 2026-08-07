@@ -500,6 +500,44 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
    und die Konturschrift nimmt davon noch einen halben Pixel. Auf schmalen
    Viewports zählt jeder Zehntel, also hier grosszügiger. */
 @media(max-width:820px){h1,h2,.sechead h2,.final h2{line-height:.98}}
+
+/* ---- Kontakt ---------------------------------------------------------------
+   Bisher gab es auf der Seite keinen Weg, eine Frage zu stellen, ausser einer
+   Mailadresse im Fuss. Die Betreffauswahl übernimmt die vier Fälle, die der
+   Kunde auf seiner eigenen Seite führt — Firmentraining ist dabei ein zweites
+   Standbein, das sonst nirgends vorkam. */
+.kkopf{margin-bottom:clamp(20px,2.6vw,32px)}
+.kunter{margin-top:12px;color:var(--dim);font-size:clamp(14.5px,1.5vw,16.5px);max-width:52ch}
+.kunter a{color:var(--blue-hi);text-decoration:none;border-bottom:1px solid currentColor;
+  display:inline-block;padding-block:4px}
+.kform{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;max-width:720px}
+.kfeld{display:flex;flex-direction:column;gap:7px;min-width:0}
+.kfeld.voll{grid-column:1/-1}
+.kfeld label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim)}
+.kfeld input,.kfeld select,.kfeld textarea{
+  font-family:inherit;font-size:15.5px;line-height:1.4;color:var(--white);
+  background:var(--deep);border:1px solid var(--line);border-radius:0;
+  padding:13px 14px;min-height:48px;width:100%;
+  -webkit-appearance:none;appearance:none}
+/* appearance:none nimmt dem Auswahlfeld auch den Pfeil — hier einer zurück,
+   damit man sieht, dass es aufklappt. */
+.kfeld select{padding-right:40px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%236FAAF0' stroke-width='1.8'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 15px center}
+.kfeld textarea{min-height:124px;resize:vertical}
+.kfeld input:focus-visible,.kfeld select:focus-visible,.kfeld textarea:focus-visible{
+  outline:2px solid var(--blue-hi);outline-offset:2px}
+.kform .btn{grid-column:1/-1;justify-self:start}
+.khinweis{grid-column:1/-1;margin:0;color:var(--dim);min-height:1.4em;line-height:1.5;
+  letter-spacing:.1em}
+.khinweis.warn{color:var(--blue-hi)}
+@media(max-width:640px){.kform{grid-template-columns:1fr}}
+
+/* Social: für ein Gym der laufende Lebensbeweis. Fehlte bisher ganz. */
+.sozial{display:flex;flex-wrap:wrap;gap:2px 18px;margin-top:10px}
+.sozial a{display:inline-flex;align-items:center;min-height:44px;
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase}
 </style>
 </head>
 <body>
@@ -739,28 +777,15 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
   <div class="two">
     <div class="panel rv">
       <h3>Kurszeiten</h3>
-      <!-- Achse 06–22, nicht 00–24: davor und danach steht nichts im Plan, und die
-           leere Viertelbreite fehlte der schmalsten Einheit (45 Minuten). -->
-      <div class="ticks mono">
-        <span style="left:0;transform:none">06</span><span style="left:37.5%">12</span>
-        <span style="left:75%">18</span><span style="right:0;left:auto;transform:none">22</span>
-      </div>
-      <!-- Die blauen Balken standen hier als 40 handgerechnete Prozentwerte.
-           Sie kommen jetzt aus denselben Daten wie der Wochenplan darüber —
-           eine verschobene Kurszeit muss niemand mehr in Prozent umrechnen. -->
-      <div class="week" id="wband">
-        <div class="wrow"><span class="d mono">MO</span><div class="bar"><i class="open"></i></div></div>
-        <div class="wrow"><span class="d mono">DI</span><div class="bar"><i class="open"></i></div></div>
-        <div class="wrow"><span class="d mono">MI</span><div class="bar"><i class="open"></i></div></div>
-        <div class="wrow"><span class="d mono">DO</span><div class="bar"><i class="open"></i></div></div>
-        <div class="wrow"><span class="d mono">FR</span><div class="bar"><i class="open"></i></div></div>
-        <div class="wrow"><span class="d mono">SA</span><div class="bar"><i class="open"></i></div></div>
-        <div class="wrow"><span class="d mono">SO</span><div class="bar"><i class="open"></i></div></div>
-      </div>
-      <div class="wlegend mono">
-        <span><i style="background:var(--blue-hi)"></i>Betreute Kurse</span>
-        <span><i style="background:rgba(255,255,255,.16);height:2px;align-self:center"></i>Open Gym · eigener Tarif, 60 €/Monat, Zutritt per App</span>
-      </div>
+      <!-- Vorher stand hier ein Wochenband mit einem Balken je belegtem Fenster,
+           sieben Zeilen, jede Pause einzeln ausgewiesen. Genauer als jemand
+           wissen will, der nur schauen möchte, ob er vormittags oder abends
+           kommen kann. Dieselben Daten, grob zusammengefasst. -->
+      <div class="hrow"><b>Montag – Freitag</b><span id="zMoFr">—</span></div>
+      <div class="hrow"><b>Samstag</b><span id="zSa">—</span></div>
+      <div class="hrow" id="zSoZeile" hidden><b>Sonntag</b><span id="zSo">—</span></div>
+      <div class="hrow"><b>Open Gym · täglich</b><span>06:00–22:00</span></div>
+      <p class="mono" style="margin-top:16px;color:var(--dim);font-size:12px;letter-spacing:.06em">Open Gym mit eigenem Tarif, Zutritt per App · genaue Kurszeiten im <a href="#plan" style="color:var(--blue-hi)">Wochenplan</a></p>
     </div>
     <div class="panel rv">
       <h3>Standort</h3>
@@ -809,12 +834,51 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
   </div>
 </dialog>
 
+
+<section id="kontakt" class="wrap" style="padding-top:0">
+  <div class="kkopf rv">
+    <h2>Schreib uns.</h2>
+    <p class="kunter">Wir melden uns am selben Tag, wenn du bis 18 Uhr schreibst.
+      Lieber telefonisch? <a href="tel:+4367682277302">+43 676 8227 7302</a></p>
+  </div>
+  <form class="kform rv" id="kform" novalidate>
+    <div class="kfeld voll">
+      <label for="k-betreff">Worum geht es?</label>
+      <select id="k-betreff" name="betreff">
+        <option>Probetraining</option>
+        <option>Allgemeine Anfrage</option>
+        <option>1:1 Coaching</option>
+        <option>Firmentraining</option>
+      </select>
+    </div>
+    <div class="kfeld">
+      <label for="k-name">Name</label>
+      <input id="k-name" name="name" type="text" autocomplete="name" required>
+    </div>
+    <div class="kfeld">
+      <label for="k-mail">E-Mail</label>
+      <input id="k-mail" name="mail" type="email" autocomplete="email" required>
+    </div>
+    <div class="kfeld voll">
+      <label for="k-text">Nachricht</label>
+      <textarea id="k-text" name="text" rows="4"></textarea>
+    </div>
+    <button class="btn" type="submit">Anfrage senden</button>
+    <p class="khinweis mono" id="khinweis" role="status" aria-live="polite"></p>
+  </form>
+</section>
+
 <footer>
   <div class="wrap">
     <div class="fgrid">
       <div>
         <img class="logo" src="../assets/logo.png" alt="Trojan Performance" style="height:32px;margin-bottom:15px" loading="lazy">
         <p style="color:var(--dim);max-width:30ch">Performance Center in Klagenfurt. Erster offizieller HYROX Training Club in Kärnten.</p>
+        <div class="sozial mono">
+          <a href="https://www.instagram.com/trojan.performance/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.facebook.com/trojanperformanceofficial" target="_blank" rel="noopener">Facebook</a>
+          <a href="https://www.youtube.com/channel/UChUZebvjDwrWEdOCa86xNiA" target="_blank" rel="noopener">YouTube</a>
+        </div>
       </div>
       <div><h3 class="mono">Seite</h3><a href="#programme">Kurse</a><a href="#preise">Preise</a><a href="#coaches">Coaches</a><a href="#zeiten">Zeiten</a></div>
       <div><h3 class="mono">Kontakt</h3><a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a><a href="tel:+4367682277302">+43 676 8227 7302</a><a href="#">Sebastiangasse 1, 9020 Klagenfurt</a></div>
@@ -907,29 +971,27 @@ function planZeichnen(termine,live,montag){
   }).join('');
   document.getElementById('wplan').removeAttribute('aria-busy');
 
-  /* Wochenband aus denselben Terminen. Achse 06–22, also 16 Stunden auf 100%.
-     Zusammengelegt wird nur, was sich wirklich berührt — eine Viertelstunde
-     Pause bleibt als Lücke stehen, sonst behauptet der Balken Betrieb, der
-     nicht stattfindet. */
-  const A=6*60, SPANNE=16*60;
-  document.querySelectorAll('#wband .wrow').forEach((zeile,tag)=>{
-    const bar=zeile.querySelector('.bar');
-    bar.querySelectorAll('i.kurs').forEach(i=>i.remove());
-    const roh=termine.filter(t=>t.tag===tag)
+  /* Kurszeiten aus denselben Terminen, grob zusammengefasst. Die Toleranz von
+     150 Minuten legt zusammen, was durch eine Mittagspause getrennt ist —
+     übrig bleiben Vormittag und Abend statt einer Kette aus sechs Blöcken.
+     Wer es genau braucht, findet den Wochenplan darüber. */
+  const LUECKE=150;
+  const fenster=tage=>{
+    const roh=termine.filter(t=>tage.includes(t.tag))
       .map(t=>[minuten(t.zeit),minuten(t.zeit)+t.dauer]).sort((a,b)=>a[0]-b[0]);
-    const bloecke=[];
+    const aus=[];
     for(const [von,bis] of roh){
-      const letzt=bloecke[bloecke.length-1];
-      if(letzt&&von<=letzt[1]) letzt[1]=Math.max(letzt[1],bis); else bloecke.push([von,bis]);
+      const l=aus[aus.length-1];
+      if(l&&von<=l[1]+LUECKE) l[1]=Math.max(l[1],bis); else aus.push([von,bis]);
     }
-    for(const [von,bis] of bloecke){
-      const i=document.createElement('i');
-      i.className='kurs';
-      i.style.setProperty('--a',((von-A)/SPANNE*100).toFixed(2)+'%');
-      i.style.setProperty('--b',((bis-von)/SPANNE*100).toFixed(2)+'%');
-      bar.appendChild(i);
-    }
-  });
+    const uhr=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+    return aus.map(([v,b])=>`${uhr(v)}–${uhr(b)}`).join(' · ');
+  };
+  document.getElementById('zMoFr').textContent=fenster([0,1,2,3,4])||'keine Kurse';
+  document.getElementById('zSa').textContent=fenster([5])||'keine Kurse';
+  const sonntag=fenster([6]);
+  document.getElementById('zSoZeile').hidden=!sonntag;
+  document.getElementById('zSo').textContent=sonntag;
 
   const bis=new Date(montag.getFullYear(),montag.getMonth(),montag.getDate()+5);
   const f=x=>x.toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit'});
@@ -1022,6 +1084,29 @@ new IntersectionObserver(([e])=>hd.classList.toggle('stuck',!e.isIntersecting))
    Seitenanfang ist die falscheste Antwort darauf — also passiert nichts. */
 document.querySelectorAll('a[href="#"]').forEach(a=>
   a.addEventListener('click',e=>e.preventDefault()));
+
+/* ---- Kontaktformular -------------------------------------------------------
+   Entwurf: es gibt keinen Empfänger. Statt die Anfrage ins Leere laufen zu
+   lassen, sagt das Formular das hin und nennt die Adresse, an die im Betrieb
+   zugestellt würde. Ein Formular, das scheinbar absendet und nichts tut, wäre
+   die schlechtere Lösung — der Interessent wartet dann auf eine Antwort. */
+(() => {
+  const f = document.getElementById('kform');
+  if (!f) return;
+  const hinweis = document.getElementById('khinweis');
+  f.addEventListener('submit', e => {
+    e.preventDefault();
+    const fehlend = [...f.querySelectorAll('[required]')].filter(x => !x.value.trim());
+    if (fehlend.length) {
+      fehlend[0].focus();
+      hinweis.textContent = 'Bitte Name und E-Mail ausfüllen.';
+      hinweis.classList.add('warn');
+      return;
+    }
+    hinweis.classList.remove('warn');
+    hinweis.textContent = 'Entwurf — im Betrieb ginge diese Anfrage an office@trojanperformance.at.';
+  });
+})();
 </script>
 </body>
 </html>
