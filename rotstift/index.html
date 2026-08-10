@@ -422,7 +422,12 @@ figure.rahmen figcaption{
         <h2>Diese Woche</h2>
         <span class="recht">Aus dem Buchungssystem</span>
       </div>
-      <p class="plan-status auf" id="plan-status">Plan wird geladen …</p>
+      <!-- Nur im Störfall sichtbar. Dass der Plan aus dem Buchungssystem kommt,
+           sagt die Randnotiz oben; welche Woche zu sehen ist, steht in den
+           Datumszeilen der Tabelle darunter. Beides zweimal zu sagen war eine
+           Zeile zu viel. Was nicht wegfällt: die Warnung, wenn die Abfrage
+           scheitert und ein gespeicherter Stand dasteht. -->
+      <p class="plan-status" id="plan-status" hidden></p>
       <div class="auf">
         <div class="plan-tabs" id="plan-tabs" aria-label="Wochentag wählen"></div>
         <div class="plan-woche" id="plan-woche"></div>
@@ -768,7 +773,6 @@ function zeichnen(evts,live){
 
   var wrap=document.getElementById('plan-woche');
   var tabs=document.getElementById('plan-tabs');
-  var status=document.getElementById('plan-status');
   wrap.textContent='';tabs.textContent='';
   wrap.style.setProperty('--spalten',tage.length);
   tabs.style.setProperty('--spalten',tage.length);
@@ -837,12 +841,6 @@ function zeichnen(evts,live){
     tabs.appendChild(tb);
   });
 
-  status.textContent='';
-  var b1=document.createElement('b');
-  b1.textContent=live?'Live aus dem Buchungssystem':'Buchungssystem gerade nicht erreichbar';
-  status.appendChild(b1);
-  status.appendChild(document.createTextNode(live?(' · Woche ab '+datum(0)):' — gespeicherter Wochenstand'));
-
   var zf=zusammenfassung(evts);
   if(zf)document.querySelectorAll('.js-kurszeiten').forEach(function(el){el.textContent=zf;});
 }
@@ -863,7 +861,15 @@ zeichnen(PLAN_STAND,false);
       dauer:Math.round((new Date(e.endTime)-new Date(e.startTime))/60000)||75,
       name:(e.course&&e.course.name||'').trim(),
     })),true);
-  }catch(_){ /* eingefrorener Stand bleibt stehen */ }
+  }catch(_){
+    /* Der eingefrorene Stand bleibt stehen — aber ungesagt bleibt es nicht:
+       ein Plan, der vielleicht nicht mehr stimmt, muss sich als solcher zu
+       erkennen geben. Das Feld trägt kein .auf, weil der Beobachter nur
+       einsammelt, was beim Laden schon eine Fläche hatte. */
+    var s=document.getElementById('plan-status');
+    s.textContent='Buchungssystem gerade nicht erreichbar — gespeicherter Wochenstand';
+    s.hidden=false;
+  }
 })();
 </script>
 </body>
