@@ -46,7 +46,7 @@ Was der Schnitt gebracht hat, in sichtbaren Wörtern:
 | stele | 928 | **312** | | spalte | 1017 | **441** |
 | logbuch | 1035 | **386** | | quer | 901 | **370** |
 | protokoll | 1174 | **544** | | fluss | 1241 | **392** |
-| rotstift | 1060 | **414** | | spektrum | 810 | **392** |
+| rotstift | 1060 | **408** | | spektrum | 810 | **392** |
 | satz | 645 | **272** | | grau | 1022 | **414** |
 | nacht | 1174 | **554** | | wende | 1466 | **581** |
 
@@ -171,6 +171,11 @@ liegen unter `assets/fonts/` und werden vom eigenen Host geladen.
 - Die Kraft-/Ausdauer-/Technik-Werte der Kurse waren **erfunden** und sind mit dem
   Schnitt aus allen Entwürfen verschwunden. Falls sie zurückkommen sollen, müssen sie
   vom Betreiber kommen.
+- **Nicht jede Einheit dauert 75 Minuten.** In vier geprüften Wochen (10.8.–6.9.2026)
+  dauern 81 von 97 Terminen 75 Minuten, *Mama reloaded* 45 und *Fenja Power Yoga* 60.
+  Der Auftraggeber ordnet die beiden Ausnahmen als Fremdkurse ein; `rotstift` nennt
+  deshalb die 75 Minuten ohne Einschränkung. Der Wochenplan weist jede Dauer einzeln
+  aus. Zu bestätigen, sobald der Inhaber zu Power Yoga Stellung nimmt.
 - Die Beschreibung von *Mama reloaded* ist **Platzhalter**.
 - **Kontrast der neuen Akzentfarbe in `rotstift`.** Der Entwurf trägt jetzt statt des
   Korrekturstift-Rots das offizielle Blau der Livesite (`#3971b7`, im Elementor-Kit als
