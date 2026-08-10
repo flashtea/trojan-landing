@@ -515,8 +515,7 @@ figure.bild img{width:100%;filter:grayscale(1) contrast(1.1) brightness(1.04)}
              Stelle, an der das Gym für sich einsteht, spricht es auch als es
              selbst. Die drei Zusagen sind gedeckt — ein Coach in jedem Kurs,
              75 Minuten je Einheit, begrenzte Plätze. -->
-        <p class="satz">Empfohlen für den Einstieg: drei Einheiten pro Woche, zwei für die Kraft, eine für die Ausdauer.</p>
-        <p class="satz">Nicht das billigste Gym der Stadt. Dafür sparen wir nicht an Betreuung, nicht an Zeit und nicht an Platz im Kurs.</p>
+        <p class="satz">Empfohlen für den Einstieg: drei Einheiten pro Woche, zwei für die Kraft, eine für die Ausdauer. Nicht das billigste Gym der Stadt, dafür sparen wir nicht an Betreuung, nicht an Zeit und nicht an Platz im Kurs.</p>
       </div>
 
       <details class="mehr auf" style="margin-top:2.6rem">
@@ -779,24 +778,44 @@ function endzeit(e){
   return String(Math.floor(min/60)).padStart(2,'0')+':'+String(min%60).padStart(2,'0');
 }
 
+// Die Zeile im Datenblatt sagt die Grobform der Woche, nicht die Zeitspannen.
+// Vorher stand dort „Mo–Fr 06:00–11:30 und 16:00–19:45" — die Vereinigung über
+// fünf Tage, die aussieht wie ein Öffnungsfenster. Am Montag steht vormittags
+// ein einziger Kurs, um 08:15. Dieselbe Sorte Fehler wie „acht Kurse": eine
+// Zusammenfassung, die der Wochenplan darunter widerlegt, sobald jemand
+// nachsieht. Die Worte hier sind an jedem einzelnen Tag wahr, und die genauen
+// Zeiten stehen einen Bildschirm weiter im Plan, exakt und antippbar.
 function zusammenfassung(evts){
-  function fenster(gruppe){
-    var cluster=[gruppe.filter(function(e){return e.zeit<'12:00';}),
-                 gruppe.filter(function(e){return e.zeit>='12:00';})]
-                .filter(function(c){return c.length;});
-    return cluster.map(function(c){
-      var von=c.map(function(e){return e.zeit;}).sort()[0];
-      var bis=c.map(endzeit).sort().slice(-1)[0];
-      return von+'–'+bis;
-    }).join(' und ');
+  function wort(gruppe){
+    var teile=[];
+    var frueh=gruppe.filter(function(e){return e.zeit<'12:00';});
+    var spaet=gruppe.filter(function(e){return e.zeit>='12:00';});
+    if(frueh.length){
+      var start=frueh.map(function(e){return e.zeit;}).sort()[0];
+      teile.push(start<'08:00'?'früh':'vormittags');
+    }
+    if(spaet.length){
+      var ende=spaet.map(endzeit).sort().slice(-1)[0];
+      teile.push(ende>='18:00'?'abends':'nachmittags');
+    }
+    return teile.join(' und ');
   }
+  var block=[['Mo–Fr',evts.filter(function(e){return e.tag<=4;})],
+             ['Sa',evts.filter(function(e){return e.tag===5;})],
+             ['So',evts.filter(function(e){return e.tag===6;})]]
+    .filter(function(b){return b[1].length;})
+    .map(function(b){return [b[0],wort(b[1])];});
+  // Benachbarte Tage mit gleicher Beschreibung zusammenziehen: „Sa und So
+  // vormittags". Nur, wenn die Beschreibung selbst kein „und" enthält, sonst
+  // stünde da „Mo–Fr und Sa früh und abends".
   var teile=[];
-  var mofr=evts.filter(function(e){return e.tag<=4;});
-  var sa=evts.filter(function(e){return e.tag===5;});
-  var so=evts.filter(function(e){return e.tag===6;});
-  if(mofr.length)teile.push('Mo–Fr '+fenster(mofr));
-  if(sa.length)teile.push('Sa '+fenster(sa));
-  if(so.length)teile.push('So '+fenster(so));
+  for(var i=0;i<block.length;i++){
+    var tage=[block[i][0]];
+    while(i+1<block.length && block[i+1][1]===block[i][1] && block[i][1].indexOf(' und ')<0){
+      tage.push(block[i+1][0]); i++;
+    }
+    teile.push(tage.join(' und ')+' '+block[i][1]);
+  }
   return teile.join(' · ');
 }
 
