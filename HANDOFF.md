@@ -11,14 +11,19 @@ Livegang.
 
 - **Repo:** `/srv/git/trojan-landing`, Branch `main`
 - **Live:** https://flashtea.github.io/trojan-landing/ (GitHub Pages, alle Seiten `noindex`)
-- **Letzter Commit:** `2c980ff` „Der Schnitt: weniger Inhalt statt weniger Gestaltung"
 - **Zustand:** ausgeliefert und geprüft, Arbeitsbaum sauber, nichts offen
 
 ## Wo das Projekt gerade steht
 
-Neunzehn Entwürfe. Der Inhaber hat **Arena** als Favorit benannt, **Matrix** als zweite
-Wahl. Die letzte inhaltliche Frage von ihm war: *wie viel Information kann wirklich auf
-der Seite sein?*
+Neunzehn Entwürfe, aber nur noch **vier stehen zur Abstimmung**: `arena`, `matrix`,
+`phalanx` und `rotstift`. Der Rest gilt auf Gestalterseite als nicht nutzbar und liegt in
+der Übersicht darunter als Kontaktbogen — sichtbar, aber nicht zur Wahl. Gelöscht ist
+nichts.
+
+Der Inhaber hat **Arena** als Favorit benannt, **Matrix** als zweite Wahl; **Rotstift**
+ist der Favorit auf Gestalterseite und der einzige der vier, der den Schnitt schon
+trägt. Die letzte inhaltliche Frage des Inhabers war: *wie viel Information kann wirklich
+auf der Seite sein?*
 
 Die Antwort darauf ist der **Schnitt** — der Stand, der jetzt live ist. Achtzehn
 Entwürfe lang war reduziert worden, was man sieht (Farbe, Bild, Rahmen), und nie, was
@@ -40,12 +45,33 @@ bei unveränderter Gestaltung.
 
 Die Zahlen aller sechzehn stehen im `README.md`.
 
+### Was zuletzt an `rotstift` geändert wurde
+
+Am 10. August 2026, auf Zuruf des Auftraggebers:
+
+- **Akzentfarbe** vom Korrekturstift-Rot auf das **offizielle Blau** der Livesite
+  (`#3971b7`). Nicht geschätzt, sondern aus dem Elementor-Kit von trojanperformance.at
+  geholt (`--e-global-color-accent`, dort auf h1–h3 und Schaltflächen). Die CSS-Variable
+  heisst deshalb `--akzent` statt `--rot`. **Offener Punkt:** auf dem Papierton kommt das
+  Blau auf 4,36:1 und liegt damit knapp unter den 4,5:1 für kleinen Text — das Rot lag
+  bei 4,87:1. Steht im `README.md` unter „Offene Punkte".
+- **Kopflogo** von 13 auf 26 px (17 px unter 720 px Breite). Es war das kleinste aller
+  Entwürfe; die Unterzeile war nicht lesbar.
+- **Coach-Porträts** auf eine gemeinsame Augenlinie gebracht. Die vier Quellbilder sind
+  unterschiedlich breit (536, 443, 537, 480 auf je 720); im 3:4-Ausschnitt lagen die
+  Augen bis zu sieben Prozent der Kachelhöhe auseinander. Zwei `object-position`-Werte
+  richten sie aus, Mike und Diego brauchen keine.
+- **Mike und Dominik** tragen je die Zeile „Gründer"; dass sie Brüder sind, steht in der
+  Kopfzeile des Abschnitts. „Gründer" statt „Inhaber", weil `inhalt.md` nur die Gründung
+  belegt — der Kunde kann das mit einem Wort bestätigen.
+
 ## Was als Nächstes ansteht
 
 1. **Rückmeldung des Inhabers zum Schnitt.** Das ist der eigentliche nächste Schritt.
    Er soll sehen, ob ihm dieselbe Gestaltung mit einem Drittel des Inhalts lieber ist.
-   Zum Vergleich taugen `arena` (ungeschnitten) gegen `kern` (geschnitten) am besten —
-   gleiche Handschrift, andere Dichte.
+   Der Vergleich steht jetzt in der engeren Auswahl selbst: `arena` (ungeschnitten) gegen
+   `rotstift` (geschnitten). Wer die Frage bei gleicher Handschrift stellen will, nimmt
+   `arena` gegen `kern` — Kern liegt bei den Studien.
 2. **Offene Inhaltsfragen an ihn** — sie stehen vollständig im `README.md` unter
    „Offene Punkte". Die wichtigste steht unten.
 3. Falls weitere Entwürfe entstehen: sie werden nach `werkzeug/schnitt.md` gebaut, nicht

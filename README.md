@@ -3,6 +3,19 @@
 Startseiten-Entwürfe für [trojanperformance.at](https://www.trojanperformance.at/),
 statisch gehostet auf GitHub Pages.
 
+## Engere Auswahl
+
+Vier Entwürfe stehen zur Abstimmung: **arena**, **matrix**, **phalanx** — die drei aus
+der ersten Runde — und **rotstift**. Die übrigen fünfzehn liegen in der Übersicht
+darunter als Studien: Zwischenstände, aus denen die vier hervorgegangen sind, keine
+Kandidaten.
+
+Arena ist der Favorit des Betreibers, Matrix seine zweite Wahl. Rotstift ist der Favorit
+auf Gestalterseite und der einzige der vier, der den Schnitt bereits trägt — dieselbe
+Gestaltung, ein Drittel des Textes. Er trägt seit dem 10. August 2026 auch nicht mehr das
+Rot des Korrekturstifts, sondern das offizielle Blau der Livesite (`#3971b7`, im
+Elementor-Kit als `--e-global-color-accent`).
+
 ## Der Schnitt
 
 Achtzehn Entwürfe lang war reduziert worden, was man sieht — Farbe, Bild, Rahmen — und
@@ -33,7 +46,7 @@ Was der Schnitt gebracht hat, in sichtbaren Wörtern:
 | stele | 928 | **312** | | spalte | 1017 | **441** |
 | logbuch | 1035 | **386** | | quer | 901 | **370** |
 | protokoll | 1174 | **544** | | fluss | 1241 | **392** |
-| rotstift | 1060 | **413** | | spektrum | 810 | **392** |
+| rotstift | 1060 | **420** | | spektrum | 810 | **392** |
 | satz | 645 | **272** | | grau | 1022 | **414** |
 | nacht | 1174 | **554** | | wende | 1466 | **581** |
 
@@ -71,7 +84,7 @@ ist es Kern.
 |---|---|---|
 | F | [`logbuch/`](logbuch/) | Papier und Ultramarin, Inhaltsverzeichnis statt Menü |
 | G | [`protokoll/`](protokoll/) | Trainingsprotokoll, Fotos als nummerierte Graustufen-Abbildungen |
-| H | [`rotstift/`](rotstift/) | Papier, eine Farbe — das Rot des Korrekturstifts |
+| H | [`rotstift/`](rotstift/) | Papier, eine Farbe — inzwischen das offizielle Blau der Livesite |
 
 Diese drei haben nur die Inhalte bekommen, nicht die anderen Entwürfe. Alle drei sind
 unabhängig voneinander auf hellen Grund gekommen — der Befund, der zur Regel führte,
@@ -132,8 +145,11 @@ python3 -m http.server 8099 --bind 127.0.0.1
 src/          Quellen mit Platzhaltern — hier wird editiert
 assets/       Fotos und Logo von trojanperformance.at, Vorschaubilder
 build.sh      Platzhalter -> Pfade, WebP-Zwillinge
-index.html    Übersicht mit Links auf die neunzehn Entwürfe
+index.html    Übersicht: vier Entwürfe gross, fünfzehn Studien als Kontaktbogen
 ```
+
+`index.html` wird **nicht** von `build.sh` erzeugt und ist von Hand zu pflegen. Kommt ein
+Entwurf dazu oder wechselt einer die Gruppe, gehört er dort eingetragen.
 
 Jeder Entwurf ist eine einzelne HTML-Datei mit eingebettetem CSS und JS. Keine
 Build-Kette, kein Framework. Die Schriften (Archivo, Archivo Black, IBM Plex Mono)
@@ -156,6 +172,12 @@ liegen unter `assets/fonts/` und werden vom eigenen Host geladen.
   Schnitt aus allen Entwürfen verschwunden. Falls sie zurückkommen sollen, müssen sie
   vom Betreiber kommen.
 - Die Beschreibung von *Mama reloaded* ist **Platzhalter**.
+- **Kontrast der neuen Akzentfarbe in `rotstift`.** Der Entwurf trägt jetzt statt des
+  Korrekturstift-Rots das offizielle Blau der Livesite (`#3971b7`, im Elementor-Kit als
+  `--e-global-color-accent`). Auf dem Papierton kommt es auf **4,36:1** — knapp unter
+  den 4,5:1, die für kleinen Text gefordert sind; das Rot lag bei 4,87:1. Betroffen sind
+  nur die kleinen Mono-Zeilen, nicht die grossen. Zu klären: offizielle Farbe unverändert
+  lassen oder für kleinen Text abdunkeln.
 - Der Zusatz „Und wenn drei nicht gehen: zwei gehen auch." ist auf Kundenwunsch aus
   allen Entwürfen entfernt.
 - Auf der Live-Seite stehen die Open-Gym-Zeiten an zwei Stellen unterschiedlich
