@@ -19,7 +19,10 @@
   --papier:#f2f0e9;
   --tinte:#181611;
   --grau:#6b675d;
-  --rot:#c2331b;
+  /* Die offizielle Akzentfarbe von trojanperformance.at: im Elementor-Kit der
+     Livesite als --e-global-color-accent hinterlegt, dort auf Überschriften
+     und Schaltflächen. Vorher stand hier das Rot des Korrekturstifts. */
+  --akzent:#3971b7;
   --mono:'IBM Plex Mono',ui-monospace,'SFMono-Regular',monospace;
   --grot:'Archivo',system-ui,sans-serif;
   --schwer:'Archivo Black','Archivo',system-ui,sans-serif;
@@ -35,11 +38,11 @@ body{
   font-family:var(--grot);font-weight:500;font-size:1rem;line-height:1.55;
   -webkit-font-smoothing:antialiased;
 }
-::selection{background:var(--rot);color:var(--papier)}
+::selection{background:var(--akzent);color:var(--papier)}
 img{display:block;max-width:100%;height:auto}
 a{color:inherit}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-:focus-visible{outline:2px solid var(--rot);outline-offset:3px;border-radius:1px}
+:focus-visible{outline:2px solid var(--akzent);outline-offset:3px;border-radius:1px}
 
 .mono{font-family:var(--mono);font-weight:400}
 .huelle{max-width:1200px;margin:0 auto;padding-left:var(--rand);padding-right:var(--rand)}
@@ -60,14 +63,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 }
 .kopf-innen{display:flex;align-items:center;justify-content:space-between;min-height:54px}
 .marke{display:inline-flex;align-items:center;min-height:44px}
-.marke img{height:13px;width:auto}
+.marke img{height:17px;width:auto}
+@media(min-width:720px){.marke img{height:26px}}
 .kopf nav{display:flex;gap:.1rem}
 .kopf nav a{
   display:inline-flex;align-items:center;min-height:44px;padding:0 .55rem;
   font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
   text-decoration:none;
 }
-.kopf nav a:hover{color:var(--rot)}
+.kopf nav a:hover{color:var(--akzent)}
 .kopf nav a.nur-breit{display:none}
 @media(min-width:720px){.kopf nav a.nur-breit{display:inline-flex}}
 
@@ -79,7 +83,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   color:var(--grau);
   border-bottom:1px solid var(--tinte);padding-bottom:.7rem;margin-bottom:1.4rem;
 }
-.hero-kicker .rotx{color:var(--rot);text-align:right}
+.hero-kicker .akz{color:var(--akzent);text-align:right}
 .fit{display:block;width:100%;overflow:hidden}
 .fit>span{
   display:inline-block;white-space:nowrap;
@@ -115,7 +119,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   transition:background .18s ease,color .18s ease;
 }
 .knopf-voll{background:var(--tinte);color:var(--papier)}
-.knopf-voll:hover{background:var(--rot);border-color:var(--rot)}
+.knopf-voll:hover{background:var(--akzent);border-color:var(--akzent)}
 .knopf-leer:hover{background:var(--tinte);color:var(--papier)}
 
 /* ---------- Figuren ---------- */
@@ -130,8 +134,8 @@ figure.rahmen figcaption{
 /* ---------- Blöcke ---------- */
 .block{border-top:1px solid var(--tinte);padding:3.2rem 0 3.8rem}
 @media(min-width:900px){.block{padding:4.5rem 0 5.5rem}}
-.blockkopf{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.8rem}
-.blockkopf .idx{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--rot)}
+.blockkopf{display:flex;flex-wrap:wrap;align-items:baseline;gap:1rem;margin-bottom:1.8rem}
+.blockkopf .idx{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--akzent)}
 .blockkopf h2{
   font-family:var(--schwer);font-weight:400;text-transform:uppercase;
   font-size:clamp(1.55rem,4.6vw,2.9rem);line-height:1;letter-spacing:-.005em;
@@ -139,22 +143,27 @@ figure.rahmen figcaption{
 .blockkopf .recht{margin-left:auto;font-family:var(--mono);font-size:.68rem;color:var(--grau);
   letter-spacing:.07em;text-transform:uppercase;text-align:right}
 @media(max-width:719px){.blockkopf .recht{display:none}}
+/* Die Randnotizen sind schmückend und verschwinden am Telefon. Diese eine
+   nicht: sie trägt die einzige Angabe darüber, wer das Gym führt. */
+@media(max-width:719px){
+  .blockkopf .recht-immer{display:block;flex:0 0 100%;margin-left:0;text-align:left}
+}
 
 .satz{max-width:34em;font-size:1.02rem}
 .satz+.satz{margin-top:.9rem}
 .klein{font-family:var(--mono);font-size:.72rem;line-height:1.65;color:var(--grau)}
 
-/* Rot umrandetes Etikett. Trug vorher den HYROX-Abschnitt, steht jetzt beim
+/* Etikett in der Akzentfarbe. Trug vorher den HYROX-Abschnitt, steht jetzt beim
    Probetraining — der Abschnitt ist weg, die Farbe bleibt auf der Seite. */
 .badge{
   display:inline-block;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--rot);border:1px solid var(--rot);
+  text-transform:uppercase;color:var(--akzent);border:1px solid var(--akzent);
   padding:.45rem .7rem;margin-bottom:1.2rem;
 }
 
 /* ---------- 01 Plan ---------- */
 .plan-status{font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;text-transform:uppercase}
-.plan-status b{font-weight:500;color:var(--rot)}
+.plan-status b{font-weight:500;color:var(--akzent)}
 .plan-tabs{display:grid;grid-template-columns:repeat(var(--spalten,6),1fr);gap:2px;margin:1.4rem 0 0}
 .plan-tabs button{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -165,7 +174,7 @@ figure.rahmen figcaption{
 .plan-tabs button .dt{font-size:.56rem;color:var(--grau)}
 .plan-tabs button[aria-pressed="true"]{background:var(--tinte);color:var(--papier)}
 .plan-tabs button[aria-pressed="true"] .dt{color:rgba(242,240,233,.7)}
-.plan-tabs button:hover{color:var(--rot)}
+.plan-tabs button:hover{color:var(--akzent)}
 .plan-tabs button[aria-pressed="true"]:hover{color:var(--papier)}
 .plan-woche{border:1px solid var(--tinte);margin-top:-1px}
 .tag-panel{display:none}
@@ -187,7 +196,7 @@ figure.rahmen figcaption{
 .eintrag .z{font-family:var(--mono);font-size:.78rem;white-space:nowrap}
 .eintrag .n{font-weight:700;line-height:1.3}
 .eintrag .d{margin-left:auto;font-family:var(--mono);font-size:.66rem;color:var(--grau);white-space:nowrap}
-.eintrag:hover .n,.eintrag:focus-visible .n{color:var(--rot)}
+.eintrag:hover .n,.eintrag:focus-visible .n{color:var(--akzent)}
 .tag-panel li.leer{color:var(--grau);font-family:var(--mono);font-size:.78rem;padding:.6rem .8rem}
 @media(min-width:960px){
   .plan-tabs{display:none}
@@ -212,11 +221,11 @@ figure.rahmen figcaption{
 .kdlg-kopf{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
 .kdlg h3{font-family:var(--grot);font-weight:780;text-transform:uppercase;font-size:1.25rem;line-height:1.15}
 .kdlg .kmeta{font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;
-  color:var(--rot);margin-top:.4rem}
+  color:var(--akzent);margin-top:.4rem}
 .kdlg .ktext{margin-top:.9rem;font-size:.93rem}
 .kdlg .zu{min-width:44px;min-height:44px;margin:-.5rem -.5rem 0 0;font-family:var(--mono);
   font-size:1.3rem;line-height:1;flex:none}
-.kdlg .zu:hover{color:var(--rot)}
+.kdlg .zu:hover{color:var(--akzent)}
 .kdlg .kfuss{margin-top:1.4rem}
 
 /* ---------- 02 Prinzip ---------- */
@@ -225,7 +234,7 @@ figure.rahmen figcaption{
   font-size:clamp(1.45rem,4.9vw,3.3rem);line-height:1.04;letter-spacing:-.005em;
   max-width:19em;margin-bottom:1.6rem;
 }
-.leitsatz em{font-style:normal;color:var(--rot)}
+.leitsatz em{font-style:normal;color:var(--akzent)}
 .prinzip-gitter{display:grid;gap:2rem}
 @media(min-width:900px){.prinzip-gitter{grid-template-columns:6fr 6fr;gap:3rem;align-items:start}}
 
@@ -238,7 +247,7 @@ figure.rahmen figcaption{
 .zitat-quelle{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--grau);margin-bottom:1.6rem}
 .markiert{position:relative;display:inline-block;padding:0 .1em}
 .markiert svg{position:absolute;inset:-46% -18%;width:136%;height:192%;overflow:visible;pointer-events:none}
-.markiert svg path{stroke:var(--rot);stroke-width:2.4;fill:none;stroke-linecap:round}
+.markiert svg path{stroke:var(--akzent);stroke-width:2.4;fill:none;stroke-linecap:round}
 @media(prefers-reduced-motion:no-preference){
   .js .markiert svg path{stroke-dasharray:420;stroke-dashoffset:420;transition:stroke-dashoffset 1.2s ease .35s}
   .js .sichtbar .markiert svg path{stroke-dashoffset:0}
@@ -251,7 +260,7 @@ figure.rahmen figcaption{
 .mehr{border-top:1px solid var(--tinte)}
 .mehr summary{
   list-style:none;cursor:pointer;display:flex;align-items:center;gap:.8rem;min-height:56px;
-  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--rot);
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--akzent);
 }
 .mehr summary::-webkit-details-marker{display:none}
 .mehr summary::after{content:"+";margin-left:auto;font-size:1.1rem;line-height:1}
@@ -262,7 +271,7 @@ figure.rahmen figcaption{
 .tarif{border:1px solid var(--tinte);padding:1.1rem 1.1rem 1.2rem;display:flex;flex-direction:column;position:relative}
 .tarif.empf{border-width:2px}
 .tarif-tag{
-  position:absolute;top:-0.7rem;left:.9rem;background:var(--rot);color:var(--papier);
+  position:absolute;top:-0.7rem;left:.9rem;background:var(--akzent);color:var(--papier);
   font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
   padding:.28rem .55rem;
 }
@@ -278,7 +287,7 @@ figure.rahmen figcaption{
 .preis-zeile{margin-top:2.6rem}
 .preis-zeile h3,.neben h3{
   font-family:var(--mono);font-weight:500;font-size:.72rem;letter-spacing:.1em;
-  text-transform:uppercase;margin-bottom:.8rem;color:var(--rot);
+  text-transform:uppercase;margin-bottom:.8rem;color:var(--akzent);
 }
 .ohne{list-style:none;border-top:1px solid var(--tinte)}
 .ohne li{
@@ -301,15 +310,27 @@ figure.rahmen figcaption{
 .neben{display:grid;gap:2rem;margin-top:2.6rem}
 @media(min-width:900px){.neben{grid-template-columns:1fr 1fr 1fr;gap:2.5rem}}
 .neben p{font-size:.9rem;max-width:38ch}
-.svs{border:1px solid var(--rot);padding:1rem 1.1rem}
+.svs{border:1px solid var(--akzent);padding:1rem 1.1rem}
 .svs p{color:var(--tinte)}
-.svs .p100{font-family:var(--mono);font-weight:500;color:var(--rot)}
+.svs .p100{font-family:var(--mono);font-weight:500;color:var(--akzent)}
 
 /* ---------- 04 Coaches ---------- */
 .coaches{display:grid;gap:1.4rem;grid-template-columns:repeat(2,1fr)}
 @media(min-width:900px){.coaches{grid-template-columns:repeat(4,1fr)}}
-.coach img{width:100%;aspect-ratio:3/4;object-fit:cover;filter:grayscale(1) contrast(1.12) brightness(1.05);border:1px solid var(--tinte)}
+.coach img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:50% 50%;
+  filter:grayscale(1) contrast(1.12) brightness(1.05);border:1px solid var(--tinte)}
+/* Die vier Porträts sind unterschiedlich hoch geschnitten (536, 443, 537, 480
+   auf je 720). Im 3:4-Ausschnitt verlieren die schmalen oben und unten am
+   meisten, und die Augen sassen dadurch bis zu sieben Prozent der Kachelhöhe
+   auseinander. Die Werte holen alle vier auf dieselbe Augenlinie, rund 29,5 %
+   der Kachel. Mike und Diego bleiben bei 50 %: bei ihnen wird kaum etwas
+   abgeschnitten, es gibt nichts zu verschieben. */
+.coach--dominik img{object-position:50% 18%}
+.coach--benni img{object-position:50% 16%}
 .coach h3{font-family:var(--grot);font-weight:780;text-transform:uppercase;font-size:1.02rem;margin-top:.6rem}
+/* Wer das Gym führt, in einer Zeile. Keine Biografie — die bleibt gestrichen. */
+.coach .rolle{font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--akzent);margin-top:.15rem}
 
 /* ---------- Fuss ---------- */
 .mural{border-top:1px solid var(--tinte)}
@@ -321,10 +342,10 @@ figure.rahmen figcaption{
 .fuss img.wort{height:15px;width:auto;filter:brightness(0) invert(1)}
 .fuss .klein{color:rgba(242,240,233,.65)}
 .fuss a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(242,240,233,.4)}
-.fuss a:hover{color:#fff;border-color:var(--rot)}
+.fuss a:hover{color:#fff;border-color:var(--akzent)}
 .fuss nav{display:flex;flex-wrap:wrap;gap:1.1rem;font-family:var(--mono);font-size:.72rem;letter-spacing:.07em;text-transform:uppercase}
 .fuss nav a{display:inline-flex;align-items:center;min-height:44px;border-bottom:0}
-.fuss nav a:hover{color:var(--rot)}
+.fuss nav a:hover{color:var(--akzent)}
 .fuss .stand{grid-column:1/-1;border-top:1px solid rgba(242,240,233,.25);padding-top:1.1rem;margin-top:.4rem}
 .fuss :focus-visible{outline-color:var(--papier)}
 
@@ -362,7 +383,7 @@ figure.rahmen figcaption{
        gestrichenen — Gründungsjahr, Open Gym, Tarifspanne — entscheiden nicht
        über ein Probetraining. -->
   <section class="hero huelle" aria-label="Überblick">
-    <p class="hero-kicker"><span>Performance Center · Klagenfurt am Wörthersee</span><span class="rotx">Offizieller HYROX Training Club</span></p>
+    <p class="hero-kicker"><span>Performance Center · Klagenfurt am Wörthersee</span><span class="akz">Offizieller HYROX Training Club</span></p>
     <h1>
       <span class="sr">Trojan Performance</span>
       <span class="fit fit-a" aria-hidden="true"><span>Trojan</span></span>
@@ -513,28 +534,32 @@ figure.rahmen figcaption{
 
   <!-- ======== 04 COACHES ========
        Gesichter schaffen Vertrauen, Lebensläufe nicht: die Biografien sind
-       gestrichen, die Porträts bleiben. -->
+       gestrichen, die Porträts bleiben. Die beiden Gründer stehen vorn und
+       tragen eine Zeile — wer das Gym führt, gehört zur Entscheidung; was er
+       vorher trainiert hat, nicht. Beide Angaben stehen in inhalt.md. -->
   <section class="block" id="coaches">
     <div class="huelle">
       <div class="blockkopf auf">
         <span class="idx">04</span>
         <h2>Coaches</h2>
-        <span class="recht">Zwei davon Brüder</span>
+        <span class="recht recht-immer">Mike und Dominik sind Brüder · gegründet 2017</span>
       </div>
       <div class="coaches">
-        <article class="coach auf">
+        <article class="coach coach--mike auf">
           <img src="__PH_COACHMIKE__" width="536" height="720" loading="lazy" alt="Porträt von Coach Mike">
           <h3>Mike</h3>
+          <p class="rolle">Gründer</p>
         </article>
-        <article class="coach auf">
+        <article class="coach coach--dominik auf">
           <img src="__PH_COACHDOMINIK__" width="443" height="720" loading="lazy" alt="Porträt von Coach Dominik">
           <h3>Dominik</h3>
+          <p class="rolle">Gründer</p>
         </article>
-        <article class="coach auf">
+        <article class="coach coach--diego auf">
           <img src="__PH_COACHDIEGO__" width="537" height="720" loading="lazy" alt="Porträt von Coach Diego">
           <h3>Diego</h3>
         </article>
-        <article class="coach auf">
+        <article class="coach coach--benni auf">
           <img src="__PH_COACHBENNI__" width="480" height="720" loading="lazy" alt="Porträt von Coach Benni">
           <h3>Benni</h3>
         </article>
