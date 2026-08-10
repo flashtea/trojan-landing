@@ -257,15 +257,34 @@ figure.rahmen figcaption{
    Monatspreise, Laufzeiten und Einzelangebote nehmen ausgeklappt mehr Platz
    ein als der Abschnitt darüber — und keine dieser Zahlen entscheidet, ob
    jemand ein Probetraining bucht. */
-.mehr{border-top:1px solid var(--tinte)}
+/* Der Aufklapper trug seine Bedienung als kleines Plus am rechten Rand, am
+   Desktop einen Meter von der Beschriftung entfernt, auf einer Zeile ohne
+   Rahmen. Dass dort dreizehn weitere Preise liegen, war ihm nicht anzusehen.
+   Jetzt ist die Zeile ein Feld mit Rahmen, das Plus steht gerahmt davor, und
+   rechts steht als Wort, was passiert. Beim Aufklappen bleibt der Rahmen und
+   trägt den Inhalt — deshalb der Innenabstand unten. */
 .mehr summary{
   list-style:none;cursor:pointer;display:flex;align-items:center;gap:.8rem;min-height:56px;
+  padding:.5rem .9rem;border:1px solid var(--tinte);
   font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--akzent);
+  transition:background .18s ease;
 }
+.mehr summary:hover{background:rgba(57,113,183,.07)}
 .mehr summary::-webkit-details-marker{display:none}
-.mehr summary::after{content:"+";margin-left:auto;font-size:1.1rem;line-height:1}
-.mehr[open] summary::after{content:"\2212"}
-.mehr-innen{padding-bottom:2rem}
+.mehr summary::before{
+  content:"+";flex:0 0 auto;
+  display:inline-flex;align-items:center;justify-content:center;
+  width:1.55rem;height:1.55rem;border:1px solid var(--akzent);
+  font-size:1rem;line-height:1;
+}
+.mehr[open] summary::before{content:"\2212"}
+.mehr summary::after{
+  content:"Aufklappen";margin-left:auto;padding-left:1rem;
+  color:var(--grau);letter-spacing:.08em;
+}
+.mehr[open] summary::after{content:"Zuklappen"}
+@media(max-width:559px){.mehr summary::after{display:none}}
+.mehr-innen{padding:1.6rem 0 2rem}
 .tarife{display:grid;gap:1.2rem}
 @media(min-width:900px){.tarife{grid-template-columns:repeat(3,1fr);gap:1.4rem;align-items:stretch}}
 .tarif{border:1px solid var(--tinte);padding:1.1rem 1.1rem 1.2rem;display:flex;flex-direction:column;position:relative}
