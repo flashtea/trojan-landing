@@ -81,7 +81,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   display:flex;justify-content:space-between;gap:1rem;
   font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
   color:var(--grau);
-  border-bottom:1px solid var(--tinte);padding-bottom:.7rem;margin-bottom:1.4rem;
+  /* Ohne Linie darunter. Ort links, Zusatz rechts, eine Haarlinie quer und
+     darunter der Name über die volle Breite: das war die Folienzeile einer
+     Zeitung, und der erste Bildschirm sah entsprechend aus. Die Anordnung
+     bleibt, die Linie geht. */
+  padding-bottom:.7rem;margin-bottom:1.4rem;
 }
 .hero-kicker .akz{color:var(--akzent);text-align:right}
 .fit{display:block;width:100%;overflow:hidden}
@@ -122,14 +126,14 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .knopf-voll:hover{background:var(--akzent);border-color:var(--akzent)}
 .knopf-leer:hover{background:var(--tinte);color:var(--papier)}
 
-/* ---------- Figuren ---------- */
-figure.rahmen{border:1px solid var(--tinte)}
-figure.rahmen img{width:100%;filter:grayscale(1) contrast(1.1) brightness(1.04)}
-figure.rahmen figcaption{
-  display:flex;justify-content:space-between;gap:1rem;
-  font-family:var(--mono);font-size:.66rem;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--grau);border-top:1px solid var(--tinte);padding:.5rem .7rem;
-}
+/* ---------- Figuren ----------
+   Ohne Rahmen und ohne Bildunterschrift. Der Rahmen mit Legendenleiste
+   darunter, „Abb. 01" links und der Ort rechts, war eine Reproduktion in
+   einem Katalog, kein Bild auf einer Seite; zusammen mit dem Cremeton und
+   dem Titelkopf sah der erste Bildschirm aus wie eine Titelseite. Der Inhalt
+   der Legenden ging nicht verloren: die Adresse steht im Datenblatt daneben,
+   die Bildbeschreibung im alt-Text. */
+figure.bild img{width:100%;filter:grayscale(1) contrast(1.1) brightness(1.04)}
 
 /* ---------- Blöcke ---------- */
 .block{border-top:1px solid var(--tinte);padding:3.2rem 0 3.8rem}
@@ -421,9 +425,8 @@ figure.rahmen figcaption{
           <a class="knopf knopf-leer" href="#plan">Wochenplan</a>
         </div>
       </div>
-      <figure class="rahmen">
+      <figure class="bild">
         <img src="__PH_HERO__" width="1365" height="768" fetchpriority="high" alt="Trainingsfläche von oben: Hantelrack, dahinter eine Trainingsgruppe">
-        <figcaption><span>Abb. 01</span><span>Trainingsfläche, Sebastiangasse 1</span></figcaption>
       </figure>
     </div>
   </section>
@@ -481,9 +484,8 @@ figure.rahmen figcaption{
                Instanz, die im Zweifel recht hat. -->
           <p class="satz">Trainiert wird im Kurs, nach Plan, in kleinen Gruppen. Eine Einheit dauert 75 Minuten. Vorkenntnisse braucht es keine.</p>
         </div>
-        <figure class="rahmen auf">
+        <figure class="bild auf">
           <img src="__PH_KURSGRUPPE__" width="1365" height="910" loading="lazy" alt="Kursgruppe hält den Liegestütz, Langhantelstangen liegen am Boden">
-          <figcaption><span>Abb. 02</span><span>Kurseinheit auf der Fläche</span></figcaption>
         </figure>
       </div>
     </div>
