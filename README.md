@@ -46,7 +46,7 @@ Was der Schnitt gebracht hat, in sichtbaren Wörtern:
 | stele | 928 | **312** | | spalte | 1017 | **441** |
 | logbuch | 1035 | **386** | | quer | 901 | **370** |
 | protokoll | 1174 | **544** | | fluss | 1241 | **392** |
-| rotstift | 1060 | **405** | | spektrum | 810 | **392** |
+| rotstift | 1060 | **404** | | spektrum | 810 | **392** |
 | satz | 645 | **272** | | grau | 1022 | **414** |
 | nacht | 1174 | **554** | | wende | 1466 | **581** |
 
