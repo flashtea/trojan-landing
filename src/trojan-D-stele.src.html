@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trojan Performance — Performance Center Klagenfurt</title>
+<meta name="description" content="Performance Center in Klagenfurt: acht Kurse, 75 Minuten pro Einheit, in jedem Kurs ein Coach auf der Fläche. Erster offizieller HYROX Training Club in Kärnten. Probetraining 15 €.">
+<!-- STELE — die minimalistische Fassung von Arena.
+     Regel des Entwurfs: jedes Mittel muss etwas bezeichnen. Übrig geblieben sind
+     genau zwei Fotografien (der Ort, die Leute), eine Haarlinie als einziges
+     Ordnungszeichen, und Blau nur dort, wo es Richtung gibt: Startlinie unter dem
+     Hero, Ziellinie vor dem Fuss, Abschnittsnummern, ein Wort in der H1, die
+     Schaltflächen. Gestrichen gegenüber Arena: Eckenschnitte, Einblendungen,
+     klebende Bühne, Kursdialog, Kartenschiene, Hover-Transformationen, Kästen. -->
+<link rel="preload" href="../assets/fonts/archivo-black.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/plexmono-400.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Archivo';src:url('../assets/fonts/archivo-var.woff2') format('woff2');
+  font-weight:500 800;font-style:normal;font-display:swap}
+/* Ersatzschrift auf die Breite von Archivo Black getrimmt (aus Arena übernommen):
+   ohne size-adjust springt jede Überschrift beim Schriftwechsel um ein Sechstel
+   ihrer Breite. Die Zeilenhöhe hängt an der font-size, nicht an den Metriken. */
+@font-face{font-family:'Archivo Black Ersatz';
+  src:local('Arial Bold'),local('Helvetica Bold'),local('Liberation Sans Bold'),local('Arial');
+  size-adjust:117.1%;font-weight:400;font-style:normal}
+@font-face{font-family:'Archivo Black';src:url('../assets/fonts/archivo-black.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'IBM Plex Mono';src:url('../assets/fonts/plexmono-400.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+:root{
+  --bg:#07090C; --ink:#EDF2F8; --mut:#A6B0BC; --dim:#7C8792;
+  --blue:#3971B7; --sky:#6FAAF0; --line:rgba(237,242,248,.13);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+/* Der Build hüllt jedes Bild in <picture> — ohne display:contents stünde ein
+   zusätzlicher Inline-Kasten zwischen Layout und Bild. */
+picture{display:contents}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Archivo',system-ui,sans-serif;
+  font-weight:500;font-size:16px;line-height:1.6;overflow-x:clip}
+p{text-wrap:pretty}
+h1,h2,.satz{text-wrap:balance}
+a{color:inherit}
+.wrap{max-width:1280px;margin:0 auto;padding:0 clamp(22px,4vw,48px)}
+.mono{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;font-weight:400}
+.disp{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;font-weight:400;
+  text-transform:uppercase;line-height:.96;letter-spacing:-.03em}
+:focus-visible{outline:2px solid var(--sky);outline-offset:3px}
+/* Bewegung gibt es fast keine — was übrig ist (sanftes Scrollen, Farbwechsel
+   auf Links und Knöpfen), schaltet reduced motion vollständig ab. */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;
+    scroll-behavior:auto!important}
+}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.skip{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;
+  z-index:200;background:var(--blue);color:#fff;font-weight:800;font-size:13px;letter-spacing:.1em;
+  text-transform:uppercase;text-decoration:none}
+.skip:focus{width:auto;height:auto;overflow:visible;clip-path:none;left:12px;top:12px;padding:14px 20px}
+
+/* Die beiden Fotos: Graustufen, in das eine Markenblau getaucht, eine flache
+   Abdunklung. Arenas Verlaufstönung ist auf eine Fläche reduziert — bei zwei
+   Bildern muss die Behandlung identisch sein, sonst ist sie keine Haltung. */
+.duo{position:relative;isolation:isolate;background:#0A0F16;overflow:hidden}
+.duo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
+  filter:grayscale(1) contrast(1.05) brightness(1.12)}
+.duo::before{content:"";position:absolute;inset:0;z-index:1;background:var(--blue);
+  mix-blend-mode:color;opacity:.8}
+.duo::after{content:"";position:absolute;inset:0;z-index:2;background:rgba(7,9,12,.35);
+  mix-blend-mode:multiply}
+
+/* Schaltfläche: ein Rechteck. Hover kehrt die Farben um statt zu schieben. */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;
+  padding:0 26px;background:var(--blue);color:#fff;text-decoration:none;border:0;cursor:pointer;
+  font-family:inherit;font-weight:800;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;
+  white-space:nowrap;transition:background .15s,color .15s}
+.btn:hover{background:var(--ink);color:var(--bg)}
+.btn.klein{min-height:44px;padding:0 18px;font-size:11.5px}
+
+/* KOPF — steht über dem Hero und scrollt mit weg. Eine angeheftete Leiste wäre
+   ein Dauergast, den die Seite nicht braucht: sie ist ein einziger Lauf nach
+   unten, und die Handlung wartet am Anfang und am Ende. */
+header{position:absolute;top:0;left:0;right:0;z-index:20}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:18px}
+.logo{height:26px;width:auto;filter:brightness(0) invert(1)}
+.marke{display:inline-flex;align-items:center;min-height:44px}
+.nlinks{display:flex;list-style:none;margin-left:auto}
+.nlinks a{display:inline-flex;align-items:center;min-height:44px;padding-inline:13px;
+  color:rgba(237,242,248,.72);text-decoration:none;transition:color .15s}
+.nlinks a:hover{color:var(--ink)}
+@media(max-width:820px){.nlinks{display:none}}
+
+/* HERO — die eine grosse Fotografie der Seite */
+.held{position:relative;min-height:100svh;display:flex;align-items:flex-end;
+  padding-bottom:clamp(34px,5vw,68px);overflow:hidden}
+.held .duo{position:absolute;inset:0}
+.held .duo img{object-position:56% 42%}
+.held .schleier{position:absolute;inset:0;z-index:3;
+  background:linear-gradient(to top,rgba(7,9,12,.94) 4%,rgba(7,9,12,.24) 52%,rgba(7,9,12,.52))}
+.held .wrap{position:relative;z-index:5;width:100%}
+.held .kick{display:block;color:var(--mut);margin-bottom:clamp(16px,2.4vw,24px)}
+h1{font-size:clamp(42px,8.6vw,112px);letter-spacing:-.035em}
+h1 .bl{color:var(--sky)}
+.held .lede{margin-top:clamp(16px,2.4vw,26px);max-width:36ch;color:var(--mut);
+  font-size:clamp(15px,1.6vw,18px)}
+.held .btn{margin-top:clamp(22px,3vw,34px)}
+/* Die Startlinie: eine durchgezogene blaue Linie, keine Strichelung. Sie kommt
+   auf der Seite genau zweimal vor — hier und als Ziellinie vor dem Fuss. */
+.startlinie{position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--blue);z-index:6}
+.ziellinie{height:2px;background:var(--sky)}
+
+/* FAKTENBAND — eine Zeile Inschrift statt fünf Plakatkacheln */
+.band{border-block:1px solid var(--line)}
+.band ul{list-style:none;display:flex;flex-wrap:wrap;gap:8px clamp(20px,3.4vw,44px);
+  padding-block:18px;color:var(--dim)}
+.band b{color:var(--ink);font-weight:400}
+
+/* ABSCHNITTSBAND — das eine Ordnungszeichen der Seite: Haarlinie, Nummer, Thema */
+section{padding-block:clamp(54px,7.6vw,112px)}
+.shead{display:flex;flex-wrap:wrap;gap:4px 18px;align-items:baseline;
+  border-top:1px solid var(--line);padding-top:15px;margin-bottom:clamp(26px,4vw,46px)}
+.shead .num{color:var(--sky)}
+.shead .thema{color:var(--ink)}
+.shead .note{margin-left:auto;color:var(--dim);text-align:right}
+@media(max-width:640px){.shead .note{display:none}}
+h2{font-size:clamp(30px,5vw,64px);max-width:22ch;margin-bottom:clamp(22px,3.4vw,42px)}
+
+/* KURSE — ein Register statt einer Kartenschiene: alle acht Beschreibungen
+   stehen offen auf der Seite, nichts liegt hinter einem Klick. */
+.kindex{list-style:none;border-top:1px solid var(--line)}
+.kurs{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);
+  gap:10px clamp(24px,4vw,72px);padding-block:clamp(20px,2.8vw,32px);
+  border-bottom:1px solid var(--line)}
+@media(max-width:760px){.kurs{grid-template-columns:1fr;gap:8px}}
+.kurs .knum{display:block;color:var(--dim);margin-bottom:9px}
+.kurs h3{font-size:clamp(21px,2.5vw,32px)}
+.kurs .meta{display:block;color:var(--dim);margin-top:9px}
+.kurs .besch{color:var(--mut);font-size:15.5px;max-width:58ch;align-self:center}
+.empfehlung{margin-top:clamp(22px,3vw,34px);color:var(--mut);max-width:56ch;
+  font-size:clamp(15px,1.6vw,17px)}
+
+/* WOCHENPLAN — Tagesspalten als Textkolumnen, ohne Kästen */
+.wplan{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:clamp(20px,3vw,30px) clamp(16px,2vw,26px)}
+@media(max-width:1020px){.wplan{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:640px){.wplan{grid-template-columns:1fr}}
+.wtag h3{font-weight:400;color:var(--dim);border-bottom:1px solid var(--line);
+  padding-bottom:10px;margin-bottom:6px}
+.wtag ul{list-style:none}
+.wtag li{display:flex;gap:12px;align-items:baseline;padding:6px 0}
+.wtag li b{font-family:'IBM Plex Mono',monospace;font-weight:400;font-size:12.5px;
+  color:var(--ink);flex:none}
+.wtag li span{font-size:14px;color:var(--mut);line-height:1.35}
+.wquelle{margin-top:clamp(18px,2.4vw,26px);color:var(--dim)}
+
+/* HALTUNG — der Satz des Betreibers trägt sich selbst. Arena brauchte dafür
+   drei Vollbilder und eine klebende Bühne; hier steht er einfach da. */
+.haltung{padding-block:clamp(76px,11vw,168px)}
+.haltung .kick{display:block;color:var(--dim)}
+.satz{font-size:clamp(34px,6.8vw,92px);max-width:13ch;margin-top:16px}
+.folge{margin-top:clamp(18px,2.6vw,28px);font-size:clamp(16px,1.8vw,21px);
+  color:var(--mut);max-width:44ch}
+.belege{list-style:none;margin-top:clamp(28px,4.4vw,52px);display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));gap:20px clamp(20px,3vw,40px)}
+@media(max-width:760px){.belege{grid-template-columns:1fr}}
+.belege li{border-top:1px solid var(--line);padding-top:14px;color:var(--mut);font-size:14.5px}
+
+/* PREISE — die ehrlichste Form für eine Preismatrix ist eine Tabelle. */
+.ptab{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ptab caption{text-align:left;color:var(--dim);padding-bottom:14px}
+.ptab th,.ptab td{border-bottom:1px solid var(--line);padding:15px 6px;text-align:right}
+.ptab thead th{color:var(--dim);font-weight:400}
+.ptab tbody th{text-align:left;padding-left:0;font-weight:700;font-size:15px}
+.ptab td{font-size:clamp(15px,1.7vw,19px)}
+.ptab .etag{display:block;color:var(--sky);margin-top:4px;font-size:9.5px}
+.rechnung{list-style:none;margin-top:clamp(16px,2vw,22px);display:grid;gap:8px;
+  color:var(--dim);font-size:13.5px;max-width:72ch}
+.rechnung b{color:var(--mut);font-weight:700}
+.kondi{margin-top:clamp(30px,4vw,48px);display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));
+  gap:clamp(22px,3vw,40px)}
+.kondi h3{font-weight:400;color:var(--sky);margin-bottom:12px}
+.kondi ul{list-style:none;display:grid;gap:8px}
+.kondi li{color:var(--mut);font-size:14.5px;line-height:1.5}
+.kondi li b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+/* Keine eigene Haarlinie: eine Linie, die auf Textbreite endet, wäre die
+   einzige abgeschnittene der Seite. Der Abstand trennt genug. */
+.svs{grid-column:1/-1;margin-top:6px;color:var(--mut);font-size:14.5px;max-width:72ch}
+.svs b{color:var(--ink);font-weight:700}
+
+/* HYROX — acht Stationen, eine Liste */
+.hyintro{color:var(--mut);max-width:58ch;font-size:clamp(15px,1.6vw,17px);
+  margin-bottom:clamp(26px,3.6vw,42px)}
+.stationen{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-rows:repeat(4,auto);grid-auto-flow:column;column-gap:clamp(24px,5vw,72px)}
+@media(max-width:640px){.stationen{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row}}
+.stationen li{display:flex;gap:14px;align-items:baseline;padding:11px 0;
+  border-bottom:1px solid var(--line)}
+.stationen .mono{color:var(--sky);flex:none}
+.stationen b{font-weight:700;font-size:clamp(14.5px,1.5vw,17px)}
+.hyfuss{margin-top:clamp(18px,2.4vw,26px);color:var(--dim)}
+
+/* COACHES — das zweite und letzte Foto: die beiden, die das Gym aufgemacht haben.
+   Auf breiten Schirmen füllt es die volle Höhe der Liste — ein stehendes Format
+   neben vier Zeilen Text, nicht ein Briefmarkenbild über totem Raum. */
+.crew{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);
+  gap:clamp(28px,4vw,64px)}
+@media(max-width:860px){.crew{grid-template-columns:1fr}}
+.crew .duo{aspect-ratio:3/2}
+.crew figure{display:flex;flex-direction:column}
+@media(min-width:861px){.crew .duo{aspect-ratio:auto;flex:1;min-height:340px}
+  .crew .duo img{object-position:50% 38%}}
+.crew figcaption{margin-top:12px;color:var(--dim)}
+.clist{list-style:none}
+.clist li{border-top:1px solid var(--line);padding-block:clamp(16px,2vw,22px)}
+.clist li:last-child{border-bottom:1px solid var(--line)}
+.clist h3{font-size:clamp(19px,2vw,24px)}
+.clist p{color:var(--mut);font-size:15px;margin-top:6px;max-width:60ch}
+
+/* ZEITEN & ORT */
+.zort{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,4vw,64px)}
+@media(max-width:860px){.zort{grid-template-columns:1fr}}
+.zrow{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;
+  padding:13px 0;border-bottom:1px solid var(--line);font-size:15px}
+.zrow b{font-weight:700;white-space:nowrap}
+.zrow span{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--mut)}
+.znote{margin-top:16px;color:var(--dim);font-size:13.5px}
+/* Inline-Links: Tippfläche über Polster auf 44px gebracht, negatives Margin
+   hält den Textfluss dicht. Unterstrich an der Schrift, nicht am Kasten. */
+.znote a{color:var(--sky);text-decoration:underline;text-underline-offset:4px;
+  display:inline-block;padding-block:12px;margin-block:-12px}
+.adr{font-style:normal;font-size:clamp(22px,2.4vw,30px);line-height:1.15}
+.ort p{margin-top:16px;color:var(--mut);font-size:14.5px;max-width:36ch}
+
+/* PROBETRAINING + KONTAKT — die Handlung ist das Formular, kein Umweg */
+.kgrid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);
+  gap:clamp(32px,5vw,80px)}
+@media(max-width:860px){.kgrid{grid-template-columns:1fr}}
+.kgrid .lede{color:var(--mut);font-size:clamp(15px,1.6vw,17px);max-width:44ch}
+.direkt{margin-top:clamp(20px,2.6vw,30px);color:var(--dim);font-size:14.5px}
+.direkt a{color:var(--sky);text-decoration:underline;text-underline-offset:4px;
+  display:inline-block;padding-block:12px;margin-block:-4px}
+.kform{display:grid;grid-template-columns:1fr 1fr;gap:18px 20px}
+@media(max-width:560px){.kform{grid-template-columns:1fr}}
+.feld{display:flex;flex-direction:column;gap:6px;min-width:0}
+.feld.voll{grid-column:1/-1}
+.feld label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim)}
+.feld input,.feld select,.feld textarea{
+  font-family:inherit;font-size:16px;line-height:1.4;color:var(--ink);
+  background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;
+  padding:11px 0;min-height:48px;width:100%;-webkit-appearance:none;appearance:none}
+.feld select{padding-right:36px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%236FAAF0' stroke-width='1.8'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 4px center}
+.feld select option{background:var(--bg);color:var(--ink)}
+.feld textarea{min-height:110px;resize:vertical}
+.kform .btn{grid-column:1/-1;justify-self:start;margin-top:6px}
+.khinweis{grid-column:1/-1;color:var(--dim);min-height:1.4em;line-height:1.5;letter-spacing:.1em}
+.khinweis.warn{color:var(--sky)}
+
+/* FUSS */
+footer{padding:clamp(40px,6vw,72px) 0 26px}
+.fgrid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);gap:32px}
+@media(max-width:760px){.fgrid{grid-template-columns:1fr}}
+.fgrid h3{color:var(--dim);margin-bottom:8px;font-weight:400}
+.fgrid p{color:var(--dim);font-size:14px;max-width:30ch;margin-top:14px}
+.fgrid a{display:flex;align-items:center;min-height:44px;color:var(--mut);
+  text-decoration:none;font-size:14px;transition:color .15s}
+.fgrid a:hover{color:var(--ink)}
+.ende{margin-top:38px;padding-top:16px;border-top:1px solid var(--line)}
+/* Was noch nicht angebunden ist, steht hier — die Seite tut nicht so, als wäre sie fertig. */
+.fnote{color:var(--dim);line-height:1.7}
+.legal{display:flex;justify-content:space-between;gap:8px 20px;flex-wrap:wrap;color:var(--dim)}
+.rechtliches{display:flex;gap:6px}
+.rechtliches a,.legal span{display:inline-flex;align-items:center;min-height:44px}
+.rechtliches a{color:inherit;text-decoration:none;padding-inline:12px;min-width:44px;justify-content:center}
+.rechtliches a:first-child{padding-left:0;justify-content:flex-start}
+.rechtliches a:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+<a class="skip" href="#inhalt">Zum Inhalt</a>
+
+<header>
+  <div class="wrap nav">
+    <a class="marke" href="#inhalt"><img class="logo" src="__LOGO__" alt="Trojan Performance"></a>
+    <ul class="nlinks mono">
+      <li><a href="#kurse">Kurse</a></li>
+      <li><a href="#plan">Wochenplan</a></li>
+      <li><a href="#preise">Preise</a></li>
+      <li><a href="#coaches">Coaches</a></li>
+    </ul>
+    <a class="btn klein" href="#probetraining">Probetraining</a>
+  </div>
+</header>
+
+<main id="inhalt">
+  <div class="held">
+    <div class="duo">
+      <img src="__PH_HERO__" alt="Die Trainingsfläche von Trojan Performance von oben: Hantelrack, dahinter eine Gruppe beim Training" fetchpriority="high">
+    </div>
+    <div class="schleier"></div>
+    <div class="wrap">
+      <span class="kick mono">Offizieller HYROX Training Club</span>
+      <h1 class="disp">Die Startlinie ist <span class="bl">hier.</span></h1>
+      <p class="lede">Acht Kurse, sieben Tage, in jeder Einheit ein Coach mit dir auf der Fläche.</p>
+      <a class="btn" href="#probetraining">Probetraining — 15&nbsp;€</a>
+    </div>
+    <div class="startlinie"></div>
+  </div>
+
+  <div class="wrap band">
+    <ul class="mono">
+      <li>Gegründet <b>2017</b></li>
+      <li><b>8</b> Kurse</li>
+      <li><b>75</b> Minuten pro Einheit</li>
+      <li><b>12–24</b> Plätze je Kurs</li>
+      <li><b>0&nbsp;€</b> Einschreibgebühr</li>
+    </ul>
+  </div>
+
+  <section id="kurse" class="wrap">
+    <div class="shead mono">
+      <span class="num">01</span><span class="thema">Kurse</span>
+      <span class="note">Jede Einheit 75 Minuten · Mama reloaded 45</span>
+    </div>
+    <h2 class="disp">Acht Kurse. Einer passt zu dir.</h2>
+    <ol class="kindex">
+      <li class="kurs">
+        <div><span class="knum mono">01</span><h3 class="disp">Performance</h3>
+          <span class="meta mono">7× pro Woche · 12–16 Plätze</span></div>
+        <p class="besch">Crosstraining aus Powerlifting, Weightlifting, Gymnastics, Calisthenics,
+          Strongman und Ausdauer. Die Reize sind nicht willkürlich kombiniert, sondern folgen
+          einer periodisierten Planung.</p>
+      </li>
+      <li class="kurs">
+        <div><span class="knum mono">02</span><h3 class="disp">FBB/Strength &amp; Power</h3>
+          <span class="meta mono">6× pro Woche · 16 Plätze</span></div>
+        <p class="besch">Muskelaufbau nach festem Schema, kombiniert mit kurzen intensiven
+          Ausdauerblöcken. Kraft und Ausdauer in einer Einheit.</p>
+      </li>
+      <li class="kurs">
+        <div><span class="knum mono">03</span><h3 class="disp">Powercircle</h3>
+          <span class="meta mono">3× pro Woche · 24 Plätze</span></div>
+        <p class="besch">Airbike, SkiErg, Schlitten, Jump-Box, Battle-Rope, Wallballs im Wechsel.
+          Kurze harte Intervalle, kurze Pausen. Technisch anspruchslos, deshalb auch für
+          Einsteiger geeignet.</p>
+      </li>
+      <li class="kurs">
+        <div><span class="knum mono">04</span><h3 class="disp">Mama reloaded</h3>
+          <span class="meta mono">3× pro Woche · 45 Minuten</span></div>
+        <p class="besch">Wiedereinstieg nach der Schwangerschaft. Beckenboden, Rumpf und Kraft
+          in einem Tempo, das sich an den Tag anpasst.</p>
+      </li>
+      <li class="kurs">
+        <div><span class="knum mono">05</span><h3 class="disp">Hyrox</h3>
+          <span class="meta mono">2× pro Woche · 24 Plätze</span></div>
+        <p class="besch">Vorbereitung auf das Rennformat, das weltweit unter denselben Bedingungen
+          läuft — für Open, Pro, Doubles und Relay. Für jedes Level, vom Einstieg bis zum
+          Wettkampf.</p>
+      </li>
+      <li class="kurs">
+        <div><span class="knum mono">06</span><h3 class="disp">Team-WOD</h3>
+          <span class="meta mono">1× pro Woche · 16 Plätze</span></div>
+        <p class="besch">Zu zweit mit deinem Trainingsbuddy. Jede Woche ein anderes Workout,
+          Intensität und Schwierigkeitsgrad werden auf euch beide angepasst.</p>
+      </li>
+      <li class="kurs">
+        <div><span class="knum mono">07</span><h3 class="disp">FBB</h3>
+          <span class="meta mono">1× pro Woche · 12 Plätze</span></div>
+        <p class="besch">Nach dem gemeinsamen Warm-up wählst du Ober- oder Unterkörper, je vier
+          Übungen mit vorgegebenen Sätzen, Wiederholungen und Pausen. Zum Abschluss eine kurze,
+          intensive Belastung.</p>
+      </li>
+      <li class="kurs">
+        <div><span class="knum mono">08</span><h3 class="disp">Community TeamWOD</h3>
+          <span class="meta mono">1× pro Woche · 24 Plätze</span></div>
+        <p class="besch">Team-Workout in grosser Runde. Jede Woche ein anderes Programm,
+          Intensität und Schwierigkeitsgrad individuell angepasst.</p>
+      </li>
+    </ol>
+    <p class="empfehlung">Wenn du neu anfängst: drei Einheiten pro Woche — zwei für die Kraft,
+      eine für die Ausdauer.</p>
+  </section>
+
+  <section id="plan" class="wrap" style="padding-top:0">
+    <div class="shead mono">
+      <span class="num">02</span><span class="thema">Wochenplan</span>
+      <span class="note">Diese Woche</span>
+    </div>
+    <h2 class="disp">Wann kannst du?</h2>
+    <div class="wplan" id="wplan" aria-busy="true">
+      <div class="wtag"><h3 class="mono">Kurse werden geladen</h3></div>
+    </div>
+    <p class="wquelle mono" id="wquelle"></p>
+  </section>
+
+  <div class="wrap haltung">
+    <span class="kick mono">Bevor wir über Preise reden</span>
+    <p class="satz disp">Nicht das billigste Gym der Stadt.</p>
+    <p class="folge">Dafür sparen wir nicht an Betreuung, nicht an Zeit und nicht an Platz im Kurs.</p>
+    <ul class="belege">
+      <li>In jedem Kurs steht ein Coach auf der Fläche. Er korrigiert dich — er sagt nicht nur an.</li>
+      <li>12 bis 24 Plätze je Kurs. Wenn er voll ist, ist er voll.</li>
+      <li>75 Minuten pro Einheit, dazu ein eigener Kraftaufbauplan — in jedem Tarif.</li>
+    </ul>
+  </div>
+
+  <section id="preise" class="wrap" style="padding-top:0">
+    <div class="shead mono">
+      <span class="num">03</span><span class="thema">Preise</span>
+      <span class="note">Ohne Einschreibgebühr</span>
+    </div>
+    <h2 class="disp">Je öfter du kommst, desto weniger kostet die Einheit.</h2>
+    <table class="ptab">
+      <caption class="mono">Preis pro Monat — Bindung wahlweise 1, 6 oder 12 Monate</caption>
+      <thead>
+        <tr><th scope="col"><span class="vh">Einheiten pro Woche</span></th>
+          <th scope="col" class="mono">1 Monat</th>
+          <th scope="col" class="mono">6 Monate</th>
+          <th scope="col" class="mono">12 Monate</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">2× pro Woche</th><td>130&nbsp;€</td><td>120&nbsp;€</td><td>110&nbsp;€</td></tr>
+        <tr><th scope="row">3× pro Woche<span class="etag mono">Empfehlung zum Einstieg</span></th>
+          <td>150&nbsp;€</td><td>140&nbsp;€</td><td>130&nbsp;€</td></tr>
+        <tr><th scope="row">6× pro Woche</th><td>170&nbsp;€</td><td>160&nbsp;€</td><td>150&nbsp;€</td></tr>
+      </tbody>
+    </table>
+    <ul class="rechnung">
+      <li><b>2×</b> — 9 Einheiten im Monat, frei einteilbar. 14,44&nbsp;€ pro Einheit.</li>
+      <li><b>3×</b> — 13 Einheiten im Monat. 11,54&nbsp;€ pro Einheit, mit 12 Monaten Bindung 10,00&nbsp;€.</li>
+      <li><b>6×</b> — 26 Einheiten, Montag bis Samstag. 6,54&nbsp;€ pro Einheit.</li>
+    </ul>
+    <div class="kondi">
+      <div>
+        <h3 class="mono">In jedem Tarif</h3>
+        <ul>
+          <li>Keine Einschreibgebühr</li>
+          <li>Eigener Kraftaufbauplan</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="mono">Vertrag</h3>
+        <ul>
+          <li>Bindung 1, 6 oder 12 Monate</li>
+          <li>Pause: bei 6 Monaten einmal, bei 12 Monaten zweimal — je bis 4 Wochen</li>
+          <li>Bei triftigem Grund übertragbar</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="mono">Ohne Bindung</h3>
+        <ul>
+          <li><b>15&nbsp;€</b> Probetraining</li>
+          <li><b>25&nbsp;€</b> Drop-in</li>
+          <li><b>200&nbsp;€</b> 10er-Block, ein Jahr gültig</li>
+          <li><b>100&nbsp;€</b> Personal Training</li>
+          <li><b>60&nbsp;€</b> Open Gym, monatlich kündbar</li>
+        </ul>
+      </div>
+      <p class="svs">Selbstständig und SVS-versichert? Dann überweist dir die SVS <b>100&nbsp;€</b>
+        aufs Konto — für jeden Tarif ausser Open Gym, und für den 10er-Block.</p>
+    </div>
+  </section>
+
+  <section id="hyrox" class="wrap" style="padding-top:0">
+    <div class="shead mono">
+      <span class="num">04</span><span class="thema">Hyrox</span>
+      <span class="note">2× pro Woche im Programm</span>
+    </div>
+    <h2 class="disp">HYROX. Einer von acht Kursen.</h2>
+    <p class="hyintro">Ein Rennformat, das weltweit nach denselben Regeln läuft: acht Kilometer
+      Laufen im Wechsel mit acht Kraftstationen. Trojan Performance ist der erste offizielle
+      HYROX Training Club in Kärnten — einer der acht Kurse bereitet darauf vor, zweimal pro
+      Woche. Man kann ihn mitmachen, ohne je an den Start zu gehen.</p>
+    <ol class="stationen">
+      <li><span class="mono">01</span><b>1000 m SkiErg</b></li>
+      <li><span class="mono">02</span><b>50 m Sled Push</b></li>
+      <li><span class="mono">03</span><b>50 m Sled Pull</b></li>
+      <li><span class="mono">04</span><b>80 m Burpee Broad Jumps</b></li>
+      <li><span class="mono">05</span><b>1000 m Rudern</b></li>
+      <li><span class="mono">06</span><b>200 m Farmers Carry</b></li>
+      <li><span class="mono">07</span><b>100 m Sandbag Lunges</b></li>
+      <li><span class="mono">08</span><b>100 Wall Balls</b></li>
+    </ol>
+    <p class="hyfuss mono">Die acht Stationen des Rennens · vor jeder wird 1 km gelaufen</p>
+  </section>
+
+  <section id="coaches" class="wrap" style="padding-top:0">
+    <div class="shead mono">
+      <span class="num">05</span><span class="thema">Coaches</span>
+      <span class="note">Seit 2017</span>
+    </div>
+    <h2 class="disp">Vier Coaches. Zwei davon Brüder.</h2>
+    <div class="crew">
+      <figure>
+        <div class="duo">
+          <img src="__PH_BRUEDER__" alt="Mike und Dominik, die Gründer, sitzen nebeneinander vor einer dunklen Wand" loading="lazy">
+        </div>
+        <figcaption class="mono">Mike und Dominik — sie haben das Gym 2017 aufgemacht</figcaption>
+      </figure>
+      <ul class="clist">
+        <li><h3 class="disp">Mike</h3>
+          <p>Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien.
+            Hat das Gym 2017 mit seinem Bruder Dominik aufgemacht.</p></li>
+        <li><h3 class="disp">Dominik</h3>
+          <p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor
+            für die olympischen Züge.</p></li>
+        <li><h3 class="disp">Diego</h3>
+          <p>Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf regionaler Ebene
+            Wettkämpfe bestritten hat.</p></li>
+        <li><h3 class="disp">Benni</h3>
+          <p>Aktiver Eishockeyspieler, studiert Lehramt für Bewegung und Sport in Klagenfurt.
+            Schwerpunkt Konditionstraining.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="zeiten" class="wrap" style="padding-top:0">
+    <div class="shead mono">
+      <span class="num">06</span><span class="thema">Zeiten &amp; Ort</span>
+      <span class="note">Sebastiangasse 1 · Klagenfurt</span>
+    </div>
+    <h2 class="disp">Der Tag hat hier 16 Stunden.</h2>
+    <div class="zort">
+      <div>
+        <div class="zrow"><b>Open Gym · täglich</b><span>06:00–22:00</span></div>
+        <div class="zrow"><b>Kurse Montag–Freitag</b><span id="zMoFr">—</span></div>
+        <div class="zrow"><b>Kurse Samstag</b><span id="zSa">—</span></div>
+        <div class="zrow" id="zSoZeile" hidden><b>Kurse Sonntag</b><span id="zSo">—</span></div>
+        <p class="znote">Open Gym als eigener Tarif, Zutritt per App.
+          Die genauen Kurszeiten stehen im <a href="#plan">Wochenplan</a>.</p>
+      </div>
+      <div class="ort">
+        <address class="adr disp">Sebastiangasse 1<br>9020 Klagenfurt<br>am Wörthersee</address>
+        <p>Gratis Parkplätze rund ums Gebäude. Zwei Garderoben, je ein Duschraum mit
+          drei Duschen.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="probetraining" class="wrap" style="padding-top:0">
+    <div class="shead mono">
+      <span class="num">07</span><span class="thema">Probetraining</span>
+      <span class="note">15 € · Keine Vorkenntnisse nötig</span>
+    </div>
+    <h2 class="disp">Einmal mittrainieren.</h2>
+    <div class="kgrid">
+      <div>
+        <p class="lede">Eine Einheit, ein Coach, 75 Minuten — für 15&nbsp;€. Vorkenntnisse
+          brauchst du keine. Handtuch, Trinkflasche, Hallenschuhe mit sauberer Sohle:
+          mehr braucht es nicht.</p>
+        <p class="direkt">Lieber direkt?<br>
+          <a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a><br>
+          <a href="tel:+4367682277302">+43&nbsp;676&nbsp;8227&nbsp;7302</a></p>
+      </div>
+      <form class="kform" id="kform" novalidate>
+        <div class="feld voll">
+          <label for="k-betreff">Worum geht es?</label>
+          <select id="k-betreff" name="betreff">
+            <option>Probetraining</option>
+            <option>Allgemeine Anfrage</option>
+            <option>1:1 Coaching</option>
+            <option>Firmentraining</option>
+          </select>
+        </div>
+        <div class="feld">
+          <label for="k-name">Name</label>
+          <input id="k-name" name="name" type="text" autocomplete="name" required>
+        </div>
+        <div class="feld">
+          <label for="k-mail">E-Mail</label>
+          <input id="k-mail" name="mail" type="email" autocomplete="email" required>
+        </div>
+        <div class="feld voll">
+          <label for="k-text">Nachricht</label>
+          <textarea id="k-text" name="text" rows="4"></textarea>
+        </div>
+        <button class="btn" type="submit">Anfrage senden</button>
+        <p class="khinweis mono" id="khinweis" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<div class="ziellinie"></div>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <img class="logo" src="__LOGO__" alt="Trojan Performance" style="height:28px" loading="lazy">
+        <p>Performance Center in Klagenfurt am Wörthersee. Erster offizieller HYROX
+          Training Club in Kärnten.</p>
+      </div>
+      <div>
+        <h3 class="mono">Seite</h3>
+        <a href="#kurse">Kurse</a>
+        <a href="#plan">Wochenplan</a>
+        <a href="#preise">Preise</a>
+        <a href="#coaches">Coaches</a>
+        <a href="#probetraining">Probetraining</a>
+      </div>
+      <div>
+        <h3 class="mono">Kontakt</h3>
+        <a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a>
+        <a href="tel:+4367682277302">+43 676 8227 7302</a>
+        <a href="https://www.instagram.com/trojan.performance/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.facebook.com/trojanperformanceofficial" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://www.youtube.com/channel/UChUZebvjDwrWEdOCa86xNiA" target="_blank" rel="noopener">YouTube</a>
+      </div>
+    </div>
+    <div class="ende">
+      <p class="fnote mono">Entwurf — das Formular hat noch keinen Empfänger, Impressum, AGB und Datenschutz sind noch nicht angebunden.</p>
+      <div class="legal mono">
+        <span>© 2026 Trojan Performance</span>
+        <span class="rechtliches"><a href="#">Impressum</a><a href="#">AGB</a><a href="#">Datenschutz</a></span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Wochenplan aus derselben öffentlichen Schnittstelle, aus der die App bucht.
+   Fällt die Abfrage aus, greift der eingefrorene Stand — eine leere Woche wäre
+   schlimmer als eine, die eine Woche alt ist. */
+const PLAN_STAND=[
+  [1,'06:00',75,'Performance'],   [3,'06:00',75,'Performance'],
+  [0,'08:15',75,'FBB/Strength & Power'], [1,'08:15',75,'Performance'],
+  [2,'08:15',75,'FBB/Strength & Power'], [4,'08:15',75,'Performance'],
+  [5,'08:15',75,'FBB/Strength & Power'], [5,'09:30',75,'Community TeamWOD'],
+  [4,'09:45',45,'Mama reloaded'],  [2,'10:00',45,'Mama reloaded'],
+  [4,'10:45',45,'Mama reloaded'],
+  [2,'16:00',75,'Powercircle'],    [4,'16:00',75,'FBB/Strength & Power'],
+  [0,'17:15',75,'Powercircle'],    [0,'17:15',75,'Performance'],
+  [1,'17:15',75,'FBB/Strength & Power'], [2,'17:15',75,'Team-WOD'],
+  [3,'17:15',75,'Performance'],    [4,'17:15',75,'Hyrox'],
+  [0,'18:30',75,'FBB/Strength & Power'], [1,'18:30',75,'Performance'],
+  [2,'18:30',75,'Hyrox'],          [3,'18:30',75,'FBB'],
+  [3,'18:30',75,'Powercircle']
+].map(([tag,zeit,dauer,name])=>({tag,zeit,dauer,name}));
+
+const TAGE=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
+/* Der Kursname kommt aus einer fremden Quelle — vor dem Einsetzen escapen. */
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const minuten=z=>+z.slice(0,2)*60+ +z.slice(3,5);
+const uhr=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+
+function planWoche(){
+  const jetzt=new Date(), versatz=(jetzt.getDay()+6)%7;
+  const mo=new Date(jetzt.getFullYear(),jetzt.getMonth(),jetzt.getDate()-versatz);
+  const so=new Date(mo.getFullYear(),mo.getMonth(),mo.getDate()+7);
+  const f=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}T00:00:00.000Z`;
+  return [f(mo),f(so)];
+}
+
+function zeichnen(termine,live){
+  const tage=[0,1,2,3,4,5,6].filter(t=>termine.some(x=>x.tag===t));
+  const wp=document.getElementById('wplan');
+  wp.innerHTML=tage.map(tag=>{
+    const liste=termine.filter(t=>t.tag===tag).sort((a,b)=>a.zeit.localeCompare(b.zeit))
+      .map(t=>`<li><b>${t.zeit}</b><span>${esc(t.name)}</span></li>`).join('');
+    return `<div class="wtag"><h3 class="mono">${TAGE[tag]}</h3><ul>${liste}</ul></div>`;
+  }).join('');
+  wp.removeAttribute('aria-busy');
+
+  /* Kurszeiten aus denselben Terminen ableiten, nicht hinschreiben. Die Toleranz
+     von 150 Minuten legt zusammen, was nur eine Mittagspause trennt — übrig
+     bleiben Vormittag und Abend statt einer Kette aus sechs Blöcken. */
+  const LUECKE=150;
+  const fenster=t=>{
+    const roh=termine.filter(x=>t.includes(x.tag))
+      .map(x=>[minuten(x.zeit),minuten(x.zeit)+x.dauer]).sort((a,b)=>a[0]-b[0]);
+    const aus=[];
+    for(const [von,bis] of roh){
+      const l=aus[aus.length-1];
+      if(l&&von<=l[1]+LUECKE) l[1]=Math.max(l[1],bis); else aus.push([von,bis]);
+    }
+    return aus.map(([v,b])=>`${uhr(v)}–${uhr(b)}`).join(' · ');
+  };
+  document.getElementById('zMoFr').textContent=fenster([0,1,2,3,4])||'keine Kurse';
+  document.getElementById('zSa').textContent=fenster([5])||'keine Kurse';
+  const sonntag=fenster([6]);
+  document.getElementById('zSoZeile').hidden=!sonntag;
+  document.getElementById('zSo').textContent=sonntag;
+
+  document.getElementById('wquelle').textContent=
+    live?'Diese Woche — direkt aus dem Buchungssystem':'Letzter bekannter Stand des Buchungssystems';
+}
+
+(async()=>{
+  const [von,bis]=planWoche();
+  try{
+    const r=await fetch(`https://gymkloud.com/api/public/course-event/trojan_performance`+
+      `?from=${von}&to=${bis}&groupNames=Kurse`);
+    if(!r.ok) throw new Error(r.status);
+    const d=await r.json();
+    if(!Array.isArray(d)||!d.length) throw new Error('leer');
+    zeichnen(d.map(e=>({
+      tag:(new Date(e.startTime).getDay()+6)%7,
+      zeit:e.startTime.slice(11,16),
+      dauer:Math.round((new Date(e.endTime)-new Date(e.startTime))/60000)||75,
+      name:(e.course&&e.course.name||'').trim(),
+    })),true);
+  }catch(_){ zeichnen(PLAN_STAND,false); }
+})();
+
+/* Platzhalter-Links (Impressum, AGB, Datenschutz): dahinter liegt noch kein
+   Ziel. Ein Sprung an den Seitenanfang wäre die falscheste Antwort darauf. */
+document.querySelectorAll('a[href="#"]').forEach(a=>
+  a.addEventListener('click',e=>e.preventDefault()));
+
+/* Kontaktformular: im Entwurf gibt es keinen Empfänger. Das Formular sagt das,
+   statt so zu tun, als hätte es abgeschickt. */
+(()=>{
+  const f=document.getElementById('kform');
+  if(!f) return;
+  const hinweis=document.getElementById('khinweis');
+  f.addEventListener('submit',e=>{
+    e.preventDefault();
+    const fehlend=[...f.querySelectorAll('[required]')].filter(x=>!x.value.trim());
+    if(fehlend.length){
+      fehlend[0].focus();
+      hinweis.textContent='Bitte Name und E-Mail ausfüllen.';
+      hinweis.classList.add('warn');
+      return;
+    }
+    hinweis.classList.remove('warn');
+    hinweis.textContent='Entwurf — im Betrieb ginge diese Anfrage an office@trojanperformance.at.';
+  });
+})();
+</script>
+</body>
+</html>

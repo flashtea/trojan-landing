@@ -1,0 +1,1283 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<title>Trojan Performance — Performance Center in Klagenfurt am Wörthersee</title>
+<meta name="description" content="Performance Center in Klagenfurt am Wörthersee. Acht Kurse, 75 Minuten, immer ein Coach auf der Fläche. Erster offizieller HYROX Training Club in Kärnten. Probetraining 15 €.">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   TROJAN PERFORMANCE — Entwurf «GRAU»
+   Zwangsbedingung: kein einziger Farbwert. Jeder Wert erfüllt r = g = b.
+   Was sonst die Farbe macht, machen hier Fläche, Gewicht, Grösse und Umkehr.
+
+   DIE GRAULEITER — bewusst gestuft, nicht nach Gefühl gestreut.
+   Kontrast jeweils gegen den Grund #000 gerechnet (WCAG 2.1).
+
+     --n00  #000000    0 %   Grund. Die ganze Seite steht darauf.
+     --n08  #141414    8 %   Fläche 1 — Karte, Formularfeld, hebt sich eben ab
+     --n14  #232323   14 %   Fläche 2 — Karte auf Karte, Zeile im Wechsel
+     --n22  #383838   22 %   Trennlinie ruhend      1,9:1  rein dekorativ,
+                                                            nie allein bedeutungstragend
+     --n38  #606060   38 %   Rahmen Bedienelement   3,3:1  ✓ UI  (≥ 3:1)
+     --n50  #808080   50 %   Mono-Marginalie gross  5,3:1  ✓ Text (≥ 4,5:1)
+     --n68  #ADADAD   68 %   Fliesstext gedämpft    9,3:1  ✓✓
+     --n85  #D9D9D9   85 %   Fliesstext             14,5:1 ✓✓
+     --n100 #FFFFFF  100 %   Titel, Zahl, Umkehrfläche  21:1
+
+   UMKEHR IST DER AKZENT. Nichts sonst ist weiss gefüllt. Wo eine farbige
+   Seite ein Element einfärben würde, dreht diese Seite es um: weisse
+   Fläche, schwarze Schrift. Auf umgekehrten Flächen gilt die Leiter
+   gespiegelt (--u*, siehe unten), damit die Kontraste dort ebenso halten.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@font-face{font-family:'Archivo';src:url('../assets/fonts/archivo-var.woff2') format('woff2');
+  font-weight:500 800;font-style:normal;font-display:swap}
+@font-face{font-family:'Archivo Black';src:url('../assets/fonts/archivo-black.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'IBM Plex Mono';src:url('../assets/fonts/plexmono-400.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'IBM Plex Mono';src:url('../assets/fonts/plexmono-500.woff2') format('woff2');
+  font-weight:500;font-style:normal;font-display:swap}
+
+:root{
+  --n00:#000000; --n08:#141414; --n14:#232323; --n22:#383838;
+  --n38:#606060; --n50:#808080; --n68:#ADADAD; --n85:#D9D9D9; --n100:#FFFFFF;
+
+  /* Auf umgekehrter (weisser) Fläche gespiegelt: */
+  --u-text:#000000;       /* 21:1  auf #fff */
+  --u-dim:#4A4A4A;        /* 8,9:1 auf #fff */
+  --u-line:#000000;
+  --ring:#FFFFFF;         /* Fokusring — wird in Umkehrflächen auf #000 gesetzt */
+
+  --sp:clamp(1rem,4.6vw,2.2rem);      /* Seitenrand */
+  --bahn:1320px;                       /* Satzbreite der Seite */
+  --kw:6.72;                           /* Breite von PERFORMANCE in em (gemessen) */
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%; scrollbar-color:var(--n38) var(--n00); scroll-behavior:smooth; scroll-padding-top:5rem}
+body{
+  margin:0; background:var(--n00); color:var(--n85);
+  font-family:'Archivo',system-ui,sans-serif; font-weight:500;
+  font-size:1.0625rem; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+picture{display:contents}
+img{display:block; max-width:100%; height:auto}
+a{color:var(--n100)}
+::selection{background:#fff; color:#000}
+h1,h2,h3,h4{margin:0; font-weight:400; letter-spacing:-.02em; text-wrap:balance}
+p{margin:0}
+ul{margin:0; padding:0; list-style:none}
+button,input,select,textarea{font:inherit; color:inherit}
+
+/* ── Fokus: doppelt geführt, damit er auf beiden Gründen sichtbar bleibt ── */
+:focus{outline:none}
+:focus-visible{
+  outline:3px solid var(--ring); outline-offset:3px;
+  box-shadow:0 0 0 3px var(--n00);
+}
+.um :focus-visible, .menue :focus-visible{--ring:#000; box-shadow:0 0 0 3px #fff}
+
+.sprung{
+  position:fixed; top:.5rem; left:.5rem; z-index:200;
+  transform:translateY(-160%);
+  background:#fff; color:#000; font-family:'Archivo Black',sans-serif;
+  padding:.85rem 1.2rem; text-decoration:none; letter-spacing:.02em;
+}
+.sprung:focus-visible{transform:none}
+
+.bahn{width:100%; max-width:var(--bahn); margin-inline:auto; padding-inline:var(--sp)}
+
+/* ── Typografische Stufen. Die Sprünge sind absichtlich gross: ohne Farbe
+      trägt die Grösse den grössten Teil der Hierarchie. ───────────────── */
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace; font-weight:500;
+  letter-spacing:.13em; text-transform:uppercase; font-size:.6875rem; line-height:1.4}
+.schwarz{font-family:'Archivo Black',sans-serif; font-weight:400}
+.gross{font-family:'Archivo Black',sans-serif; font-size:clamp(1.9rem,6.6vw,3.5rem);
+  line-height:.98; letter-spacing:-.03em; color:var(--n100)}
+.mittel{font-family:'Archivo Black',sans-serif; font-size:clamp(1.15rem,3.6vw,1.5rem);
+  line-height:1.1; letter-spacing:-.02em; color:var(--n100)}
+.lauf{color:var(--n85); max-width:62ch}
+.leise{color:var(--n68)}
+
+/* ── Kopfleiste ───────────────────────────────────────────────────────── */
+.kopf{
+  position:sticky; top:0; z-index:90; background:var(--n00);
+  border-bottom:1px solid var(--n22);
+}
+.kopf-in{display:flex; align-items:center; gap:.65rem; height:3.5rem}
+.marke{display:flex; align-items:center; gap:.6rem; text-decoration:none; margin-right:auto;
+  min-width:0; flex:0 1 auto; min-height:2.75rem; padding-right:.4rem}
+.marke img{height:14px; width:auto; filter:brightness(0) invert(1)}
+.marke span{display:none; color:var(--n50)}
+.kopf .knopf{font-size:.6875rem; padding:.6rem .75rem; letter-spacing:.05em}
+.kopf-nav{display:none}
+.kopf-nav a{color:var(--n85); text-decoration:none; font-size:.9375rem; font-weight:700;
+  padding:.55rem .1rem; letter-spacing:-.01em; border-bottom:2px solid transparent}
+.kopf-nav a:hover{color:var(--n100); border-bottom-color:var(--n100)}
+
+.knopf{
+  display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+  min-height:2.75rem; padding:.7rem 1.1rem; border:2px solid var(--n100);
+  background:var(--n00); color:var(--n100); text-decoration:none; cursor:pointer;
+  font-family:'Archivo Black',sans-serif; font-size:.8125rem; letter-spacing:.06em;
+  text-transform:uppercase; transition:background .16s, color .16s;
+}
+.knopf:hover{background:var(--n100); color:var(--n00)}
+.knopf.voll{background:var(--n100); color:var(--n00)}
+.knopf.voll:hover{background:var(--n85)}
+.knopf.gr{min-height:3.5rem; font-size:.9375rem; padding:1rem 1.4rem}
+
+.menue-auf{display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+  width:2.75rem; height:2.75rem; padding:0; border:2px solid var(--n100);
+  background:var(--n00); cursor:pointer}
+.menue-auf i{display:block; width:18px; height:2px; background:var(--n100); position:relative}
+.menue-auf i::before,.menue-auf i::after{content:''; position:absolute; left:0; width:18px; height:2px; background:var(--n100)}
+.menue-auf i::before{top:-6px} .menue-auf i::after{top:6px}
+
+/* Das Menü ist die reinste Form der Umkehr: die ganze Seite dreht sich um. */
+.menue{
+  position:fixed; inset:0; z-index:150; background:#fff; color:#000;
+  display:flex; flex-direction:column; padding:var(--sp);
+  transform:translateY(-100%); transition:transform .34s cubic-bezier(.2,.85,.25,1);
+  overflow-y:auto;
+}
+.menue[data-offen="1"]{transform:none}
+.menue-kopf{display:flex; align-items:center; justify-content:space-between; height:3.5rem; margin-bottom:auto}
+.menue-zu{width:2.75rem; height:2.75rem; border:2px solid #000; background:#fff; color:#000;
+  cursor:pointer; font-family:'Archivo Black',sans-serif; font-size:1.1rem; line-height:1}
+.menue ol{margin:0; padding:0; list-style:none}
+.menue ol a{
+  display:block; text-decoration:none; color:#000;
+  font-family:'Archivo Black',sans-serif; font-size:clamp(1.9rem,9vw,3rem);
+  line-height:1.06; letter-spacing:-.035em; padding:.28rem 0;
+  border-bottom:2px solid #000;
+}
+.menue ol li:first-child a{border-top:2px solid #000}
+.menue ol a:hover{background:#000; color:#fff}
+.menue-fuss{margin-top:auto; padding-top:1.4rem; color:var(--u-dim)}
+.menue-fuss a{color:#000}
+
+/* ── Bühne ────────────────────────────────────────────────────────────── */
+.buehne{padding-top:clamp(2rem,7vw,4.5rem); padding-bottom:0}
+/* Der Name füllt die Satzbreite exakt aus — die Schriftgrösse wird aus der
+   gemessenen Laufweite von «Performance» (--kw em) zurückgerechnet. */
+.wort{
+  font-family:'Archivo Black',sans-serif; color:var(--n100);
+  font-size:calc((min(100vw, var(--bahn)) - 2*var(--sp)) / var(--kw));
+  line-height:.845; letter-spacing:-.035em; margin:0;
+}
+.wort span{display:block}
+.ort{color:var(--n50); margin-bottom:1.1rem}
+.regel{height:3px; background:var(--n100); margin:clamp(1.1rem,3.5vw,1.8rem) 0}
+.anriss{font-size:clamp(1.0625rem,4vw,1.375rem); font-weight:700; line-height:1.34;
+  color:var(--n85); max-width:34ch; letter-spacing:-.015em}
+.tuen{display:flex; flex-wrap:wrap; gap:.75rem; margin-top:clamp(1.4rem,4vw,2rem)}
+.tuen .knopf{flex:1 1 15rem}
+
+/* Streifen mit der Kärnten-Tatsache — Rahmen statt Farbe. */
+.tatsache{
+  display:flex; gap:.85rem; align-items:baseline; margin-top:clamp(1.6rem,4.5vw,2.4rem);
+  border:2px solid var(--n38); padding:.85rem 1rem;
+}
+.tatsache b{font-family:'Archivo Black',sans-serif; color:var(--n100); font-weight:400}
+
+/* Vollbreites Foto. Graustufen sind hier kein Versteck, sondern Gesetz —
+   deshalb dürfen die Bilder hart sein statt gedämpft. */
+.band{position:relative; margin-top:clamp(2rem,6vw,3.5rem)}
+.band img{width:100%; height:clamp(15rem,52vw,30rem); object-fit:cover;
+  filter:grayscale(1) contrast(1.5) brightness(.88)}
+.band-schild{
+  position:absolute; left:0; bottom:0; background:var(--n00); color:var(--n68);
+  padding:.7rem clamp(1rem,4.6vw,2.2rem) .7rem var(--sp); max-width:min(100%,34rem);
+}
+
+/* ── Abschnittsköpfe: Nummer + Titel, hart getrennt ───────────────────── */
+.abschnitt{padding-block:clamp(3rem,9vw,5.25rem)}
+.abschnitt.eng{padding-block:clamp(2.4rem,7vw,4.5rem)}
+.kopfzeile{border-top:3px solid var(--n100); padding-top:.9rem; margin-bottom:clamp(1.6rem,5vw,2.6rem)}
+.kopfzeile .num{color:var(--n50); display:block; margin-bottom:.75rem}
+.kopfzeile p{margin-top:.9rem}
+
+/* ── Der Schieber: das eine Bedienbild der Seite ───────────────────────
+   Eine weisse Fläche fährt unter die Beschriftung. Die Beschriftung ist
+   weiss und blendet im Modus «difference» — über Schwarz bleibt sie weiss,
+   über der weissen Fläche wird sie rechnerisch schwarz. Ein Zustand, der
+   ohne jede Farbe auskommt und trotzdem unmissverständlich ist. */
+.schalter{
+  position:relative; isolation:isolate; background:var(--n00);
+  border:2px solid var(--n100); display:grid;
+  grid-template-columns:repeat(var(--n),minmax(0,1fr));
+}
+.schieber{
+  position:absolute; z-index:0; top:0; bottom:0; left:0;
+  width:calc(100% / var(--n)); background:var(--n100);
+  transform:translateX(calc(var(--i) * 100%));
+  transition:transform .3s cubic-bezier(.2,.9,.2,1);
+}
+.schalter > button{
+  position:relative; z-index:1; mix-blend-mode:difference;
+  background:transparent; border:0; cursor:pointer; color:#fff;
+  min-height:2.875rem; padding:.55rem .3rem; text-align:center;
+  font-family:'Archivo Black',sans-serif; font-size:.8125rem; letter-spacing:.03em;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.28rem;
+}
+.schalter > button + button{box-shadow:inset 2px 0 0 #fff}
+/* Ohne «difference» bliebe die Beschriftung weiss auf Weiss — dann wird
+   der gewählte Knopf schlicht direkt umgefärbt. */
+@supports not (mix-blend-mode:difference){
+  .schalter > button{mix-blend-mode:normal}
+  .schalter > button[aria-pressed="true"]{color:var(--n00)}
+}
+/* Im erzwungenen Kontrastmodus bestimmt das System die Farben, nicht diese
+   Seite: Blendmodus aus, Auswahl über einen Rahmen statt über die Fläche. */
+@media (forced-colors:active){
+  .schalter > button{mix-blend-mode:normal}
+  .schieber{display:none}
+  .schalter > button[aria-pressed="true"]{outline:3px solid; outline-offset:-7px}
+}
+
+/* ── Die Woche ─────────────────────────────────────────────────────────── */
+.woche-kopf{display:flex; flex-wrap:wrap; gap:.6rem 1.2rem; align-items:baseline; margin-bottom:1.1rem}
+.quelle{display:inline-flex; align-items:center; gap:.5rem; color:var(--n68)}
+.quelle b{display:block; width:.7rem; height:.7rem; border:2px solid var(--n68); background:transparent}
+.quelle[data-live="1"] b{background:var(--n100); border-color:var(--n100)}
+
+.tagwahl{--n:7; margin-bottom:1.4rem}
+.tagwahl button{font-size:.75rem; letter-spacing:.06em}
+/* Mengenbalken im Reiter: die Zahl als Fläche, nicht als Ziffer. */
+.mb{display:block; width:1.6rem; height:4px; background:transparent; box-shadow:inset 0 0 0 1px #fff}
+.mb i{display:block; height:100%; background:#fff; transform-origin:left center; transform:scaleX(var(--f,0))}
+.heute-strich{position:absolute; left:.4rem; right:.4rem; bottom:.25rem; height:3px; background:#fff}
+
+.tagliste{border-top:2px solid var(--n22); padding-top:.9rem}
+.tagliste h3{display:flex; align-items:baseline; gap:.7rem; margin-bottom:.7rem}
+.tagliste h3 .tg{font-family:'Archivo Black',sans-serif; font-size:1.0625rem; color:var(--n100)}
+.tagliste h3 .anz{color:var(--n50); font-family:'IBM Plex Mono',monospace; font-size:.6875rem;
+  letter-spacing:.1em; text-transform:uppercase}
+/* «Heute» ist eine Umkehrfläche, kein Farbtupfer. */
+.heutechip{margin-left:auto; background:var(--n100); color:var(--n00);
+  font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:.625rem;
+  letter-spacing:.12em; text-transform:uppercase; padding:.18rem .42rem}
+.tagliste.heute{box-shadow:inset 0 3px 0 var(--n100)}
+.tagliste ul{display:grid; gap:2px}
+.zeile{
+  display:grid; grid-template-columns:4.6rem 1fr auto; gap:.6rem; align-items:baseline;
+  background:var(--n08); padding:.7rem .8rem;
+}
+.zeile .zt{font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:1rem; color:var(--n100)}
+.zeile .zn{font-weight:700; color:var(--n85); letter-spacing:-.01em; line-height:1.25}
+.zeile .zd{font-family:'IBM Plex Mono',monospace; font-size:.75rem; color:var(--n50)}
+.tagliste.leerTag .keine{background:var(--n08); padding:.9rem .8rem; color:var(--n68)}
+.spanne{border-top:2px solid var(--n22); margin-top:1.4rem; padding-top:1rem;
+  display:grid; gap:.45rem}
+.spanne div{display:flex; gap:.9rem; flex-wrap:wrap}
+.spanne dt{color:var(--n50); min-width:5.5rem; font-family:'IBM Plex Mono',monospace;
+  font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase; padding-top:.18rem}
+.spanne dd{margin:0; font-family:'IBM Plex Mono',monospace; font-size:.9375rem; color:var(--n85)}
+
+/* ── Kurse ─────────────────────────────────────────────────────────────── */
+.kursnetz{display:grid; gap:2px; background:var(--n22)}
+.kurs{background:var(--n00); padding:clamp(1.1rem,4vw,1.6rem) 0}
+.kurs-kopf{display:grid; grid-template-columns:auto 1fr; gap:.9rem; align-items:start}
+.kurs .nr{font-family:'Archivo Black',sans-serif; font-size:1.5rem; line-height:1;
+  color:var(--n50); font-variant-numeric:tabular-nums}
+.kurs h3{font-family:'Archivo Black',sans-serif; font-size:clamp(1.35rem,5vw,1.9rem);
+  line-height:1.02; letter-spacing:-.03em; color:var(--n100)}
+.kurs .txt{margin-top:.7rem; color:var(--n68); max-width:52ch}
+.marker{display:inline-block; margin-top:.7rem; border:2px solid var(--n100); color:var(--n100);
+  padding:.28rem .55rem; font-family:'IBM Plex Mono',monospace; font-weight:500;
+  font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase}
+/* Zwei Messwerte je Kurs, als Länge statt als Farbe. */
+.werte{display:grid; gap:.7rem; margin-top:1rem; max-width:26rem}
+.wert{display:grid; grid-template-columns:5.4rem 1fr auto; gap:.7rem; align-items:center}
+.wert .wl{color:var(--n50); font-family:'IBM Plex Mono',monospace; font-size:.6875rem;
+  letter-spacing:.1em; text-transform:uppercase}
+.wert .wz{font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:.875rem; color:var(--n85);
+  text-align:right; min-width:5.2rem}
+.balken{height:10px; background:transparent; box-shadow:inset 0 0 0 2px var(--n38)}
+.balken i{display:block; height:100%; background:var(--n100);
+  transform-origin:left center; transform:scaleX(var(--f,0))}
+.balken.leer{box-shadow:inset 0 0 0 2px var(--n22)}
+
+.kurs-fuss{margin-top:clamp(1.6rem,5vw,2.4rem); border-top:3px solid var(--n100); padding-top:1.1rem;
+  display:grid; gap:.6rem}
+.kurs-fuss .mittel{max-width:30ch}
+
+/* ── HYROX-Leiter ──────────────────────────────────────────────────────── */
+.hyrox{background:var(--n08)}
+.leiter{margin-top:1.6rem; border-left:3px solid var(--n100); padding-left:0}
+.rung{display:grid; grid-template-columns:2.6rem 1fr; align-items:center; gap:.9rem;
+  padding:.55rem 0 .55rem .9rem; position:relative}
+.rung.lauf-r{color:var(--n50)}
+.rung.lauf-r .mono{color:var(--n50)}
+.rung.st{background:var(--n00)}
+.rung .kn{display:flex; align-items:center; justify-content:center;
+  width:2.6rem; height:2.6rem; background:var(--n100); color:var(--n00);
+  font-family:'Archivo Black',sans-serif; font-size:1rem; font-variant-numeric:tabular-nums}
+.rung .sn{font-family:'Archivo Black',sans-serif; font-size:clamp(1rem,4vw,1.25rem);
+  letter-spacing:-.02em; color:var(--n100); line-height:1.1}
+.rung.lauf-r .kn{background:transparent; color:var(--n50); box-shadow:inset 0 0 0 2px var(--n22);
+  font-family:'IBM Plex Mono',monospace; font-size:.75rem; font-weight:500}
+.hyrox-bild img{width:100%; height:clamp(11rem,34vw,17rem); object-fit:cover;
+  filter:grayscale(1) contrast(1.55) brightness(.8)}
+
+/* ── Preise ────────────────────────────────────────────────────────────── */
+.bindung{--n:3; max-width:26rem; margin-bottom:1.6rem}
+.tarife{display:grid; gap:2px; background:var(--n22); margin-bottom:2px}
+.tarif{background:var(--n00); padding:clamp(1.2rem,4.5vw,1.8rem)}
+.tarif .tn{font-family:'Archivo Black',sans-serif; font-size:1.0625rem; letter-spacing:-.02em;
+  color:var(--n100); line-height:1.1}
+.preis{display:flex; align-items:baseline; gap:.5rem; margin-top:.5rem}
+.preis .zahl{font-family:'Archivo Black',sans-serif; font-size:clamp(3.2rem,13vw,4.6rem);
+  line-height:.9; letter-spacing:-.045em; color:var(--n100); font-variant-numeric:tabular-nums;
+  display:inline-block}
+.preis .eur{font-family:'Archivo Black',sans-serif; font-size:1.6rem; color:var(--n100)}
+.preis .pm{color:var(--n50); font-family:'IBM Plex Mono',monospace; font-size:.75rem;
+  letter-spacing:.1em; text-transform:uppercase}
+.tarif .rech{margin-top:.7rem; color:var(--n68)}
+.tarif .je{margin-top:.35rem; font-family:'IBM Plex Mono',monospace; font-weight:500;
+  font-size:.9375rem; color:var(--n85)}
+/* Die Empfehlung ist umgekehrt. Kein Etikett in Signalfarbe — die Karte
+   selbst kippt ins Weisse und wird damit zum lautesten Element im Block. */
+.tarif.um{background:#fff; color:var(--u-text)}
+.tarif.um .tn,.tarif.um .preis .zahl,.tarif.um .preis .eur{color:#000}
+.tarif.um .preis .pm,.tarif.um .rech{color:var(--u-dim)}
+.tarif.um .je{color:#000}
+.tarif.um .fahne{display:inline-block; background:#000; color:#fff; padding:.3rem .6rem;
+  font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:.6875rem;
+  letter-spacing:.12em; text-transform:uppercase; margin-bottom:.8rem}
+
+.ohne{border-top:3px solid var(--n100); margin-top:clamp(2rem,6vw,3rem); padding-top:1.2rem}
+.ohne ul{display:grid; gap:2px; background:var(--n22); margin-top:1rem}
+.ohne li{background:var(--n00); display:flex; align-items:baseline; gap:.9rem; padding:.85rem .1rem}
+.ohne .op{font-family:'Archivo Black',sans-serif; font-size:1.35rem; color:var(--n100);
+  min-width:4.2rem; font-variant-numeric:tabular-nums; letter-spacing:-.03em}
+.ohne .ot{font-weight:700; color:var(--n85)}
+.ohne .oz{display:block; color:var(--n50); font-weight:500; font-size:.9375rem}
+
+.kasten{border:2px solid var(--n38); padding:clamp(1rem,4vw,1.4rem); margin-top:1.4rem}
+.kasten .mittel{margin-bottom:.5rem}
+.kasten.stark{border:0; background:#fff; color:var(--u-text)}
+.kasten.stark .mittel{color:#000}
+.kasten.stark .leise{color:var(--u-dim)}
+
+details.falte{border-top:2px solid var(--n22); margin-top:1.4rem}
+details.falte summary{
+  cursor:pointer; list-style:none; padding:1rem .1rem; display:flex; align-items:center; gap:.8rem;
+  font-family:'Archivo Black',sans-serif; font-size:.9375rem; color:var(--n100); min-height:2.75rem;
+}
+details.falte summary::-webkit-details-marker{display:none}
+details.falte summary .pm2{margin-left:auto; width:1.4rem; height:1.4rem; position:relative; flex:none}
+details.falte summary .pm2::before,details.falte summary .pm2::after{
+  content:''; position:absolute; background:var(--n100); left:50%; top:50%; translate:-50% -50%}
+details.falte summary .pm2::before{width:1.4rem; height:2px}
+details.falte summary .pm2::after{width:2px; height:1.4rem; transition:scale .2s}
+details.falte[open] summary .pm2::after{scale:1 0}
+details.falte .innen{padding:0 .1rem 1.2rem; color:var(--n68); max-width:60ch}
+
+/* Der Satz des Betreibers. Grösse statt Farbe. */
+.zitat{border-top:3px solid var(--n100); border-bottom:3px solid var(--n100);
+  padding:clamp(1.6rem,6vw,2.6rem) 0; margin-top:clamp(2rem,6vw,3rem)}
+.zitat blockquote{margin:0; font-family:'Archivo Black',sans-serif; color:var(--n100);
+  font-size:clamp(1.7rem,8vw,3.2rem); line-height:1; letter-spacing:-.04em; text-wrap:balance}
+.zitat figcaption{margin-top:.9rem; color:var(--n50)}
+
+/* ── Coaches ───────────────────────────────────────────────────────────── */
+.coaches{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:2px; background:var(--n22)}
+.coach{background:var(--n00); padding-bottom:.9rem}
+.coach img{width:100%; aspect-ratio:3/4; object-fit:cover; object-position:50% 22%;
+  filter:grayscale(1) contrast(1.35) brightness(.95)}
+.coach h3{font-family:'Archivo Black',sans-serif; font-size:clamp(1.15rem,4.6vw,1.5rem);
+  color:var(--n100); margin:.8rem 0 .35rem; letter-spacing:-.02em}
+.coach p{color:var(--n68); font-size:.9375rem; line-height:1.45}
+
+/* ── Haus ──────────────────────────────────────────────────────────────── */
+.haus{display:grid; gap:clamp(1.4rem,5vw,2.4rem)}
+.haus-bild img{width:100%; height:clamp(12rem,42vw,20rem); object-fit:cover;
+  filter:grayscale(1) contrast(1.4) brightness(.86)}
+.fakten{display:grid; gap:2px; background:var(--n22)}
+.fakten div{background:var(--n00); padding:.95rem .1rem}
+.fakten dt{color:var(--n50); font-family:'IBM Plex Mono',monospace; font-size:.6875rem;
+  letter-spacing:.12em; text-transform:uppercase; margin-bottom:.3rem}
+.fakten dd{margin:0; color:var(--n85); font-weight:700; letter-spacing:-.01em}
+.fakten dd small{display:block; font-weight:500; color:var(--n68); font-size:.9375rem; letter-spacing:0}
+.opengym{border:2px solid var(--n100); padding:clamp(1rem,4vw,1.4rem); display:grid; gap:.4rem}
+.opengym .zeit{font-family:'Archivo Black',sans-serif; font-size:clamp(1.9rem,8vw,2.8rem);
+  color:var(--n100); letter-spacing:-.03em; line-height:1; font-variant-numeric:tabular-nums}
+
+/* ── Kontakt ───────────────────────────────────────────────────────────── */
+.form{display:grid; gap:1.2rem; max-width:40rem}
+fieldset{border:0; margin:0; padding:0}
+legend{padding:0; margin-bottom:.7rem; color:var(--n50);
+  font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:.6875rem;
+  letter-spacing:.12em; text-transform:uppercase}
+/* Wahl ohne Farbe: nicht gewählt = Umriss, gewählt = gefüllte Umkehrfläche. */
+.chips{display:flex; flex-wrap:wrap; gap:.5rem}
+.chip{position:relative}
+.chip input{position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer}
+.chip span{display:flex; align-items:center; justify-content:center; min-height:2.75rem;
+  padding:.6rem 1rem; border:2px solid var(--n38); color:var(--n85);
+  font-family:'Archivo Black',sans-serif; font-size:.8125rem; letter-spacing:.03em;
+  text-transform:uppercase; transition:background .16s,color .16s,border-color .16s}
+.chip input:checked + span{background:var(--n100); color:var(--n00); border-color:var(--n100)}
+.chip input:focus-visible + span{outline:3px solid var(--ring); outline-offset:3px; box-shadow:0 0 0 3px var(--n00)}
+.feld{display:grid; gap:.45rem}
+.feld label{color:var(--n50); font-family:'IBM Plex Mono',monospace; font-weight:500;
+  font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase}
+.feld input,.feld textarea{
+  width:100%; background:var(--n08); border:2px solid var(--n38); color:var(--n100);
+  padding:.8rem .85rem; min-height:2.75rem; font-size:1rem; caret-color:var(--n100);
+}
+.feld textarea{min-height:8rem; resize:vertical}
+.feld input::placeholder,.feld textarea::placeholder{color:var(--n38)}
+.feld input:focus-visible,.feld textarea:focus-visible{border-color:var(--n100)}
+.feld input:-webkit-autofill{-webkit-text-fill-color:#fff; -webkit-box-shadow:0 0 0 1000px #141414 inset}
+.hinweis{border:2px solid var(--n100); padding:1rem; display:none}
+.hinweis[data-an="1"]{display:block}
+.hinweis .mittel{margin-bottom:.5rem}
+.hinweis a{color:var(--n100)}
+.kontaktnetz{display:grid; gap:clamp(2rem,6vw,3.5rem)}
+.kontaktdaten{display:grid; gap:1.6rem; align-content:start}
+.kontaktdaten .direkt{border-top:3px solid var(--n100); padding-top:1.1rem}
+.kontaktdaten a{color:var(--n100); font-family:'Archivo Black',sans-serif;
+  font-size:clamp(1.05rem,4.2vw,1.4rem); letter-spacing:-.02em; text-decoration:none;
+  border-bottom:2px solid var(--n38); display:inline-flex; align-items:center;
+  min-height:2.75rem; padding-bottom:.15rem}
+.kontaktdaten a:hover{border-bottom-color:var(--n100)}
+.sozial{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.4rem}
+
+/* ── Fuss ──────────────────────────────────────────────────────────────── */
+.fuss{border-top:3px solid var(--n100); padding-block:clamp(2rem,6vw,3rem) 2.5rem}
+.fuss-netz{display:grid; gap:1.8rem}
+.fuss h2{color:var(--n100); font-family:'Archivo Black',sans-serif; font-size:1.0625rem; margin-bottom:.7rem}
+.offen li{display:grid; grid-template-columns:1.4rem 1fr; gap:.6rem; padding:.35rem 0; color:var(--n68)}
+.offen li::before{content:'—'; color:var(--n38)}
+.fuss .mono{color:var(--n50)}
+/* Fuss- und Menülinks sind eigenständige Ziele, keine Wörter im Satz — 44 px hoch. */
+.fuss-netz a,.menue-fuss a{display:inline-flex; align-items:center; min-height:2.75rem}
+.fuss-schluss{margin-top:2rem; padding-top:1.2rem; border-top:1px solid var(--n22);
+  display:flex; flex-wrap:wrap; gap:.6rem 1.4rem; align-items:center; color:var(--n50)}
+.fuss-schluss img{height:13px; width:auto; filter:brightness(0) invert(1); opacity:.75}
+
+/* ── Einblendung: Bewegung, die eine Reihenfolge behauptet ────────────── */
+html.js .auf{opacity:0; transform:translateY(20px)}
+html.js .auf.da{opacity:1; transform:none;
+  transition:opacity .55s ease, transform .55s cubic-bezier(.2,.85,.25,1)}
+html.js .balken i,html.js .mb i{transition:transform .8s cubic-bezier(.2,.85,.25,1)}
+html.js .balken i{transform:scaleX(0)}
+html.js .da .balken i,html.js .mb i{transform:scaleX(var(--f,0))}
+.preis .zahl{transition:transform .2s ease, opacity .2s ease}
+.preis .zahl.wechsel{transform:translateY(-.14em); opacity:0}
+
+/* ── Schmale Schirme: die Woche zeigt genau einen Tag ─────────────────
+      Der gewählte Reiter ist die einzige weisse Fläche der Gruppe — die
+      Auswahl braucht dadurch weder Farbe noch Beschriftung. ──────────── */
+@media (max-width:899px){
+  .tagliste{display:none}
+  .woche[data-tag="0"] .tagliste[data-t="0"],
+  .woche[data-tag="1"] .tagliste[data-t="1"],
+  .woche[data-tag="2"] .tagliste[data-t="2"],
+  .woche[data-tag="3"] .tagliste[data-t="3"],
+  .woche[data-tag="4"] .tagliste[data-t="4"],
+  .woche[data-tag="5"] .tagliste[data-t="5"],
+  .woche[data-tag="6"] .tagliste[data-t="6"]{display:block}
+}
+
+/* ── Breite Schirme ───────────────────────────────────────────────────── */
+@media (min-width:760px){
+  .coaches{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .fakten{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ohne ul{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .haus{grid-template-columns:1fr 1fr; align-items:start}
+  .zeile{grid-template-columns:4.6rem 1fr auto}
+}
+@media (min-width:900px){
+  .kopf-nav{display:flex; gap:1.6rem; margin-right:1.2rem}
+  .menue-auf{display:none}
+  .kopf-in{height:4rem; gap:1rem}
+  .kopf .knopf{font-size:.8125rem; padding:.7rem 1.1rem}
+  .marke img{height:17px}
+  .marke span{display:block}
+  .tagwahl{display:none}
+  .woche-netz{display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:2px; background:var(--n22)}
+  .tagliste{background:var(--n00); border-top:0; padding:.9rem .7rem 1.2rem}
+  .tagliste ul{gap:2px}
+  .zeile{grid-template-columns:1fr; gap:.15rem; padding:.6rem .55rem; background:var(--n14)}
+  .zeile .zd{grid-column:1}
+  .spanne{grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem 2rem}
+  .kursnetz{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kurs{padding:clamp(1.4rem,2.6vw,2rem)}
+  .tarife{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .ohne ul{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .ohne li{flex-direction:column; gap:.3rem; padding:1rem .9rem}
+  /* Spaltenweise füllen, damit die Abfolge Laufen–Station erhalten bleibt. */
+  .leiter{display:grid; grid-auto-flow:column; grid-template-rows:repeat(8,auto);
+    grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:3rem;
+    border-left:0; border-top:3px solid var(--n100); padding-top:.4rem}
+  .rung{padding-left:0}
+  .rung::after{content:''; position:absolute; left:calc(1.3rem - 1.5px); width:3px;
+    top:calc(50% + 1.3rem); bottom:-.55rem; background:var(--n22)}
+  .rung:nth-child(8)::after,.rung:nth-child(16)::after{display:none}
+  .fuss-netz{grid-template-columns:1.2fr 1fr 1fr}
+  .kontaktnetz{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); align-items:start}
+  .form{max-width:none}
+  .buehne{padding-top:clamp(3rem,6vw,5.5rem)}
+  .anriss{font-size:1.75rem; max-width:26ch}
+  .tuen .knopf{flex:0 0 auto}
+  /* Kopf zweispaltig: Titel links, Erläuterung rechts auf gleicher Grundlinie. */
+  .kopfzeile{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    column-gap:clamp(2rem,5vw,5rem); align-items:end}
+  .kopfzeile .num{grid-column:1; grid-row:1}
+  .kopfzeile > h2{grid-column:1; grid-row:2}
+  .kopfzeile > p{grid-column:2; grid-row:1 / span 2; margin-top:0; align-self:end;
+    padding-bottom:.4rem; max-width:52ch}
+}
+@media (min-width:1180px){
+  .kursnetz{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+
+/* ── Ruhe ─────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:.001ms !important; animation-duration:.001ms !important}
+  html.js .auf{opacity:1 !important; transform:none !important}
+  html.js .balken i{transform:scaleX(var(--f,0)) !important}
+  .menue{transition:none}
+  .knopf:hover,.kopf-nav a:hover{transform:none}
+}
+</style>
+</head>
+<body>
+<a class="sprung" href="#inhalt">Zum Inhalt springen</a>
+
+<header class="kopf">
+  <div class="bahn kopf-in">
+    <a class="marke" href="#oben">
+      <img src="__LOGO__" alt="Trojan Performance" width="120" height="17">
+      <span class="mono">Klagenfurt</span>
+    </a>
+    <nav class="kopf-nav" aria-label="Hauptbereiche">
+      <a href="#woche">Woche</a>
+      <a href="#kurse">Kurse</a>
+      <a href="#hyrox">Hyrox</a>
+      <a href="#preise">Preise</a>
+      <a href="#coaches">Coaches</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+    <a class="knopf voll" href="#kontakt">Probetraining</a>
+    <button class="menue-auf" type="button" id="menueAuf" aria-expanded="false"
+            aria-controls="menue" aria-label="Menü öffnen">
+      <i aria-hidden="true"></i>
+    </button>
+  </div>
+</header>
+
+<div class="menue" id="menue" data-offen="0" hidden>
+  <div class="menue-kopf">
+    <img src="__MONO__" alt="" width="28" height="28" style="height:22px;width:auto">
+    <button class="menue-zu" type="button" id="menueZu" aria-label="Menü schliessen">✕</button>
+  </div>
+  <nav aria-label="Alle Bereiche">
+    <ol>
+      <li><a href="#woche">Woche</a></li>
+      <li><a href="#kurse">Kurse</a></li>
+      <li><a href="#hyrox">Hyrox</a></li>
+      <li><a href="#preise">Preise</a></li>
+      <li><a href="#coaches">Coaches</a></li>
+      <li><a href="#haus">Haus</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ol>
+  </nav>
+  <div class="menue-fuss">
+    <p class="mono">Sebastiangasse 1 · 9020 Klagenfurt</p>
+    <p style="margin-top:.5rem"><a href="tel:+4367682277302">+43 676 8227 7302</a></p>
+  </div>
+</div>
+
+<main id="oben">
+
+<!-- ═══ BÜHNE ═══════════════════════════════════════════════════════════ -->
+<section class="buehne" id="inhalt">
+  <div class="bahn">
+    <p class="mono ort">Klagenfurt am Wörthersee · seit 2017</p>
+    <h1 class="wort"><span>Trojan</span><span>Performance</span></h1>
+    <div class="regel"></div>
+    <p class="anriss">In jedem Kurs steht ein Coach auf der Fläche und korrigiert. Er sagt nicht nur an.</p>
+    <div class="tuen">
+      <a class="knopf voll gr" href="#kontakt">Probetraining 15 €</a>
+      <a class="knopf gr" href="#woche">Die Woche ansehen</a>
+    </div>
+    <p class="tatsache"><b>Hyrox</b> <span class="mono">Erster offizieller Training Club in Kärnten</span></p>
+  </div>
+  <div class="band">
+    <img src="__PH_HERO__" alt="Blick von der Galerie auf die Trainingsfläche: Hantelracks, dahinter eine Gruppe beim Training." width="1365" height="768" fetchpriority="high" decoding="async">
+    <p class="band-schild mono">Die Halle in der Sebastiangasse — acht Kurse, je 75 Minuten</p>
+  </div>
+</section>
+
+<!-- ═══ WOCHE ═══════════════════════════════════════════════════════════ -->
+<section class="abschnitt" id="woche" aria-labelledby="h-woche">
+  <div class="bahn">
+    <div class="kopfzeile auf">
+      <span class="mono num">01 — Passt das in deine Woche</span>
+      <h2 class="gross" id="h-woche">Die Woche</h2>
+      <p class="lauf leise">Die Termine kommen aus dem Buchungssystem, aus dem auch die App bucht. Antwortet es nicht, steht hier der zuletzt bekannte Stand.</p>
+    </div>
+
+    <div class="woche-kopf">
+      <p class="mono" id="wochenspanne">Diese Woche</p>
+      <p class="quelle mono" id="quelle" data-live="0"><b aria-hidden="true"></b><span id="quelleText">Stand wird geladen</span></p>
+    </div>
+
+    <noscript><p class="lauf">Der Wochenplan braucht JavaScript. Die aktuellen Zeiten bekommst du unter <a href="tel:+4367682277302">+43 676 8227 7302</a>.</p></noscript>
+
+    <div class="woche" data-tag="0">
+      <div class="schalter tagwahl" role="group" aria-label="Wochentag wählen" id="tagwahl">
+        <span class="schieber" aria-hidden="true"></span>
+      </div>
+      <div class="woche-netz" id="wochenetz"></div>
+    </div>
+
+    <dl class="spanne" id="spanne"></dl>
+  </div>
+</section>
+
+<!-- ═══ KURSE ═══════════════════════════════════════════════════════════ -->
+<section class="abschnitt" id="kurse" aria-labelledby="h-kurse">
+  <div class="bahn">
+    <div class="kopfzeile auf">
+      <span class="mono num">02 — Ist das etwas für dich</span>
+      <h2 class="gross" id="h-kurse">Acht Kurse</h2>
+      <p class="lauf leise">Jede Einheit dauert 75 Minuten, Mama reloaded 45. Die beiden Balken je Kurs zeigen, wie oft er läuft und wie gross die Gruppe wird — als Länge, nicht als Ziffer.</p>
+    </div>
+
+    <div class="kursnetz">
+
+      <article class="kurs auf">
+        <div class="kurs-kopf"><span class="nr">01</span><h3>Performance</h3></div>
+        <p class="txt">Crosstraining aus Powerlifting, Weightlifting, Gymnastics, Calisthenics, Strongman und Ausdauer. Die Reize sind nicht willkürlich kombiniert, sondern folgen einer periodisierten Planung.</p>
+        <div class="werte">
+          <div class="wert"><span class="wl">Läuft</span><span class="balken"><i style="--f:1"></i></span><span class="wz">7× / Woche</span></div>
+          <div class="wert"><span class="wl">Gruppe</span><span class="balken"><i style="--f:.667"></i></span><span class="wz">12–16 Plätze</span></div>
+        </div>
+      </article>
+
+      <article class="kurs auf">
+        <div class="kurs-kopf"><span class="nr">02</span><h3>FBB / Strength &amp; Power</h3></div>
+        <p class="txt">Muskelaufbau nach festem Schema, kombiniert mit kurzen intensiven Ausdauerblöcken. Kraft und Ausdauer in einer Einheit.</p>
+        <div class="werte">
+          <div class="wert"><span class="wl">Läuft</span><span class="balken"><i style="--f:.857"></i></span><span class="wz">6× / Woche</span></div>
+          <div class="wert"><span class="wl">Gruppe</span><span class="balken"><i style="--f:.667"></i></span><span class="wz">16 Plätze</span></div>
+        </div>
+      </article>
+
+      <article class="kurs auf">
+        <div class="kurs-kopf"><span class="nr">03</span><h3>Powercircle</h3></div>
+        <p class="txt">Airbike, SkiErg, Schlitten, Jump-Box, Battle-Rope, Wallballs im Wechsel. Kurze harte Intervalle, kurze Pausen.</p>
+        <p class="marker">Technisch anspruchslos — auch für Einsteiger</p>
+        <div class="werte">
+          <div class="wert"><span class="wl">Läuft</span><span class="balken"><i style="--f:.429"></i></span><span class="wz">3× / Woche</span></div>
+          <div class="wert"><span class="wl">Gruppe</span><span class="balken"><i style="--f:1"></i></span><span class="wz">24 Plätze</span></div>
+        </div>
+      </article>
+
+      <article class="kurs auf">
+        <div class="kurs-kopf"><span class="nr">04</span><h3>Mama reloaded</h3></div>
+        <p class="txt">Wiedereinstieg nach der Schwangerschaft. Beckenboden, Rumpf und Kraft in einem Tempo, das sich an den Tag anpasst.</p>
+        <div class="werte">
+          <div class="wert"><span class="wl">Läuft</span><span class="balken"><i style="--f:.429"></i></span><span class="wz">3× / Woche</span></div>
+          <div class="wert"><span class="wl">Dauer</span><span class="balken leer"><i style="--f:.6"></i></span><span class="wz">45 Minuten</span></div>
+        </div>
+        <p class="txt" style="font-size:.875rem">Gruppengrösse ist für diesen Kurs nicht angegeben.</p>
+      </article>
+
+      <article class="kurs auf">
+        <div class="kurs-kopf"><span class="nr">05</span><h3>Hyrox</h3></div>
+        <p class="txt">Vorbereitung auf das Rennformat, das weltweit unter denselben Bedingungen läuft — für Open, Pro, Doubles und Relay.</p>
+        <p class="marker">Für jedes Level, vom Einstieg bis zum Wettkampf</p>
+        <div class="werte">
+          <div class="wert"><span class="wl">Läuft</span><span class="balken"><i style="--f:.286"></i></span><span class="wz">2× / Woche</span></div>
+          <div class="wert"><span class="wl">Gruppe</span><span class="balken"><i style="--f:1"></i></span><span class="wz">24 Plätze</span></div>
+        </div>
+      </article>
+
+      <article class="kurs auf">
+        <div class="kurs-kopf"><span class="nr">06</span><h3>Team-WOD</h3></div>
+        <p class="txt">Zu zweit mit deinem Trainingsbuddy. Jede Woche ein anderes Workout, Intensität und Schwierigkeitsgrad werden auf euch beide angepasst.</p>
+        <div class="werte">
+          <div class="wert"><span class="wl">Läuft</span><span class="balken"><i style="--f:.143"></i></span><span class="wz">1× / Woche</span></div>
+          <div class="wert"><span class="wl">Gruppe</span><span class="balken"><i style="--f:.667"></i></span><span class="wz">16 Plätze</span></div>
+        </div>
+      </article>
+
+      <article class="kurs auf">
+        <div class="kurs-kopf"><span class="nr">07</span><h3>FBB</h3></div>
+        <p class="txt">Nach dem gemeinsamen Warm-up wählst du Ober- oder Unterkörper, je vier Übungen mit vorgegebenen Sätzen, Wiederholungen und Pausen. Zum Abschluss eine kurze, intensive Belastung.</p>
+        <div class="werte">
+          <div class="wert"><span class="wl">Läuft</span><span class="balken"><i style="--f:.143"></i></span><span class="wz">1× / Woche</span></div>
+          <div class="wert"><span class="wl">Gruppe</span><span class="balken"><i style="--f:.5"></i></span><span class="wz">12 Plätze</span></div>
+        </div>
+      </article>
+
+      <article class="kurs auf">
+        <div class="kurs-kopf"><span class="nr">08</span><h3>Community TeamWOD</h3></div>
+        <p class="txt">Team-Workout in grosser Runde. Jede Woche ein anderes Programm, Intensität und Schwierigkeitsgrad individuell angepasst.</p>
+        <div class="werte">
+          <div class="wert"><span class="wl">Läuft</span><span class="balken"><i style="--f:.143"></i></span><span class="wz">1× / Woche</span></div>
+          <div class="wert"><span class="wl">Gruppe</span><span class="balken"><i style="--f:1"></i></span><span class="wz">24 Plätze</span></div>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="kurs-fuss auf">
+      <p class="mittel">Für den Einstieg empfehlen wir drei Einheiten pro Woche — zwei für die Kraft, eine für die Ausdauer.</p>
+      <p class="lauf leise">Balkenmassstab: «Läuft» gegen sieben Einheiten pro Woche, «Gruppe» gegen 24 Plätze.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HYROX ═══════════════════════════════════════════════════════════ -->
+<section class="abschnitt hyrox" id="hyrox" aria-labelledby="h-hyrox">
+  <div class="bahn">
+    <div class="kopfzeile auf">
+      <span class="mono num">03 — Das Rennformat</span>
+      <h2 class="gross" id="h-hyrox">Hyrox</h2>
+      <p class="lauf leise">Acht Kilometer Laufen im Wechsel mit acht Kraftstationen, weltweit nach denselben Regeln. Vor jeder Station wird ein Kilometer gelaufen. Ein Kurs bereitet darauf vor, zweimal pro Woche — mitmachen kannst du, ohne je an den Start zu gehen.</p>
+    </div>
+    <div class="leiter auf" role="list" aria-label="Ablauf eines Hyrox-Rennens">
+      <div class="rung lauf-r" role="listitem"><span class="kn">1 km</span><span class="mono">Laufen</span></div>
+      <div class="rung st" role="listitem"><span class="kn">1</span><span class="sn">1000 m SkiErg</span></div>
+      <div class="rung lauf-r" role="listitem"><span class="kn">1 km</span><span class="mono">Laufen</span></div>
+      <div class="rung st" role="listitem"><span class="kn">2</span><span class="sn">50 m Sled Push</span></div>
+      <div class="rung lauf-r" role="listitem"><span class="kn">1 km</span><span class="mono">Laufen</span></div>
+      <div class="rung st" role="listitem"><span class="kn">3</span><span class="sn">50 m Sled Pull</span></div>
+      <div class="rung lauf-r" role="listitem"><span class="kn">1 km</span><span class="mono">Laufen</span></div>
+      <div class="rung st" role="listitem"><span class="kn">4</span><span class="sn">80 m Burpee Broad Jumps</span></div>
+      <div class="rung lauf-r" role="listitem"><span class="kn">1 km</span><span class="mono">Laufen</span></div>
+      <div class="rung st" role="listitem"><span class="kn">5</span><span class="sn">1000 m Rudern</span></div>
+      <div class="rung lauf-r" role="listitem"><span class="kn">1 km</span><span class="mono">Laufen</span></div>
+      <div class="rung st" role="listitem"><span class="kn">6</span><span class="sn">200 m Farmers Carry</span></div>
+      <div class="rung lauf-r" role="listitem"><span class="kn">1 km</span><span class="mono">Laufen</span></div>
+      <div class="rung st" role="listitem"><span class="kn">7</span><span class="sn">100 m Sandbag Lunges</span></div>
+      <div class="rung lauf-r" role="listitem"><span class="kn">1 km</span><span class="mono">Laufen</span></div>
+      <div class="rung st" role="listitem"><span class="kn">8</span><span class="sn">100 Wall Balls</span></div>
+    </div>
+  </div>
+  <div class="hyrox-bild auf" style="margin-top:clamp(2rem,6vw,3rem)">
+    <img src="__PH_HYROX__" alt="Ein Mann am Ruderergometer, dahinter eine beschriebene Tafel mit dem Workout." width="700" height="557" loading="lazy" decoding="async">
+  </div>
+</section>
+
+<!-- ═══ PREISE ══════════════════════════════════════════════════════════ -->
+<section class="abschnitt" id="preise" aria-labelledby="h-preise">
+  <div class="bahn">
+    <div class="kopfzeile auf">
+      <span class="mono num">04 — Was es kostet</span>
+      <h2 class="gross" id="h-preise">Preise</h2>
+      <p class="lauf leise">Kurstarife, Preis pro Monat. Wähle die Bindung — die Preise unten rechnen mit.</p>
+    </div>
+
+    <div class="schalter bindung" role="group" aria-label="Bindung wählen" id="bindung" style="--n:3; --i:0">
+      <span class="schieber" aria-hidden="true"></span>
+      <button type="button" data-b="1" aria-pressed="true">1 Monat</button>
+      <button type="button" data-b="6" aria-pressed="false">6 Monate</button>
+      <button type="button" data-b="12" aria-pressed="false">12 Monate</button>
+    </div>
+
+    <div class="tarife" id="tarife">
+      <article class="tarif auf" data-p1="130" data-p6="120" data-p12="110" data-e="9">
+        <p class="tn">2 Einheiten / Woche</p>
+        <p class="preis"><span class="zahl">130</span><span class="eur">€</span><span class="pm">pro Monat</span></p>
+        <p class="rech">9 Einheiten im Monat, frei einteilbar</p>
+        <p class="je"><span class="jz">14,44 €</span> pro Einheit</p>
+      </article>
+      <article class="tarif um auf" data-p1="150" data-p6="140" data-p12="130" data-e="13">
+        <p class="fahne">Empfehlung zum Einstieg</p>
+        <p class="tn">3 Einheiten / Woche</p>
+        <p class="preis"><span class="zahl">150</span><span class="eur">€</span><span class="pm">pro Monat</span></p>
+        <p class="rech">13 Einheiten im Monat</p>
+        <p class="je"><span class="jz">11,54 €</span> pro Einheit</p>
+      </article>
+      <article class="tarif auf" data-p1="170" data-p6="160" data-p12="150" data-e="26">
+        <p class="tn">6 Einheiten / Woche</p>
+        <p class="preis"><span class="zahl">170</span><span class="eur">€</span><span class="pm">pro Monat</span></p>
+        <p class="rech">26 Einheiten, Montag bis Samstag</p>
+        <p class="je"><span class="jz">6,54 €</span> pro Einheit</p>
+      </article>
+    </div>
+
+    <p class="mono" style="color:var(--n50); margin-top:1rem">In jedem Tarif enthalten: keine Einschreibgebühr · eigener Kraftaufbauplan</p>
+
+    <div class="ohne auf">
+      <h3 class="mittel">Ohne Bindung</h3>
+      <ul>
+        <li><span class="op">15 €</span><span class="ot">Probetraining<small class="oz">75 Minuten, ein Coach</small></span></li>
+        <li><span class="op">25 €</span><span class="ot">Drop-in<small class="oz">eine Einheit</small></span></li>
+        <li><span class="op">200 €</span><span class="ot">10er-Block<small class="oz">ein Jahr gültig</small></span></li>
+        <li><span class="op">100 €</span><span class="ot">Personal Training<small class="oz">eins zu eins</small></span></li>
+        <li><span class="op">60 €</span><span class="ot">Open Gym<small class="oz">monatlich kündbar</small></span></li>
+      </ul>
+    </div>
+
+    <div class="kasten stark auf">
+      <p class="mittel">Selbstständig und SVS-versichert? Dann überweist dir die SVS 100 € aufs Konto.</p>
+      <p class="leise">Für jeden Tarif ausser Open Gym, und für den 10er-Block.</p>
+    </div>
+
+    <details class="falte">
+      <summary>Vertrag, Bindung und Pause<span class="pm2" aria-hidden="true"></span></summary>
+      <div class="innen">
+        <p>Die Bindung beträgt wahlweise 1, 6 oder 12 Monate. Bei 6 Monaten kannst du einmal pausieren, bei 12 Monaten zweimal — je bis zu vier Wochen. Bei triftigem Grund ist der Vertrag übertragbar.</p>
+      </div>
+    </details>
+
+    <figure class="zitat auf">
+      <blockquote>„Nicht das billigste Gym der Stadt.“</blockquote>
+      <figcaption class="mono">Der Betreiber über sein Preisniveau</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ═══ COACHES ═════════════════════════════════════════════════════════ -->
+<section class="abschnitt" id="coaches" aria-labelledby="h-coaches">
+  <div class="bahn">
+    <div class="kopfzeile auf">
+      <span class="mono num">05 — Wer auf der Fläche steht</span>
+      <h2 class="gross" id="h-coaches">Coaches</h2>
+      <p class="lauf leise">Mike und Dominik haben das Gym 2017 als Brüder aufgemacht.</p>
+    </div>
+    <div class="coaches auf">
+      <article class="coach">
+        <img src="__PH_COACHMIKE__" alt="Porträt von Mike, Vollbart, kahl geschoren." width="536" height="720" loading="lazy" decoding="async">
+        <h3>Mike</h3>
+        <p>Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien. Gründer.</p>
+      </article>
+      <article class="coach">
+        <img src="__PH_COACHDOMINIK__" alt="Porträt von Dominik, blond, lachend." width="443" height="720" loading="lazy" decoding="async">
+        <h3>Dominik</h3>
+        <p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor für die olympischen Züge.</p>
+      </article>
+      <article class="coach">
+        <img src="__PH_COACHDIEGO__" alt="Porträt von Diego, dunkler Vollbart." width="537" height="720" loading="lazy" decoding="async">
+        <h3>Diego</h3>
+        <p>Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf regionaler Ebene Wettkämpfe bestritten hat.</p>
+      </article>
+      <article class="coach">
+        <img src="__PH_COACHBENNI__" alt="Porträt von Benni, dunkle Locken, verschränkte Arme." width="480" height="720" loading="lazy" decoding="async">
+        <h3>Benni</h3>
+        <p>Aktiver Eishockeyspieler, studiert Lehramt für Bewegung und Sport in Klagenfurt. Schwerpunkt Konditionstraining.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HAUS ════════════════════════════════════════════════════════════ -->
+<section class="abschnitt" id="haus" aria-labelledby="h-haus">
+  <div class="bahn">
+    <div class="kopfzeile auf">
+      <span class="mono num">06 — Das Haus</span>
+      <h2 class="gross" id="h-haus">Sebastiangasse 1</h2>
+    </div>
+    <div class="haus auf">
+      <div class="haus-bild">
+        <img src="__PH_GYM__" alt="Blick in die Halle: Turnringe, eine Frau hängt am Klimmzugbalken." width="700" height="467" loading="lazy" decoding="async">
+      </div>
+      <div>
+        <dl class="fakten">
+          <div><dt>Adresse</dt><dd>Sebastiangasse 1<small>9020 Klagenfurt am Wörthersee</small></dd></div>
+          <div><dt>Parken</dt><dd>Gratis<small>Rund ums Gebäude</small></dd></div>
+          <div><dt>Garderoben</dt><dd>Zwei<small>Je ein Duschraum mit drei Duschen</small></dd></div>
+          <div><dt>Mitbringen</dt><dd>Handtuch, Trinkflasche<small>Hallenschuhe mit sauberer Sohle</small></dd></div>
+        </dl>
+        <div class="opengym" style="margin-top:2px">
+          <p class="mono" style="color:var(--n50)">Open Gym — täglich</p>
+          <p class="zeit">06:00–22:00</p>
+          <p class="leise">Eigener Tarif, 60 € im Monat, monatlich kündbar. Zutritt per App.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ KONTAKT ═════════════════════════════════════════════════════════ -->
+<section class="abschnitt" id="kontakt" aria-labelledby="h-kontakt">
+  <div class="bahn">
+    <div class="kopfzeile auf">
+      <span class="mono num">07 — Anfangen</span>
+      <h2 class="gross" id="h-kontakt">Probetraining</h2>
+      <p class="lauf leise">Eine Einheit, ein Coach, 75 Minuten, 15 €. Vorkenntnisse braucht es keine. Handtuch, Trinkflasche, Hallenschuhe mit sauberer Sohle — mehr nicht.</p>
+    </div>
+
+    <div class="kontaktnetz">
+    <form class="form auf" id="form" novalidate>
+      <fieldset>
+        <legend>Anliegen</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="anliegen" value="Probetraining" checked><span>Probetraining</span></label>
+          <label class="chip"><input type="radio" name="anliegen" value="Allgemeine Anfrage"><span>Allgemeine Anfrage</span></label>
+          <label class="chip"><input type="radio" name="anliegen" value="1:1 Coaching"><span>1:1 Coaching</span></label>
+          <label class="chip"><input type="radio" name="anliegen" value="Firmentraining"><span>Firmentraining</span></label>
+        </div>
+      </fieldset>
+      <div class="feld"><label for="f-name">Name</label><input id="f-name" name="name" type="text" autocomplete="name" placeholder="Vor- und Nachname"></div>
+      <div class="feld"><label for="f-mail">E-Mail</label><input id="f-mail" name="mail" type="email" autocomplete="email" placeholder="du@beispiel.at"></div>
+      <div class="feld"><label for="f-text">Nachricht</label><textarea id="f-text" name="text" placeholder="Wann würde es dir passen?"></textarea></div>
+      <div><button class="knopf voll gr" type="submit">Absenden</button></div>
+      <div class="hinweis" id="hinweis" role="status" data-an="0">
+        <p class="mittel">Nichts wurde verschickt.</p>
+        <p class="lauf leise">Dieses Formular hat im Entwurf keinen Empfänger — es ist an nichts angebunden. Nimm den Weg daneben: <a id="mailtoLink" href="mailto:office@trojanperformance.at">die Anfrage als E-Mail öffnen</a> oder anrufen unter <a href="tel:+4367682277302">+43 676 8227 7302</a>.</p>
+      </div>
+    </form>
+
+    <aside class="kontaktdaten auf">
+      <div class="direkt">
+        <p class="mono" style="color:var(--n50); margin-bottom:.8rem">Oder direkt</p>
+        <p><a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a></p>
+        <p style="margin-top:.7rem"><a href="tel:+4367682277302">+43 676 8227 7302</a></p>
+        <div class="sozial">
+          <a class="knopf" href="https://www.instagram.com/trojan.performance/" rel="noopener">Instagram</a>
+          <a class="knopf" href="https://www.facebook.com/trojanperformanceofficial" rel="noopener">Facebook</a>
+          <a class="knopf" href="https://www.youtube.com/channel/UChUZebvjDwrWEdOCa86xNiA" rel="noopener">YouTube</a>
+        </div>
+      </div>
+      <dl class="fakten mitbringen">
+        <div><dt>Dauer</dt><dd>75 Minuten<small>Eine Einheit, ein Coach</small></dd></div>
+        <div><dt>Kostet</dt><dd>15 €<small>Einmalig, ohne Bindung</small></dd></div>
+        <div><dt>Vorkenntnisse</dt><dd>Keine<small>Wirklich keine</small></dd></div>
+        <div><dt>Mitbringen</dt><dd>Handtuch, Trinkflasche<small>Hallenschuhe mit sauberer Sohle</small></dd></div>
+      </dl>
+    </aside>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="fuss">
+  <div class="bahn">
+    <div class="fuss-netz">
+      <div>
+        <h2>Trojan Performance</h2>
+        <p class="lauf leise">Performance Center in Klagenfurt am Wörthersee. Gegründet 2017 von den Brüdern Mike und Dominik. Erster offizieller HYROX Training Club in Kärnten.</p>
+      </div>
+      <div>
+        <h2>Hier</h2>
+        <p class="lauf leise">Sebastiangasse 1<br>9020 Klagenfurt am Wörthersee</p>
+        <p style="margin-top:.7rem"><a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a><br><a href="tel:+4367682277302">+43 676 8227 7302</a></p>
+      </div>
+      <div>
+        <h2>Noch nicht angebunden</h2>
+        <ul class="offen">
+          <li>Das Kontaktformular verschickt nichts</li>
+          <li>Kurse lassen sich hier nicht buchen</li>
+          <li>Kein Routenplaner hinterlegt</li>
+          <li>Impressum fehlt</li>
+          <li>Datenschutzerklärung fehlt</li>
+        </ul>
+      </div>
+    </div>
+    <div class="fuss-schluss">
+      <img src="__LOGO__" alt="" width="100" height="13">
+      <span class="mono">Entwurf «Grau» — ohne jede Farbe</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.documentElement.classList.add('js');
+
+/* ─────────────────────────────────────────────────────────────────────
+   1. Menü — die ganze Seite kippt ins Weisse.
+   ───────────────────────────────────────────────────────────────────── */
+(function(){
+  var auf=document.getElementById('menueAuf'),
+      zu=document.getElementById('menueZu'),
+      m=document.getElementById('menue');
+  if(!auf||!m) return;
+  function oeffnen(){
+    m.hidden=false;
+    requestAnimationFrame(function(){ m.dataset.offen='1'; });
+    auf.setAttribute('aria-expanded','true');
+    document.body.style.overflow='hidden';
+    zu.focus();
+  }
+  function schliessen(){
+    m.dataset.offen='0';
+    auf.setAttribute('aria-expanded','false');
+    document.body.style.overflow='';
+    setTimeout(function(){ if(m.dataset.offen==='0') m.hidden=true; },340);
+    auf.focus();
+  }
+  auf.addEventListener('click',oeffnen);
+  zu.addEventListener('click',schliessen);
+  m.addEventListener('click',function(e){ if(e.target.closest('a')) schliessen(); });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&m.dataset.offen==='1') schliessen();
+  });
+})();
+
+/* ─────────────────────────────────────────────────────────────────────
+   2. Der Schieber. Eine weisse Fläche fährt; die Beschriftung darüber
+      rechnet sich per «difference» selbst ins Gegenteil.
+   ───────────────────────────────────────────────────────────────────── */
+function schalterSetzen(gruppe,index){
+  gruppe.style.setProperty('--i',index);
+  var b=gruppe.querySelectorAll('button');
+  for(var i=0;i<b.length;i++) b[i].setAttribute('aria-pressed', i===index?'true':'false');
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   3. Preise. Bindung wählen, Preise und Stückpreise rechnen mit.
+   ───────────────────────────────────────────────────────────────────── */
+(function(){
+  var gruppe=document.getElementById('bindung');
+  if(!gruppe) return;
+  var karten=document.querySelectorAll('#tarife .tarif');
+  var ruhig=window.matchMedia('(prefers-reduced-motion: reduce)');
+  function euro(x){ return x.toFixed(2).replace('.',',')+' €'; }
+  function anwenden(b,index){
+    schalterSetzen(gruppe,index);
+    karten.forEach(function(k){
+      var p=+k.getAttribute('data-p'+b), e=+k.getAttribute('data-e');
+      var zahl=k.querySelector('.zahl'), je=k.querySelector('.jz');
+      if(!zahl) return;
+      if(ruhig.matches){
+        zahl.textContent=p; if(je) je.textContent=euro(p/e);
+      }else{
+        zahl.classList.add('wechsel');
+        setTimeout(function(){
+          zahl.textContent=p; if(je) je.textContent=euro(p/e);
+          zahl.classList.remove('wechsel');
+        },200);
+      }
+    });
+  }
+  gruppe.querySelectorAll('button').forEach(function(btn,i){
+    btn.addEventListener('click',function(){ anwenden(btn.getAttribute('data-b'),i); });
+  });
+})();
+
+/* ─────────────────────────────────────────────────────────────────────
+   4. Die Woche aus dem Buchungssystem. Fällt sie aus, greift der
+      eingefrorene Stand — eine leere Woche wäre schlimmer.
+   ───────────────────────────────────────────────────────────────────── */
+const PLAN_STAND=[
+  [1,'06:00',75,'Performance'],   [3,'06:00',75,'Performance'],
+  [0,'08:15',75,'FBB/Strength & Power'], [1,'08:15',75,'Performance'],
+  [2,'08:15',75,'FBB/Strength & Power'], [4,'08:15',75,'Performance'],
+  [5,'08:15',75,'FBB/Strength & Power'], [5,'09:30',75,'Community TeamWOD'],
+  [4,'09:45',45,'Mama reloaded'],  [2,'10:00',45,'Mama reloaded'],
+  [4,'10:45',45,'Mama reloaded'],
+  [2,'16:00',75,'Powercircle'],    [4,'16:00',75,'FBB/Strength & Power'],
+  [0,'17:15',75,'Powercircle'],    [0,'17:15',75,'Performance'],
+  [1,'17:15',75,'FBB/Strength & Power'], [2,'17:15',75,'Team-WOD'],
+  [3,'17:15',75,'Performance'],    [4,'17:15',75,'Hyrox'],
+  [0,'18:30',75,'FBB/Strength & Power'], [1,'18:30',75,'Performance'],
+  [2,'18:30',75,'Hyrox'],          [3,'18:30',75,'FBB'],
+  [3,'18:30',75,'Powercircle']
+].map(function(a){ return {tag:a[0],zeit:a[1],dauer:a[2],name:a[3]}; });
+
+function planWoche(){
+  const jetzt=new Date(), versatz=(jetzt.getDay()+6)%7;
+  const mo=new Date(jetzt.getFullYear(),jetzt.getMonth(),jetzt.getDate()-versatz);
+  const so=new Date(mo.getFullYear(),mo.getMonth(),mo.getDate()+7);
+  const f=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}T00:00:00.000Z`;
+  return [f(mo),f(so),mo];
+}
+
+const TAGE=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
+const TAGK=['Mo','Di','Mi','Do','Fr','Sa','So'];
+
+function minuten(t){ var p=t.split(':'); return (+p[0])*60+(+p[1]); }
+function uhr(m){ return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); }
+
+function zeichnen(daten,live){
+  var heute=(new Date().getDay()+6)%7;
+  var netz=document.getElementById('wochenetz');
+  var wahl=document.getElementById('tagwahl');
+  var behaelter=document.querySelector('.woche');
+  if(!netz||!wahl) return;
+
+  var proTag=[[],[],[],[],[],[],[]];
+  daten.forEach(function(e){
+    if(e.tag>=0&&e.tag<7&&e.zeit) proTag[e.tag].push(e);
+  });
+  proTag.forEach(function(l){ l.sort(function(a,b){ return minuten(a.zeit)-minuten(b.zeit); }); });
+  var maxAnz=Math.max.apply(null,proTag.map(function(l){ return l.length; }))||1;
+
+  /* Reiter */
+  netz.textContent='';
+  Array.prototype.slice.call(wahl.querySelectorAll('button')).forEach(function(b){ b.remove(); });
+  proTag.forEach(function(liste,i){
+    var b=document.createElement('button');
+    b.type='button';
+    b.setAttribute('aria-pressed', i===heute?'true':'false');
+    b.setAttribute('aria-label', TAGE[i]+', '+liste.length+' Kurse');
+    var t=document.createElement('span'); t.textContent=TAGK[i].toUpperCase(); b.appendChild(t);
+    var mb=document.createElement('span'); mb.className='mb';
+    var f=document.createElement('i'); f.style.setProperty('--f', liste.length/maxAnz);
+    mb.appendChild(f); b.appendChild(mb);
+    if(i===heute){ var hs=document.createElement('span'); hs.className='heute-strich'; b.appendChild(hs); }
+    b.addEventListener('click',function(){
+      behaelter.setAttribute('data-tag',i);
+      schalterSetzen(wahl,i);
+    });
+    wahl.appendChild(b);
+
+    /* Spalte */
+    var sp=document.createElement('div');
+    sp.className='tagliste'+(liste.length?'':' leerTag')+(i===heute?' heute':'');
+    sp.setAttribute('data-t',i);
+    var h=document.createElement('h3');
+    var tg=document.createElement('span'); tg.className='tg'; tg.textContent=TAGE[i];
+    var az=document.createElement('span'); az.className='anz';
+    az.textContent=liste.length===1?'1 Kurs':liste.length+' Kurse';
+    h.appendChild(tg); h.appendChild(az);
+    if(i===heute){ var hc=document.createElement('span'); hc.className='heutechip';
+      hc.textContent='heute'; h.appendChild(hc); }
+    sp.appendChild(h);
+    if(liste.length){
+      var ul=document.createElement('ul');
+      liste.forEach(function(e){
+        var li=document.createElement('li'); li.className='zeile';
+        var zt=document.createElement('span'); zt.className='zt'; zt.textContent=e.zeit;
+        var zn=document.createElement('span'); zn.className='zn'; zn.textContent=e.name;
+        var zd=document.createElement('span'); zd.className='zd'; zd.textContent=e.dauer+' min';
+        li.appendChild(zt); li.appendChild(zn); li.appendChild(zd);
+        ul.appendChild(li);
+      });
+      sp.appendChild(ul);
+    }else{
+      var k=document.createElement('p'); k.className='keine';
+      k.textContent='Keine Kurse. Open Gym ist trotzdem offen, 06:00–22:00.';
+      sp.appendChild(k);
+    }
+    netz.appendChild(sp);
+  });
+  behaelter.setAttribute('data-tag',heute);
+  schalterSetzen(wahl,heute);
+
+  /* Öffnungsfenster ableiten, nicht hinschreiben. */
+  function fenster(tage,grenze){
+    var a=null,b=null;
+    tage.forEach(function(t){
+      proTag[t].forEach(function(e){
+        var s=minuten(e.zeit), x=s+(e.dauer||75);
+        if(grenze==='frueh'&&s>=720) return;
+        if(grenze==='spaet'&&s<720) return;
+        if(a===null||s<a) a=s;
+        if(b===null||x>b) b=x;
+      });
+    });
+    return a===null?null:uhr(a)+'–'+uhr(b);
+  }
+  var dl=document.getElementById('spanne');
+  if(dl){
+    dl.textContent='';
+    var reihen=[
+      ['Mo – Fr', [fenster([0,1,2,3,4],'frueh'), fenster([0,1,2,3,4],'spaet')].filter(Boolean).join('  ·  ')],
+      ['Sa',      fenster([5],'alle')||'keine Kurse'],
+      ['So',      proTag[6].length?fenster([6],'alle'):'keine Kurse'],
+      ['Open Gym','täglich 06:00–22:00']
+    ];
+    reihen.forEach(function(r){
+      var d=document.createElement('div');
+      var dt=document.createElement('dt'); dt.textContent=r[0];
+      var dd=document.createElement('dd'); dd.textContent=r[1]||'—';
+      d.appendChild(dt); d.appendChild(dd); dl.appendChild(d);
+    });
+  }
+
+  /* Quelle ehrlich benennen. */
+  var q=document.getElementById('quelle'), qt=document.getElementById('quelleText');
+  if(q&&qt){
+    q.setAttribute('data-live', live?'1':'0');
+    qt.textContent = live ? 'Live aus dem Buchungssystem'
+                          : 'Eingefrorener Stand — die Abfrage antwortet gerade nicht';
+  }
+  var ws=document.getElementById('wochenspanne');
+  if(ws){
+    var mo=planWoche()[2];
+    var so=new Date(mo.getFullYear(),mo.getMonth(),mo.getDate()+6);
+    var f2=function(d){ return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'; };
+    ws.textContent='Woche '+f2(mo)+' – '+f2(so);
+  }
+  balkenWecken();
+}
+
+(async()=>{
+  const [von,bis]=planWoche();
+  try{
+    const r=await fetch(`https://gymkloud.com/api/public/course-event/trojan_performance`+
+      `?from=${von}&to=${bis}&groupNames=Kurse`);
+    if(!r.ok) throw new Error(r.status);
+    const d=await r.json();
+    if(!Array.isArray(d)||!d.length) throw new Error('leer');
+    zeichnen(d.map(e=>({
+      tag:(new Date(e.startTime).getDay()+6)%7,
+      zeit:e.startTime.slice(11,16),
+      dauer:Math.round((new Date(e.endTime)-new Date(e.startTime))/60000)||75,
+      name:(e.course&&e.course.name||'').trim(),
+    })),true);
+  }catch(_){ zeichnen(PLAN_STAND,false); }
+})();
+
+/* ─────────────────────────────────────────────────────────────────────
+   5. Formular — es sagt, was es ist: an nichts angebunden.
+   ───────────────────────────────────────────────────────────────────── */
+(function(){
+  var f=document.getElementById('form');
+  if(!f) return;
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var d=new FormData(f);
+    var betreff=(d.get('anliegen')||'Anfrage')+' — '+(d.get('name')||'ohne Namen');
+    var koerper=(d.get('text')||'')+'\n\n'+(d.get('name')||'')+'\n'+(d.get('mail')||'');
+    var a=document.getElementById('mailtoLink');
+    if(a) a.href='mailto:office@trojanperformance.at?subject='+encodeURIComponent(betreff)+
+                 '&body='+encodeURIComponent(koerper);
+    var h=document.getElementById('hinweis');
+    h.setAttribute('data-an','1');
+    h.scrollIntoView({block:'nearest'});
+  });
+})();
+
+/* ─────────────────────────────────────────────────────────────────────
+   6. Platzhalter-Links dürfen nicht an den Seitenanfang springen.
+   ───────────────────────────────────────────────────────────────────── */
+document.addEventListener('click',function(e){
+  var a=e.target.closest&&e.target.closest('a[href="#"]');
+  if(a) e.preventDefault();
+});
+
+/* ─────────────────────────────────────────────────────────────────────
+   7. Einblendung. Bewegung behauptet eine Reihenfolge — sonst nichts.
+   ───────────────────────────────────────────────────────────────────── */
+function balkenWecken(){
+  document.querySelectorAll('.mb i').forEach(function(i){ i.style.transform='scaleX('+(i.style.getPropertyValue('--f')||0)+')'; });
+}
+(function(){
+  var ruhig=window.matchMedia('(prefers-reduced-motion: reduce)');
+  var teile=document.querySelectorAll('.auf');
+  if(ruhig.matches||!('IntersectionObserver' in window)){
+    teile.forEach(function(t){ t.classList.add('da'); });
+    return;
+  }
+  var beo=new IntersectionObserver(function(eintraege){
+    eintraege.forEach(function(x){
+      if(x.isIntersecting){ x.target.classList.add('da'); beo.unobserve(x.target); }
+    });
+  },{rootMargin:'0px 0px -8% 0px', threshold:.08});
+  teile.forEach(function(t){ beo.observe(t); });
+})();
+</script>
+</body>
+</html>

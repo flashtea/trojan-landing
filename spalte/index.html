@@ -1,0 +1,1376 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="../assets/monogram.png">
+<title>Trojan Performance — Performance Center in Klagenfurt am Wörthersee</title>
+<meta name="description" content="Acht Kurse, 75 Minuten je Einheit, in jedem steht ein Coach auf der Fläche. Erster offizieller HYROX Training Club in Kärnten. Probetraining 15 €.">
+<style>
+/* ───────────────────────────────────────────────────────────────
+   Trojan Performance — „Die Tafel steht, die Woche läuft."
+   Zwei Teile: der Strom (hell, läuft) und die Tafel (dunkel, steht).
+   Was im Strom gerade an der Leselinie liegt, schreibt die Tafel um.
+   ─────────────────────────────────────────────────────────────── */
+
+@font-face{font-family:'Archivo';src:url('../assets/fonts/archivo-var.woff2') format('woff2');
+  font-weight:500 800;font-style:normal;font-display:swap}
+@font-face{font-family:'Archivo Black';src:url('../assets/fonts/archivo-black.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'IBM Plex Mono';src:url('../assets/fonts/plexmono-400.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'IBM Plex Mono';src:url('../assets/fonts/plexmono-500.woff2') format('woff2');
+  font-weight:500;font-style:normal;font-display:swap}
+
+:root{
+  --marine:#0D1F4C;      /* Tafel */
+  --marine-t:#081334;    /* Tafel, unten */
+  --kreide:#EFF2F7;
+  --kreide-m:#9AA8C6;
+  --grund:#E5E8ED;       /* Strom */
+  --karte:#F1F3F6;
+  --tinte:#0D1F4C;
+  --tinte-m:#4A5878;
+  --linie:rgba(13,31,76,.18);
+  --linie-s:rgba(13,31,76,.34);
+  --signal:#F04E23;      /* „jetzt / gewählt" auf dunkel */
+  --signal-d:#C33A12;    /* dasselbe auf hell */
+  --tafelb:clamp(340px,30vw,462px);
+  --konsole:138px;
+  --rand:20px;
+  --takt:380ms;
+  --kurve:cubic-bezier(.2,.86,.24,1);
+  --zw:.575em;           /* Zellbreite einer Ziffer in Archivo Black */
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--grund);color:var(--tinte);
+  font-family:'Archivo',system-ui,sans-serif;font-weight:500;
+  font-size:16px;line-height:1.5;
+  overflow-x:hidden;
+  font-synthesis-weight:none;
+}
+h1,h2,h3,p,ul,ol,figure,table,dl,dd{margin:0}
+ul,ol{padding:0;list-style:none}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+button{font:inherit;color:inherit}
+
+:focus-visible{outline:2px solid var(--signal-d);outline-offset:3px;border-radius:1px}
+.tafel :focus-visible{outline-color:var(--signal)}
+
+.vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
+  clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+
+.sprung{position:fixed;top:8px;left:8px;z-index:90;transform:translateY(-160%);
+  background:var(--marine);color:var(--kreide);padding:14px 18px;min-height:44px;
+  font:500 13px/1 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;
+  text-decoration:none;transition:transform 160ms var(--kurve)}
+.sprung:focus{transform:translateY(0)}
+
+/* ── Bühne ─────────────────────────────────────────────── */
+.buehne{position:relative}
+
+/* ── Strom (der laufende Teil) ─────────────────────────── */
+.strom{
+  padding:0 var(--rand) calc(var(--konsole) + 28px);
+  max-width:760px;
+}
+.abschnitt{padding:52px 0 4px;scroll-margin-top:10px}
+.kopf{padding-bottom:14px}
+.marke{
+  font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--tinte-m);display:flex;gap:10px;align-items:center;margin-bottom:12px
+}
+.marke::after{content:"";flex:1;height:1px;background:var(--linie)}
+h2{
+  font-family:'Archivo Black',Archivo,sans-serif;font-weight:400;
+  font-size:clamp(27px,7.4vw,42px);line-height:1.02;letter-spacing:-.022em;
+  text-wrap:balance
+}
+.unter{margin-top:12px;color:var(--tinte-m);max-width:52ch;font-size:15px}
+.regel{height:2px;background:var(--tinte);margin:18px 0 0}
+
+/* ── Auftakt ───────────────────────────────────────────── */
+.auftakt{padding:22px 0 4px}
+.stirn{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:16px 0 26px;border-bottom:1px solid var(--linie)
+}
+.stirn img{width:126px}
+.stirn span{font:400 10px/1.3 'IBM Plex Mono',monospace;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--tinte-m);text-align:right}
+h1{
+  font-family:'Archivo Black',Archivo,sans-serif;font-weight:400;
+  font-size:clamp(33px,9.1vw,60px);line-height:1.0;letter-spacing:-.032em;
+  margin:30px 0 0;text-wrap:balance
+}
+h1 em{font-style:normal;color:var(--tinte-m)}
+.vorspann{margin-top:20px;font-size:17px;max-width:46ch}
+.stiche{
+  margin-top:26px;border-top:1px solid var(--linie);
+  display:grid;grid-template-columns:repeat(3,1fr)
+}
+.stich{padding:14px 12px 14px 0;border-right:1px solid var(--linie)}
+.stich:last-child{border-right:0;padding-right:0}
+.stich b{display:block;font-family:'Archivo Black',Archivo,sans-serif;font-weight:400;
+  font-size:24px;line-height:1;letter-spacing:-.02em}
+.stich span{display:block;margin-top:7px;font:400 10.5px/1.45 'IBM Plex Mono',monospace;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--tinte-m)}
+
+/* ── Woche ─────────────────────────────────────────────── */
+.quelle{
+  font:400 11px/1.4 'IBM Plex Mono',monospace;letter-spacing:.06em;
+  color:var(--tinte-m);display:flex;gap:8px;align-items:baseline;margin-top:14px
+}
+.quelle b{font-weight:500;color:var(--tinte)}
+.woche{margin-top:18px}
+.wo-achse{
+  display:grid;grid-template-columns:34px 1fr 30px;align-items:end;
+  font:400 10px/1 'IBM Plex Mono',monospace;color:var(--tinte-m);padding-bottom:6px
+}
+.wo-achse i{position:relative;display:block;height:11px;font-style:normal}
+.wo-achse i span{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap}
+.wo-achse i span:first-child{transform:none}
+.wo-achse i span:last-child{transform:translateX(-100%)}
+.wo-tag{
+  display:grid;grid-template-columns:34px 1fr 30px;align-items:center;gap:0;
+  width:100%;background:none;border:0;border-top:1px solid var(--linie);
+  padding:0;margin:0;text-align:left;cursor:pointer;min-height:44px
+}
+.wo-tag:last-of-type{border-bottom:1px solid var(--linie)}
+.wo-name{font:500 11.5px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:var(--tinte-m)}
+.wo-zahl{font:500 12px/1 'IBM Plex Mono',monospace;text-align:right;color:var(--tinte-m)}
+.wo-band{position:relative;height:22px;background:rgba(13,31,76,.07);
+  border-left:1px solid var(--linie);border-right:1px solid var(--linie)}
+.wo-band i{position:absolute;top:3px;bottom:3px;background:var(--marine);
+  transition:background 160ms linear}
+.wo-jetzt{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--signal-d);z-index:2}
+.wo-tag[aria-pressed="true"]{background:var(--karte)}
+.wo-tag[aria-pressed="true"] .wo-name,
+.wo-tag[aria-pressed="true"] .wo-zahl{color:var(--tinte)}
+.wo-tag[aria-pressed="true"] .wo-band{background:rgba(13,31,76,.12)}
+.wo-tag[aria-pressed="true"] .wo-band i{background:var(--signal-d)}
+.wo-tag:focus-visible{outline-offset:-2px}
+.legende{margin-top:10px;font:400 10.5px/1.5 'IBM Plex Mono',monospace;
+  letter-spacing:.04em;color:var(--tinte-m)}
+.wo-liste{margin-top:20px;border-top:2px solid var(--tinte)}
+.wo-liste h3{
+  font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;
+  padding:12px 0 10px;color:var(--tinte)
+}
+.wo-zeile{display:grid;grid-template-columns:58px 1fr auto;gap:10px;align-items:baseline;
+  padding:9px 0;border-top:1px solid var(--linie);font-size:14.5px}
+.wo-zeile time{font:500 13px/1.3 'IBM Plex Mono',monospace}
+.wo-zeile em{font-style:normal;font-weight:700}
+.wo-zeile span{font:400 11.5px/1.3 'IBM Plex Mono',monospace;color:var(--tinte-m)}
+.wo-leer{padding:14px 0;border-top:1px solid var(--linie);color:var(--tinte-m);font-size:14.5px}
+.hinweis{
+  margin-top:22px;padding:16px 18px;background:var(--karte);
+  border-left:3px solid var(--signal-d);font-size:14.5px
+}
+.hinweis b{font-weight:700}
+
+/* ── Kurse ─────────────────────────────────────────────── */
+.kurse{margin-top:6px;border-top:2px solid var(--tinte)}
+.kurs{padding:18px 0 20px;border-bottom:1px solid var(--linie)}
+.kurs-kopf{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;align-items:baseline}
+.kurs-nr{font:500 11px/1.5 'IBM Plex Mono',monospace;color:var(--tinte-m);letter-spacing:.06em}
+.kurs h3{font-family:'Archivo',sans-serif;font-weight:800;font-size:20px;line-height:1.15;
+  letter-spacing:-.015em;min-width:0}
+.kurs-zahl{grid-column:2;font:500 11.5px/1.4 'IBM Plex Mono',monospace;color:var(--tinte-m)}
+.kurs p{margin-top:9px;font-size:14.5px;color:var(--tinte-m);max-width:54ch}
+.kurs-fahne{display:inline-block;margin-top:10px;padding:4px 9px;background:var(--marine);
+  color:var(--kreide);font:500 10px/1.4 'IBM Plex Mono',monospace;letter-spacing:.08em;
+  text-transform:uppercase}
+
+/* ── Hyrox ─────────────────────────────────────────────── */
+.stationen{margin-top:20px;border-top:2px solid var(--tinte)}
+.station{display:grid;grid-template-columns:30px 1fr auto;gap:12px;align-items:baseline;
+  padding:12px 0;border-bottom:1px solid var(--linie)}
+.station b{font:500 12px/1.3 'IBM Plex Mono',monospace;color:var(--tinte-m)}
+.station em{font-style:normal;font-weight:700;font-size:15.5px}
+.station span{font:500 13px/1.3 'IBM Plex Mono',monospace;white-space:nowrap}
+.lauf{font:400 10.5px/1 'IBM Plex Mono',monospace;color:var(--tinte-m);
+  letter-spacing:.08em;padding:7px 0 7px 42px;border-bottom:1px solid var(--linie);
+  text-transform:uppercase}
+
+/* ── Preise ────────────────────────────────────────────── */
+.tarife{width:100%;border-collapse:collapse;margin-top:18px;table-layout:fixed}
+.tarife th,.tarife td{padding:0;text-align:left;vertical-align:middle}
+.tarife thead th{
+  font:400 10px/1.3 'IBM Plex Mono',monospace;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--tinte-m);padding:0 0 8px;font-weight:400;text-align:center
+}
+.tarife thead th:first-child{text-align:left}
+.tarife tbody th{border-top:1px solid var(--linie);padding:8px 8px 8px 0;font-weight:700;
+  font-size:14px;line-height:1.2}
+.tarife tbody th small{display:block;font:400 10px/1.3 'IBM Plex Mono',monospace;
+  color:var(--tinte-m);letter-spacing:.05em;text-transform:uppercase;margin-top:3px;font-weight:400}
+.tarife tbody td{border-top:1px solid var(--linie);padding:4px 2px}
+.zelle{
+  width:100%;min-height:46px;background:var(--karte);border:1px solid var(--linie);
+  font:500 15px/1 'IBM Plex Mono',monospace;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background 140ms linear,color 140ms linear,border-color 140ms linear
+}
+.zelle[aria-pressed="true"]{background:var(--marine);border-color:var(--marine);color:var(--kreide)}
+.tarife tbody tr[data-tipp] th{position:relative}
+.tipp{display:inline-block;margin-top:5px;padding:2px 6px;background:var(--signal-d);
+  color:#fff;font:500 9px/1.5 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase}
+.rechnung{
+  margin-top:14px;padding:14px 16px;background:var(--marine);color:var(--kreide);
+  font-size:14.5px
+}
+.rechnung b{font-family:'Archivo Black',Archivo,sans-serif;font-weight:400}
+.rechnung span{color:var(--kreide-m)}
+.frei{margin-top:26px;border-top:2px solid var(--tinte)}
+.frei-z{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:baseline;
+  padding:11px 0;border-bottom:1px solid var(--linie)}
+.frei-z b{font-weight:700;font-size:15px}
+.frei-z i{display:block;font-style:normal;font:400 11px/1.4 'IBM Plex Mono',monospace;
+  color:var(--tinte-m);margin-top:2px}
+.frei-z span{font:500 15px/1 'IBM Plex Mono',monospace;white-space:nowrap}
+.zitat{
+  margin:26px 0 0;padding:20px 0 0;border-top:2px solid var(--tinte);
+  font-family:'Archivo Black',Archivo,sans-serif;font-weight:400;
+  font-size:clamp(20px,5.4vw,28px);line-height:1.14;letter-spacing:-.02em
+}
+.zitat cite{display:block;margin-top:10px;font:400 10.5px/1.4 'IBM Plex Mono',monospace;
+  font-style:normal;letter-spacing:.09em;text-transform:uppercase;color:var(--tinte-m)}
+.klein{margin-top:22px;display:grid;gap:14px}
+.klein div{border-top:1px solid var(--linie);padding-top:11px}
+.klein dt{font:500 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--tinte-m);margin-bottom:6px}
+.klein dd{margin:0;font-size:14.5px}
+
+/* ── Bildtafel: Fotos stehen nur auf Marine ────────────── */
+.bildtafel{margin-top:24px;background:var(--marine);padding:11px;max-width:430px}
+.bildtafel .rahmen{position:relative;overflow:hidden;background:#000;
+  aspect-ratio:var(--ar,3/2)}
+.bildtafel img{width:100%;height:100%;object-fit:cover;object-position:50% 38%;
+  filter:grayscale(1) contrast(1.22) brightness(1.02);mix-blend-mode:luminosity;opacity:.95}
+.bildtafel .rahmen::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(200deg,rgba(20,52,124,.62),rgba(8,19,52,.82));
+  mix-blend-mode:color;pointer-events:none}
+.bildtafel figcaption{margin-top:10px;font:400 10.5px/1.5 'IBM Plex Mono',monospace;
+  letter-spacing:.05em;color:var(--kreide-m)}
+
+/* ── Coaches ───────────────────────────────────────────── */
+.coaches{margin-top:6px;border-top:2px solid var(--tinte)}
+.coach{padding:16px 0;border-bottom:1px solid var(--linie)}
+.coach h3{font-family:'Archivo Black',Archivo,sans-serif;font-weight:400;font-size:19px;
+  line-height:1;letter-spacing:-.02em}
+.coach p{margin-top:7px;font-size:14.5px;color:var(--tinte-m);max-width:52ch}
+
+/* ── Ort ───────────────────────────────────────────────── */
+.ort{margin-top:18px;border-top:2px solid var(--tinte)}
+.ort-z{display:grid;grid-template-columns:104px 1fr;gap:12px;padding:11px 0;
+  border-bottom:1px solid var(--linie);font-size:14.5px}
+.ort-z dt{font:400 10.5px/1.6 'IBM Plex Mono',monospace;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--tinte-m)}
+.ort-z dd{margin:0}
+
+/* ── Kontakt ───────────────────────────────────────────── */
+form{margin-top:20px}
+fieldset{border:0;padding:0;margin:0 0 20px}
+legend,.feldname{font:500 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--tinte-m);padding:0;margin-bottom:10px;display:block}
+.anliegen{display:flex;flex-wrap:wrap;gap:8px}
+.anliegen label{position:relative}
+.anliegen input{position:absolute;opacity:0;width:100%;height:100%;left:0;top:0;margin:0;cursor:pointer}
+.anliegen span{display:flex;align-items:center;min-height:44px;padding:0 14px;
+  background:var(--karte);border:1px solid var(--linie);font-size:14px;
+  transition:background 140ms linear,color 140ms linear,border-color 140ms linear}
+.anliegen input:checked+span{background:var(--marine);border-color:var(--marine);color:var(--kreide)}
+.anliegen input:focus-visible+span{outline:2px solid var(--signal-d);outline-offset:3px}
+label.feld{display:block;margin-bottom:16px}
+input[type=text],input[type=email],textarea{
+  width:100%;background:var(--karte);border:1px solid var(--linie);
+  padding:12px 14px;font:500 15px/1.4 'Archivo',sans-serif;color:var(--tinte);
+  min-height:48px;border-radius:0;-webkit-appearance:none
+}
+textarea{min-height:112px;resize:vertical}
+.senden{
+  min-height:52px;padding:0 22px;background:var(--marine);color:var(--kreide);
+  border:0;cursor:pointer;font:500 11.5px/1 'IBM Plex Mono',monospace;
+  letter-spacing:.13em;text-transform:uppercase;width:100%;
+  transition:background 140ms linear
+}
+.antwort{margin-top:14px;padding:15px 16px;background:var(--karte);
+  border-left:3px solid var(--signal-d);font-size:14.5px}
+.antwort[hidden]{display:none}
+.antwort a{font-weight:700}
+.draehte{margin-top:26px;border-top:2px solid var(--tinte)}
+.draht{display:grid;grid-template-columns:104px 1fr;gap:12px;padding:11px 0;
+  border-bottom:1px solid var(--linie);font-size:14.5px;align-items:baseline}
+.draht dt{font:400 10.5px/1.6 'IBM Plex Mono',monospace;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--tinte-m)}
+.draht dd{margin:0}
+.draht a{display:inline-block;padding:14px 0;margin:-14px 0;
+  text-decoration-thickness:1px;text-underline-offset:3px}
+.fuss{margin-top:34px;padding:20px 0 4px;border-top:1px solid var(--linie);
+  font:400 10.5px/1.7 'IBM Plex Mono',monospace;letter-spacing:.05em;color:var(--tinte-m)}
+
+/* ═══ TAFEL — der stehende Teil ══════════════════════════ */
+.tafel{
+  position:fixed;left:0;right:0;bottom:0;z-index:60;
+  background:linear-gradient(178deg,var(--marine),var(--marine-t));
+  color:var(--kreide);
+  display:flex;flex-direction:column;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  box-shadow:0 -18px 40px rgba(8,19,52,.16);
+}
+/* Naht: die gemeinsame Kante. Waagrecht am Handy, senkrecht am Schirm. */
+.tafel::after{content:"";position:fixed;inset:0;background:rgba(6,14,38,.55);
+  opacity:0;pointer-events:none;transition:opacity 300ms var(--kurve);z-index:-1}
+.tafel[data-offen="1"]::after{opacity:1}
+.naht{
+  position:relative;display:flex;align-items:stretch;
+  height:46px;flex:0 0 46px;
+  border-top:1px solid rgba(239,242,247,.22);
+  background:rgba(8,19,52,.35)
+}
+.fortschritt{
+  position:absolute;left:0;top:-2px;height:2px;width:0;background:var(--signal);
+  transition:width 140ms linear;z-index:3
+}
+.klappe{
+  position:absolute;inset:0;z-index:2;background:none;border:0;cursor:pointer;
+  display:flex;align-items:center;justify-content:flex-start;padding:0 16px
+}
+.klappe i{display:block;width:15px;height:9px;position:relative;flex:0 0 15px}
+.klappe i::before,.klappe i::after{content:"";position:absolute;left:0;right:0;height:1.5px;
+  background:var(--kreide-m);transition:transform 240ms var(--kurve)}
+.klappe i::before{top:0}
+.klappe i::after{bottom:0}
+.tafel[data-offen="1"] .klappe i::before{transform:translateY(3.75px) rotate(45deg)}
+.tafel[data-offen="1"] .klappe i::after{transform:translateY(-3.75px) rotate(-45deg)}
+.marken{position:absolute;left:46px;right:0;top:0;bottom:0;display:flex;
+  pointer-events:none;min-width:0}
+.tick{flex:1;position:relative;min-width:0}
+.tick::before{
+  content:"";position:absolute;left:3px;right:3px;top:50%;height:2px;
+  transform:translateY(-50%);background:rgba(239,242,247,.22);
+  transition:background 240ms linear,height 240ms var(--kurve)
+}
+.tick.jetzt::before{height:4px;background:var(--signal)}
+
+/* Blatt: Verzeichnis + was immer gilt */
+.blatt{
+  overflow:hidden;max-height:0;
+  transition:max-height 340ms var(--kurve);
+  order:-1
+}
+.tafel[data-offen="1"] .blatt{max-height:min(80vh,664px);overflow-y:auto}
+.blatt-inh{padding:18px var(--rand) 14px}
+.tafel-kopf{
+  font:500 10.5px/1.3 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--kreide);padding-bottom:14px;margin-bottom:6px;
+  border-bottom:1px solid rgba(239,242,247,.16)
+}
+.tafel-kopf span{display:block;margin-top:6px;letter-spacing:.06em;font-weight:400;
+  color:var(--kreide-m);text-transform:none;font-size:10.5px}
+.verz{margin-bottom:18px}
+.verz li{border-top:1px solid rgba(239,242,247,.12)}
+.verz li:last-child{border-bottom:1px solid rgba(239,242,247,.12)}
+.verz a{
+  display:flex;align-items:center;gap:12px;min-height:46px;text-decoration:none;
+  color:var(--kreide-m);transition:color 160ms linear
+}
+.verz a b{font:400 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.08em;
+  color:rgba(239,242,247,.4);width:20px;flex:0 0 20px}
+.verz a span{font-weight:700;font-size:15px;letter-spacing:-.01em}
+.verz li[aria-current="true"] a{color:var(--kreide)}
+.verz li[aria-current="true"] a b{color:var(--signal)}
+.immer{border-top:1px solid rgba(239,242,247,.16);padding-top:12px}
+.immer div{display:grid;grid-template-columns:84px 1fr;gap:10px;padding:4px 0;
+  font-size:13px;line-height:1.45;color:var(--kreide)}
+.immer dt{font:400 10px/1.6 'IBM Plex Mono',monospace;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--kreide-m)}
+.immer dd{margin:0}
+.immer a{display:inline-block;padding:14px 0;margin:-14px 0;text-decoration:none;
+  border-bottom:1px solid rgba(239,242,247,.3)}
+
+/* Lesung: der wechselnde Teil */
+.lesung{
+  padding:11px var(--rand) 13px;
+  display:grid;gap:0 14px;
+  grid-template-columns:1fr auto;
+  grid-template-areas:"zeile zeile" "zahl tat";
+  align-items:center;position:relative
+}
+.wischer{
+  position:absolute;left:var(--rand);right:var(--rand);top:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--signal),transparent);
+  opacity:0;transform:scaleX(.2);transform-origin:left center;pointer-events:none
+}
+.wischer.geht{animation:wisch 560ms var(--kurve)}
+@keyframes wisch{
+  0%{opacity:0;transform:scaleX(0);transform-origin:left center}
+  22%{opacity:.9}
+  60%{opacity:.7;transform:scaleX(1);transform-origin:left center}
+  61%{transform-origin:right center}
+  100%{opacity:0;transform:scaleX(0);transform-origin:right center}
+}
+.zeile{
+  grid-area:zeile;display:flex;align-items:baseline;gap:9px;min-width:0;
+  margin-bottom:4px
+}
+.kennung{
+  font:500 10px/1.6 'IBM Plex Mono',monospace;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--signal);flex:0 0 auto;white-space:nowrap
+}
+.satz{
+  font-size:12.5px;line-height:1.5;color:var(--kreide-m);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0
+}
+.zahl{grid-area:zahl;display:flex;align-items:flex-end;gap:9px;min-width:0}
+.gross{
+  display:flex;font-family:'Archivo Black',Archivo,sans-serif;font-weight:400;
+  font-size:var(--gz,40px);line-height:1.06;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums
+}
+.zif{
+  display:block;overflow:hidden;height:1.06em;width:var(--zw);
+  transition:width var(--takt) var(--kurve);transition-delay:var(--d,0ms)
+}
+.zif.sym{width:.5em}
+.zif.leer{width:0}
+.saeule{
+  display:flex;flex-direction:column;
+  transition:transform var(--takt) var(--kurve);transition-delay:var(--d,0ms)
+}
+.zif.b .saeule{transform:translateY(-50%)}
+.saeule b{display:block;height:1.06em;font-weight:400;text-align:center}
+.einheit{
+  font:500 10.5px/1.2 'IBM Plex Mono',monospace;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--kreide);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  margin-bottom:calc(var(--gz,40px) * .19)
+}
+.tat{
+  grid-area:tat;display:flex;align-items:center;justify-content:center;gap:8px;
+  min-height:46px;padding:0 15px;background:var(--kreide);color:var(--marine);
+  text-decoration:none;font:500 11px/1 'IBM Plex Mono',monospace;
+  letter-spacing:.09em;text-transform:uppercase;white-space:nowrap;
+  transition:background 140ms linear
+}
+.tat b{font-family:'Archivo Black',Archivo,sans-serif;font-weight:400;font-size:14px;letter-spacing:0}
+.tat:hover{background:#fff}
+
+/* ═══ Schirm: die Tafel steht rechts ═════════════════════ */
+@media (min-width:1024px){
+  :root{--rand:clamp(56px,6vw,92px);--konsole:0px;--gz:clamp(50px,4.6vw,66px)}
+  .buehne{display:grid;grid-template-columns:minmax(0,1fr) var(--tafelb);align-items:start}
+  .strom{max-width:none;padding-right:40px;padding-bottom:104px;padding-left:var(--rand)}
+  .abschnitt{padding:78px 0 4px;max-width:800px}
+  .auftakt{padding:30px 0 44px;max-width:840px;min-height:100vh;
+    display:flex;flex-direction:column}
+  .auftakt > div[data-posten]{padding-top:9vh}
+  h1{font-size:clamp(48px,4.9vw,70px);margin-top:0}
+  .vorspann{font-size:19px;max-width:44ch}
+  .stiche{margin-top:auto;padding-top:26px}
+  .kurs-kopf{display:flex;align-items:baseline;gap:12px}
+  .kurs h3{flex:1 1 auto}
+  .kurs-zahl{white-space:nowrap}
+  .bildtafel{max-width:400px}
+  input[type=text],input[type=email]{max-width:420px}
+  .tafel{
+    position:sticky;top:0;left:auto;right:auto;bottom:auto;
+    height:100vh;min-height:600px;padding:0 0 0 15px;
+    box-shadow:none;border-left:1px solid rgba(13,31,76,.3)
+  }
+  .naht{
+    position:absolute;left:0;top:0;bottom:0;width:15px;height:auto;flex:none;
+    flex-direction:column;border-top:0;background:rgba(8,19,52,.5)
+  }
+  .fortschritt{left:-1px;right:auto;top:0;width:2px;height:0;
+    transition:height 140ms linear}
+  .klappe{display:none}
+  .marken{left:0;flex-direction:column;width:100%}
+  .tick{width:100%}
+  .tick::before{left:50%;right:auto;top:3px;bottom:3px;height:auto;width:2px;
+    transform:translateX(-50%);
+    transition:background 240ms linear,width 240ms var(--kurve)}
+  .tick[aria-current="true"]::before{width:4px;height:auto}
+  .blatt{max-height:none;overflow:visible;order:0;flex:1 1 auto;min-height:0;
+    display:flex;flex-direction:column;justify-content:flex-start;transition:none}
+  .blatt-inh{padding:24px 26px 0 22px;display:flex;flex-direction:column;height:100%}
+  .verz{margin-bottom:auto}
+  .verz a{min-height:40px}
+  .verz a span{font-size:16px}
+  .immer{margin-top:24px}
+  .lesung{
+    padding:18px 26px 22px 22px;
+    grid-template-columns:1fr;
+    grid-template-areas:"zeile" "zahl" "tat";
+    align-items:start;gap:0;
+    border-top:1px solid rgba(239,242,247,.16)
+  }
+  .wischer{left:22px;right:26px}
+  .zeile{display:block;margin-bottom:6px}
+  .satz{white-space:normal;font-size:13.5px;margin-top:5px;min-height:2.9em;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .kennung{font-size:10.5px}
+  .zahl{margin:0 0 16px}
+  .einheit{font-size:11px}
+  .tat{width:100%;min-height:52px;font-size:11.5px}
+  .stiche{grid-template-columns:repeat(3,1fr)}
+  .stich b{font-size:30px}
+  .klein{grid-template-columns:1fr 1fr;gap:14px 26px}
+  .wo-achse,.wo-tag{grid-template-columns:42px 1fr 38px}
+  .wo-band{height:26px}
+  .wo-tag{min-height:44px}
+  .ort-z,.draht{grid-template-columns:128px 1fr}
+  .senden{width:auto;min-width:260px}
+  .anliegen span{font-size:14.5px}
+}
+@media (min-width:1500px){
+  :root{--rand:84px}
+  .abschnitt{max-width:780px}
+}
+
+/* ── Ruhe ──────────────────────────────────────────────── */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{
+    animation-duration:1ms !important;animation-iteration-count:1 !important;
+    transition-duration:1ms !important;transition-delay:0ms !important;
+    scroll-behavior:auto !important
+  }
+  .wischer,.wischer.geht{animation:none;opacity:0}
+  .tat:hover{background:var(--kreide)}
+}
+</style>
+</head>
+<body>
+<a class="sprung" href="#inhalt">Zum Inhalt springen</a>
+
+<div class="buehne">
+
+<!-- ══ Der Strom ═══════════════════════════════════════════ -->
+<main class="strom" id="inhalt">
+
+  <!-- 01 ─ Auftakt -->
+  <section class="abschnitt auftakt" id="start" aria-labelledby="h-start">
+    <div class="stirn">
+      <img src="../assets/logo.png" alt="Trojan Performance" width="126" fetchpriority="high">
+      <span>Sebastiangasse 1<br>9020 Klagenfurt am Wörthersee</span>
+    </div>
+    <div data-posten data-idx="0" data-gross="8" data-einheit="Kurse"
+         data-satz="75 Minuten je Einheit · in jedem ein Coach auf der Fläche">
+      <h1 id="h-start">Der Plan steht.<br><em>Du suchst dir aus, was hineinpasst.</em></h1>
+      <p class="vorspann">Acht Kurse, 75 Minuten je Einheit. In jedem steht ein Coach auf
+        der Fläche und korrigiert — er sagt nicht nur an.</p>
+    </div>
+    <div class="stiche">
+      <div class="stich"><b>2017</b><span>von den Brüdern<br>Mike und Dominik</span></div>
+      <div class="stich"><b>1.</b><span>offizieller HYROX<br>Training Club in Kärnten</span></div>
+      <div class="stich"><b>15 €</b><span>Probetraining,<br>ohne Vorkenntnisse</span></div>
+    </div>
+  </section>
+
+  <!-- 02 ─ Woche -->
+  <section class="abschnitt" id="woche" aria-labelledby="h-woche">
+    <div class="kopf" data-posten data-idx="1" data-gross="24" data-einheit="Einheiten"
+         data-satz="Kurszeiten aus dem Buchungssystem" id="posten-woche">
+      <p class="marke">02 — Die Woche</p>
+      <h2 id="h-woche">Passt das in deine Woche?</h2>
+      <p class="unter">Das ist die laufende Woche, so wie sie im Buchungssystem steht.
+        Tipp einen Tag an, dann siehst du seine Einheiten.</p>
+      <p class="quelle" id="quelle"><b>Wird geladen …</b></p>
+    </div>
+
+    <div class="woche">
+      <div class="wo-achse" aria-hidden="true">
+        <span></span>
+        <i><span>06</span><span style="left:25%">10</span><span style="left:50%">14</span><span style="left:75%">18</span><span style="left:100%">22</span></i>
+        <span></span>
+      </div>
+      <div id="wo-tage"></div>
+      <p class="legende">Spur = Open Gym, täglich 06:00–22:00 · Balken = Kurs</p>
+    </div>
+
+    <div class="wo-liste">
+      <h3 id="wo-titel">Montag</h3>
+      <div id="wo-inhalt"></div>
+    </div>
+
+    <p class="hinweis"><b>Empfehlung fürs erste Jahr:</b> drei Einheiten pro Woche — zwei für
+      die Kraft, eine für die Ausdauer.</p>
+  </section>
+
+  <!-- 03 ─ Kurse -->
+  <section class="abschnitt" id="kurse" aria-labelledby="h-kurse">
+    <div class="kopf" data-posten data-idx="2" data-gross="8" data-einheit="Kurse"
+         data-satz="Alle 75 Minuten, Mama reloaded 45">
+      <p class="marke">03 — Die Kurse</p>
+      <h2 id="h-kurse">Acht Kurse, ein Coach auf der Fläche</h2>
+      <p class="unter">Die Zahl rechts ist die Gruppengrösse. Wie oft ein Kurs in der Woche
+        läuft, steht daneben.</p>
+    </div>
+    <div class="kurse">
+
+      <article class="kurs" data-posten data-idx="2" data-gross="12–16" data-einheit="Plätze"
+               data-satz="Performance · 7× pro Woche · 75 Minuten">
+        <div class="kurs-kopf"><span class="kurs-nr">01</span><h3>Performance</h3>
+          <span class="kurs-zahl">7× / Woche · 12–16 Plätze</span></div>
+        <p>Crosstraining aus Powerlifting, Weightlifting, Gymnastics, Calisthenics, Strongman
+          und Ausdauer. Die Reize sind nicht willkürlich kombiniert, sondern folgen einer
+          periodisierten Planung.</p>
+      </article>
+
+      <article class="kurs" data-posten data-idx="2" data-gross="16" data-einheit="Plätze"
+               data-satz="FBB/Strength &amp; Power · 6× pro Woche · 75 Minuten">
+        <div class="kurs-kopf"><span class="kurs-nr">02</span><h3>FBB/Strength &amp; Power</h3>
+          <span class="kurs-zahl">6× / Woche · 16 Plätze</span></div>
+        <p>Muskelaufbau nach festem Schema, kombiniert mit kurzen intensiven Ausdauerblöcken.
+          Kraft und Ausdauer in einer Einheit.</p>
+      </article>
+
+      <article class="kurs" data-posten data-idx="2" data-gross="24" data-einheit="Plätze"
+               data-satz="Powercircle · 3× pro Woche · für Einsteiger geeignet">
+        <div class="kurs-kopf"><span class="kurs-nr">03</span><h3>Powercircle</h3>
+          <span class="kurs-zahl">3× / Woche · 24 Plätze</span></div>
+        <p>Airbike, SkiErg, Schlitten, Jump-Box, Battle-Rope, Wallballs im Wechsel. Kurze harte
+          Intervalle, kurze Pausen. Technisch anspruchslos, deshalb auch für Einsteiger geeignet.</p>
+        <span class="kurs-fahne">Einstieg möglich</span>
+      </article>
+
+      <article class="kurs" data-posten data-idx="2" data-gross="45" data-einheit="Minuten"
+               data-satz="Mama reloaded · 3× pro Woche · Wiedereinstieg">
+        <div class="kurs-kopf"><span class="kurs-nr">04</span><h3>Mama reloaded</h3>
+          <span class="kurs-zahl">3× / Woche · 45 Minuten</span></div>
+        <p>Wiedereinstieg nach der Schwangerschaft. Beckenboden, Rumpf und Kraft in einem Tempo,
+          das sich an den Tag anpasst.</p>
+      </article>
+
+      <article class="kurs" data-posten data-idx="2" data-gross="24" data-einheit="Plätze"
+               data-satz="Hyrox · 2× pro Woche · Open, Pro, Doubles und Relay">
+        <div class="kurs-kopf"><span class="kurs-nr">05</span><h3>Hyrox</h3>
+          <span class="kurs-zahl">2× / Woche · 24 Plätze</span></div>
+        <p>Vorbereitung auf das Rennformat, das weltweit unter denselben Bedingungen läuft —
+          für Open, Pro, Doubles und Relay. Für jedes Level, vom Einstieg bis zum Wettkampf.</p>
+        <span class="kurs-fahne">Einstieg möglich</span>
+      </article>
+
+      <article class="kurs" data-posten data-idx="2" data-gross="16" data-einheit="Plätze"
+               data-satz="Team-WOD · 1× pro Woche · zu zweit">
+        <div class="kurs-kopf"><span class="kurs-nr">06</span><h3>Team-WOD</h3>
+          <span class="kurs-zahl">1× / Woche · 16 Plätze</span></div>
+        <p>Zu zweit mit deinem Trainingsbuddy. Jede Woche ein anderes Workout, Intensität und
+          Schwierigkeitsgrad werden auf euch beide angepasst.</p>
+      </article>
+
+      <article class="kurs" data-posten data-idx="2" data-gross="12" data-einheit="Plätze"
+               data-satz="FBB · 1× pro Woche · Ober- oder Unterkörper">
+        <div class="kurs-kopf"><span class="kurs-nr">07</span><h3>FBB</h3>
+          <span class="kurs-zahl">1× / Woche · 12 Plätze</span></div>
+        <p>Nach dem gemeinsamen Warm-up wählst du Ober- oder Unterkörper, je vier Übungen mit
+          vorgegebenen Sätzen, Wiederholungen und Pausen. Zum Abschluss eine kurze, intensive
+          Belastung.</p>
+      </article>
+
+      <article class="kurs" data-posten data-idx="2" data-gross="24" data-einheit="Plätze"
+               data-satz="Community TeamWOD · 1× pro Woche · grosse Runde">
+        <div class="kurs-kopf"><span class="kurs-nr">08</span><h3>Community TeamWOD</h3>
+          <span class="kurs-zahl">1× / Woche · 24 Plätze</span></div>
+        <p>Team-Workout in grosser Runde. Jede Woche ein anderes Programm, Intensität und
+          Schwierigkeitsgrad individuell angepasst.</p>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 04 ─ Hyrox -->
+  <section class="abschnitt" id="hyrox" aria-labelledby="h-hyrox">
+    <div class="kopf" data-posten data-idx="3" data-gross="8" data-einheit="Kilometer"
+         data-satz="Laufen, dazu acht Stationen · vor jeder Station 1 km">
+      <p class="marke">04 — Hyrox</p>
+      <h2 id="h-hyrox">Acht Kilometer, acht Stationen</h2>
+      <p class="unter">Ein Rennformat, das weltweit nach denselben Regeln läuft. Der Kurs
+        bereitet zweimal pro Woche darauf vor — mitmachen kannst du ihn, ohne je an den Start
+        zu gehen.</p>
+    </div>
+    <ol class="stationen">
+      <li class="lauf" aria-hidden="true">1 km Laufen</li>
+      <li class="station" data-posten data-idx="3" data-gross="1000" data-einheit="Meter"
+          data-satz="Station 1 von 8 · SkiErg · davor 1 km Laufen">
+        <b>01</b><em>SkiErg</em><span>1000 m</span></li>
+      <li class="lauf" aria-hidden="true">1 km Laufen</li>
+      <li class="station" data-posten data-idx="3" data-gross="50" data-einheit="Meter"
+          data-satz="Station 2 von 8 · Sled Push · davor 1 km Laufen">
+        <b>02</b><em>Sled Push</em><span>50 m</span></li>
+      <li class="lauf" aria-hidden="true">1 km Laufen</li>
+      <li class="station" data-posten data-idx="3" data-gross="50" data-einheit="Meter"
+          data-satz="Station 3 von 8 · Sled Pull · davor 1 km Laufen">
+        <b>03</b><em>Sled Pull</em><span>50 m</span></li>
+      <li class="lauf" aria-hidden="true">1 km Laufen</li>
+      <li class="station" data-posten data-idx="3" data-gross="80" data-einheit="Meter"
+          data-satz="Station 4 von 8 · Burpee Broad Jumps · davor 1 km Laufen">
+        <b>04</b><em>Burpee Broad Jumps</em><span>80 m</span></li>
+      <li class="lauf" aria-hidden="true">1 km Laufen</li>
+      <li class="station" data-posten data-idx="3" data-gross="1000" data-einheit="Meter"
+          data-satz="Station 5 von 8 · Rudern · davor 1 km Laufen">
+        <b>05</b><em>Rudern</em><span>1000 m</span></li>
+      <li class="lauf" aria-hidden="true">1 km Laufen</li>
+      <li class="station" data-posten data-idx="3" data-gross="200" data-einheit="Meter"
+          data-satz="Station 6 von 8 · Farmers Carry · davor 1 km Laufen">
+        <b>06</b><em>Farmers Carry</em><span>200 m</span></li>
+      <li class="lauf" aria-hidden="true">1 km Laufen</li>
+      <li class="station" data-posten data-idx="3" data-gross="100" data-einheit="Meter"
+          data-satz="Station 7 von 8 · Sandbag Lunges · davor 1 km Laufen">
+        <b>07</b><em>Sandbag Lunges</em><span>100 m</span></li>
+      <li class="lauf" aria-hidden="true">1 km Laufen</li>
+      <li class="station" data-posten data-idx="3" data-gross="100" data-einheit="Wall Balls"
+          data-satz="Station 8 von 8 · davor 1 km Laufen">
+        <b>08</b><em>Wall Balls</em><span>100 ×</span></li>
+    </ol>
+  </section>
+
+  <!-- 05 ─ Preise -->
+  <section class="abschnitt" id="preise" aria-labelledby="h-preise">
+    <div class="kopf" data-posten data-idx="4" data-gross="130" data-einheit="€ pro Monat"
+         data-satz="3 Einheiten pro Woche, 12 Monate Bindung" id="posten-preise">
+      <p class="marke">05 — Preise</p>
+      <h2 id="h-preise">Was es kostet</h2>
+      <p class="unter">Preis pro Monat. Tipp ein Feld an — die Tafel rechnet es dir auf die
+        einzelne Einheit herunter.</p>
+    </div>
+
+    <table class="tarife">
+      <caption class="vh">Kurstarife: Preis pro Monat nach Umfang und Bindung</caption>
+      <thead><tr><th scope="col">Umfang</th><th scope="col">1 Monat</th>
+        <th scope="col">6 Monate</th><th scope="col">12 Monate</th></tr></thead>
+      <tbody id="tarife-koerper"></tbody>
+    </table>
+    <p class="rechnung" id="rechnung"></p>
+    <p class="legende">Empfehlung zum Einstieg: 3 Einheiten pro Woche.<br>
+      In jedem Tarif enthalten: keine Einschreibgebühr, eigener Kraftaufbauplan.</p>
+
+    <div class="frei">
+      <div class="frei-z"><div><b>Probetraining</b><i>Eine Einheit, 75 Minuten</i></div><span>15 €</span></div>
+      <div class="frei-z"><div><b>Drop-in</b><i>Einzelne Einheit</i></div><span>25 €</span></div>
+      <div class="frei-z"><div><b>10er-Block</b><i>Ein Jahr gültig</i></div><span>200 €</span></div>
+      <div class="frei-z"><div><b>Personal Training</b><i>Einzeln, mit Coach</i></div><span>100 €</span></div>
+      <div class="frei-z"><div><b>Open Gym</b><i>Monatlich kündbar, täglich 06:00–22:00</i></div><span>60 €</span></div>
+    </div>
+
+    <dl class="klein">
+      <div><dt>Vertrag</dt><dd>Bindung wahlweise 1, 6 oder 12 Monate. Pause bei 6 Monaten
+        einmal, bei 12 Monaten zweimal — je bis 4 Wochen. Bei triftigem Grund übertragbar.</dd></div>
+      <div><dt>SVS</dt><dd>Selbstständig und SVS-versichert? Dann überweist die SVS 100 € aufs
+        Konto — für jeden Tarif ausser Open Gym, und für den 10er-Block.</dd></div>
+    </dl>
+
+    <blockquote class="zitat">„Nicht das billigste Gym der Stadt."
+      <cite>Der Betreiber über sich selbst</cite></blockquote>
+  </section>
+
+  <!-- 06 ─ Einstieg -->
+  <section class="abschnitt" id="einstieg" aria-labelledby="h-einstieg">
+    <div class="kopf" data-posten data-idx="5" data-gross="15" data-einheit="Euro"
+         data-satz="Probetraining: eine Einheit, ein Coach, 75 Minuten. Ohne Vorkenntnisse.">
+      <p class="marke">06 — Einstieg</p>
+      <h2 id="h-einstieg">Ist das etwas für dich?</h2>
+      <p class="unter">Kurz: ja, auch wenn du seit Jahren nichts gemacht hast. Der Coach passt
+        die Last an, nicht du dich an die Gruppe.</p>
+    </div>
+
+    <figure class="bildtafel" style="--ar:4/5">
+      <div class="rahmen"><picture><source type="image/webp" srcset="../assets/o-kraft.webp"><img src="../assets/o-kraft.jpg" width="467" height="700" loading="lazy"
+        alt="Frau mit grauem Haar in der Kniebeuge mit der Langhantel"></picture></div>
+      <figcaption>Auf der Fläche steht, wer gerade da ist — vom Wiedereinstieg bis zum Wettkampf.</figcaption>
+    </figure>
+
+    <dl class="klein" style="margin-top:24px">
+      <div><dt>Ohne Vorkenntnisse</dt><dd>Fürs Probetraining brauchst du keine. Powercircle ist
+        technisch anspruchslos und deshalb auch für Einsteiger geeignet.</dd></div>
+      <div><dt>Mitbringen</dt><dd>Handtuch, Trinkflasche, Hallenschuhe mit sauberer Sohle —
+        mehr nicht.</dd></div>
+      <div><dt>Wie oft</dt><dd>Drei Einheiten pro Woche: zwei für die Kraft, eine für die
+        Ausdauer. Wenn drei nicht gehen, gehen auch zwei.</dd></div>
+      <div><dt>Nach der Schwangerschaft</dt><dd>Mama reloaded ist der Wiedereinstieg —
+        45 Minuten, dreimal pro Woche.</dd></div>
+      <div><dt>Für den Wettkampf</dt><dd>Hyrox läuft zweimal pro Woche, für jedes Level.
+        Mitmachen kannst du auch, ohne je an den Start zu gehen.</dd></div>
+      <div><dt>Immer dabei</dt><dd>Ein Coach auf der Fläche, der korrigiert. Und ein eigener
+        Kraftaufbauplan, in jedem Tarif enthalten.</dd></div>
+    </dl>
+  </section>
+
+  <!-- 07 ─ Coaches -->
+  <section class="abschnitt" id="coaches" aria-labelledby="h-coaches">
+    <div class="kopf" data-posten data-idx="6" data-gross="4" data-einheit="Coaches"
+         data-satz="Mike, Dominik, Diego und Benni">
+      <p class="marke">07 — Coaches</p>
+      <h2 id="h-coaches">Wer auf der Fläche steht</h2>
+    </div>
+
+    <figure class="bildtafel" style="--ar:3/2">
+      <div class="rahmen"><picture><source type="image/webp" srcset="../assets/o-brueder.webp"><img src="../assets/o-brueder.jpg" width="1365" height="910" loading="lazy"
+        alt="Mike und Dominik sitzen nebeneinander vor einer dunklen Wand, die Arme verschränkt"></picture></div>
+      <figcaption>Mike und Dominik, 2017.</figcaption>
+    </figure>
+
+    <div class="coaches" style="margin-top:22px">
+      <article class="coach" data-posten data-idx="6" data-gross="4" data-einheit="Coaches"
+               data-satz="Mike — Olympiastützpunkt Linz, Nationalkaderzentrum Wien">
+        <h3>Mike</h3><p>Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum
+        Wien. Hat das Gym 2017 mit seinem Bruder Dominik aufgemacht.</p></article>
+      <article class="coach" data-posten data-idx="6" data-gross="4" data-einheit="Coaches"
+               data-satz="Dominik — dreifacher Staatsmeister im Gewichtheben">
+        <h3>Dominik</h3><p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer
+        und Instruktor für die olympischen Züge.</p></article>
+      <article class="coach" data-posten data-idx="6" data-gross="4" data-einheit="Coaches"
+               data-satz="Diego — Psychologe und CrossFit Level 1 Trainer">
+        <h3>Diego</h3><p>Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf
+        regionaler Ebene Wettkämpfe bestritten hat.</p></article>
+      <article class="coach" data-posten data-idx="6" data-gross="4" data-einheit="Coaches"
+               data-satz="Benni — Konditionstraining, aktiver Eishockeyspieler">
+        <h3>Benni</h3><p>Aktiver Eishockeyspieler, studiert Lehramt für Bewegung und Sport in
+        Klagenfurt. Schwerpunkt Konditionstraining.</p></article>
+    </div>
+  </section>
+
+  <!-- 08 ─ Ort -->
+  <section class="abschnitt" id="ort" aria-labelledby="h-ort">
+    <div class="kopf" data-posten data-idx="7" data-gross="16" data-einheit="Stunden"
+         data-satz="Open Gym täglich 06:00–22:00 · Zutritt per App · eigener Tarif">
+      <p class="marke">08 — Ort</p>
+      <h2 id="h-ort">Sebastiangasse 1</h2>
+    </div>
+    <dl class="ort">
+      <div class="ort-z"><dt>Adresse</dt><dd>Sebastiangasse 1, 9020 Klagenfurt am Wörthersee</dd></div>
+      <div class="ort-z"><dt>Parken</dt><dd>Gratis Parkplätze rund ums Gebäude</dd></div>
+      <div class="ort-z"><dt>Garderobe</dt><dd>Zwei Garderoben, je ein Duschraum mit drei Duschen</dd></div>
+      <div class="ort-z"><dt>Open Gym</dt><dd>Täglich 06:00–22:00, eigener Tarif, Zutritt per App</dd></div>
+      <div class="ort-z"><dt>Kurszeiten</dt><dd id="ort-zeiten">—</dd></div>
+    </dl>
+  </section>
+
+  <!-- 09 ─ Kontakt -->
+  <section class="abschnitt" id="kontakt" aria-labelledby="h-kontakt">
+    <div class="kopf" data-posten data-idx="8" data-gross="15" data-einheit="Euro"
+         data-satz="Probetraining, allgemeine Anfrage, 1:1 Coaching oder Firmentraining">
+      <p class="marke">09 — Kontakt</p>
+      <h2 id="h-kontakt">Probetraining anfragen</h2>
+      <p class="unter">Eine Einheit, ein Coach, 75 Minuten, 15 €. Vorkenntnisse braucht es keine.</p>
+    </div>
+
+    <form id="formular" novalidate>
+      <fieldset>
+        <legend>Anliegen</legend>
+        <div class="anliegen">
+          <label><input type="radio" name="anliegen" value="Probetraining" checked><span>Probetraining</span></label>
+          <label><input type="radio" name="anliegen" value="Allgemeine Anfrage"><span>Allgemeine Anfrage</span></label>
+          <label><input type="radio" name="anliegen" value="1:1 Coaching"><span>1:1 Coaching</span></label>
+          <label><input type="radio" name="anliegen" value="Firmentraining"><span>Firmentraining</span></label>
+        </div>
+      </fieldset>
+      <label class="feld"><span class="feldname">Name</span>
+        <input type="text" name="name" autocomplete="name"></label>
+      <label class="feld"><span class="feldname">E-Mail</span>
+        <input type="email" name="email" autocomplete="email"></label>
+      <label class="feld"><span class="feldname">Nachricht</span>
+        <textarea name="nachricht" rows="4"></textarea></label>
+      <button type="submit" class="senden">Absenden</button>
+      <p class="antwort" id="antwort" hidden role="status"></p>
+    </form>
+
+    <dl class="draehte">
+      <div class="draht"><dt>E-Mail</dt><dd><a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a></dd></div>
+      <div class="draht"><dt>Telefon</dt><dd><a href="tel:+436768227302">+43 676 8227 7302</a></dd></div>
+      <div class="draht"><dt>Instagram</dt><dd><a href="https://www.instagram.com/trojan.performance/" rel="noopener">trojan.performance</a></dd></div>
+      <div class="draht"><dt>Facebook</dt><dd><a href="https://www.facebook.com/trojanperformanceofficial" rel="noopener">trojanperformanceofficial</a></dd></div>
+      <div class="draht"><dt>YouTube</dt><dd><a href="https://www.youtube.com/channel/UChUZebvjDwrWEdOCa86xNiA" rel="noopener">Trojan Performance</a></dd></div>
+    </dl>
+
+    <p class="fuss">Trojan Performance · Sebastiangasse 1, 9020 Klagenfurt am Wörthersee ·
+      Performance Center seit 2017 · Erster offizieller HYROX Training Club in Kärnten</p>
+    <noscript><p class="hinweis">Ohne JavaScript bleiben Wochenplan und Preisrechner leer.
+      Ruf in dem Fall an: +43 676 8227 7302.</p></noscript>
+  </section>
+
+</main>
+
+<!-- ══ Die Tafel ═══════════════════════════════════════════ -->
+<aside class="tafel" id="tafel" data-offen="0" aria-label="Übersicht und Probetraining">
+
+  <div class="naht">
+    <span class="fortschritt" id="fortschritt" aria-hidden="true"></span>
+    <div class="marken" id="marken" aria-hidden="true"></div>
+    <button type="button" class="klappe" id="klappe" aria-expanded="false" aria-controls="blatt">
+      <i aria-hidden="true"></i><span class="vh">Übersicht öffnen</span>
+    </button>
+  </div>
+
+  <div class="blatt" id="blatt">
+    <div class="blatt-inh">
+      <p class="tafel-kopf">Trojan Performance
+        <span>Performance Center · Klagenfurt am Wörthersee · seit 2017</span></p>
+      <ul class="verz" id="verz"></ul>
+      <dl class="immer">
+        <div><dt>Ort</dt><dd>Sebastiangasse 1, 9020 Klagenfurt</dd></div>
+        <div><dt>Kurszeiten</dt><dd id="tafel-zeiten">—</dd></div>
+        <div><dt>Open Gym</dt><dd>Täglich 06:00–22:00</dd></div>
+        <div><dt>Telefon</dt><dd><a href="tel:+436768227302">+43 676 8227 7302</a></dd></div>
+        <div><dt>E-Mail</dt><dd><a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a></dd></div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="lesung">
+    <span class="wischer" id="wischer" aria-hidden="true"></span>
+    <p class="zeile" aria-hidden="true">
+      <span class="kennung" id="kennung">01 Start</span>
+      <span class="satz" id="satz">75 Minuten je Einheit · in jedem ein Coach auf der Fläche</span>
+    </p>
+    <p class="zahl" aria-hidden="true">
+      <span class="gross" id="gross"></span>
+      <span class="einheit" id="einheit">Kurse</span>
+    </p>
+    <a class="tat" href="#kontakt" id="tat">Probetraining <b>15 €</b></a>
+  </div>
+
+</aside>
+
+</div>
+
+<script>
+(() => {
+'use strict';
+
+const $ = s => document.querySelector(s);
+const ruhig = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+const schirm = () => matchMedia('(min-width: 1024px)').matches;
+
+/* ── Abschnitte ─────────────────────────────────────────── */
+const ABSCHNITTE = [
+  ['start','Start'], ['woche','Woche'], ['kurse','Kurse'], ['hyrox','Hyrox'],
+  ['preise','Preise'], ['einstieg','Einstieg'], ['coaches','Coaches'],
+  ['ort','Ort'], ['kontakt','Kontakt'],
+];
+
+const verz = $('#verz'), marken = $('#marken');
+ABSCHNITTE.forEach(([id, name], i) => {
+  const li = document.createElement('li');
+  li.innerHTML = '<a href="#' + id + '"><b></b><span></span></a>';
+  li.querySelector('b').textContent = String(i + 1).padStart(2, '0');
+  li.querySelector('span').textContent = name;
+  verz.appendChild(li);
+
+  const b = document.createElement('span');
+  b.className = 'tick';
+  marken.appendChild(b);
+});
+const verzL = [...verz.children], tickL = [...marken.children];
+
+function springen(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.scrollIntoView({ behavior: ruhig() ? 'auto' : 'smooth', block: 'start' });
+  schliessen();
+}
+verz.addEventListener('click', e => {
+  const a = e.target.closest('a'); if (!a) return;
+  e.preventDefault(); springen(a.getAttribute('href').slice(1));
+});
+
+/* ── Die Tafel: Ziffernwalze ────────────────────────────── */
+const BREITE = { '–': '.5em', '-': '.42em', ',': '.3em', '.': '.3em', ' ': '.28em',
+                 ':': '.3em', '×': '.62em', '€': '.62em', '+': '.55em' };
+const grossBox = $('#gross');
+
+function rollen(box, text) {
+  const ziel = String(text);
+  if (box.dataset.wert === ziel) return;
+  box.dataset.wert = ziel;
+  const n = Math.max(box.children.length, ziel.length);
+  for (let i = 0; i < n; i++) {
+    let z = box.children[i];
+    if (!z) {
+      z = document.createElement('span');
+      z.className = 'zif leer';
+      z.innerHTML = '<span class="saeule"><b></b><b></b></span>';
+      z.dataset.alt = '';
+      box.appendChild(z);
+    }
+    const neu = ziel[i] || '';
+    if (z.dataset.alt === neu) continue;
+    z.dataset.alt = neu;
+    const b = z.firstChild.children[z.classList.contains('b') ? 0 : 1];
+    b.textContent = neu;
+    z.style.setProperty('--d', (i * 26) + 'ms');
+    z.classList.toggle('b');
+    z.classList.toggle('leer', neu === '');
+    z.classList.toggle('sym', neu !== '' && !/[0-9]/.test(neu));
+    z.style.width = (neu === '' || /[0-9]/.test(neu)) ? '' : (BREITE[neu] || '.62em');
+  }
+}
+
+/* ── Die Tafel: Anzeige ─────────────────────────────────── */
+const kennungEl = $('#kennung'), satzEl = $('#satz'), einheitEl = $('#einheit'),
+      wischer = $('#wischer'), balken = $('#fortschritt');
+let aktivIdx = -1, letzterSatz = '', tickt = false;
+
+function anzeigen(d) {
+  const idx = +d.idx;
+  const kenn = String(idx + 1).padStart(2, '0') + ' ' + ABSCHNITTE[idx][1];
+  const neu = d.gross + '|' + d.einheit + '|' + d.satz;
+  if (neu === letzterSatz && idx === aktivIdx) return;
+  const wechsel = letzterSatz !== '';
+  letzterSatz = neu;
+
+  rollen(grossBox, d.gross);
+  einheitEl.textContent = d.einheit;
+  kennungEl.textContent = kenn;
+  satzEl.textContent = d.satz;
+
+  if (wechsel && !ruhig()) {
+    wischer.classList.remove('geht');
+    void wischer.offsetWidth;
+    wischer.classList.add('geht');
+  }
+  if (idx !== aktivIdx) {
+    aktivIdx = idx;
+    verzL.forEach((li, i) => li.setAttribute('aria-current', i === idx ? 'true' : 'false'));
+    tickL.forEach((t, i) => t.classList.toggle('jetzt', i === idx));
+    fortschritt();
+  }
+}
+
+/* ── Leselinie: welcher Posten ist gerade dran ──────────── */
+/* Bewusst gemessen statt beobachtet: ein IntersectionObserver auf einem
+   dünnen Band meldet nichts, wenn die Seite in einem Sprung dorthin
+   springt (Ankerlink, ohne Bewegung, Neuladen mitten im Text). */
+const posten = [...document.querySelectorAll('[data-posten]')];
+let gesperrt = 0;   // Zeitfenster, in dem eine Auswahl Vorrang hat
+
+function pruefen() {
+  if (Date.now() < gesperrt) return;
+  const linie = innerHeight * .42;
+  let bester = posten[0];
+  for (const p of posten) {
+    if (p.getBoundingClientRect().top > linie) break;
+    bester = p;
+  }
+  anzeigen(bester.dataset);
+}
+
+/* Fortschritt auf der Naht — in Abschnitten gerechnet, damit der Balken
+   und die Marken dieselbe Skala benutzen. */
+function fortschritt() {
+  const h = document.documentElement, y = h.scrollTop;
+  const i = Math.max(0, aktivIdx);
+  const el = document.getElementById(ABSCHNITTE[i][0]);
+  const naechst = ABSCHNITTE[i + 1] && document.getElementById(ABSCHNITTE[i + 1][0]);
+  const oben = el ? el.offsetTop : 0;
+  const unten = naechst ? naechst.offsetTop : h.scrollHeight;
+  const innen = Math.min(1, Math.max(0, (y + h.clientHeight * .42 - oben) /
+    Math.max(1, unten - oben)));
+  const p = (i + innen) / ABSCHNITTE.length * 100;
+  if (schirm()) { balken.style.height = p + '%'; balken.style.width = ''; }
+  else { balken.style.width = p + '%'; balken.style.height = ''; }
+  tickt = false;
+}
+
+function takt() { pruefen(); fortschritt(); }
+addEventListener('scroll', () => { if (!tickt) { tickt = true; requestAnimationFrame(takt); } },
+  { passive: true });
+addEventListener('resize', takt);
+takt();
+
+/* ── Klappe (Handy): die Tafel wird zur ganzen Tafel ────── */
+const tafel = $('#tafel'), klappe = $('#klappe');
+function schliessen() {
+  tafel.dataset.offen = '0';
+  klappe.setAttribute('aria-expanded', 'false');
+}
+klappe.addEventListener('click', () => {
+  const auf = tafel.dataset.offen === '1';
+  tafel.dataset.offen = auf ? '0' : '1';
+  klappe.setAttribute('aria-expanded', String(!auf));
+});
+addEventListener('keydown', e => { if (e.key === 'Escape') schliessen(); });
+document.addEventListener('click', e => {
+  if (tafel.dataset.offen === '1' && !tafel.contains(e.target)) schliessen();
+});
+
+/* ── Preise ─────────────────────────────────────────────── */
+const UMFANG = [
+  { n: 2, e: 9,  p: [130, 120, 110], t: 'frei einteilbar' },
+  { n: 3, e: 13, p: [150, 140, 130], t: 'frei einteilbar', tipp: 'Empfehlung' },
+  { n: 6, e: 26, p: [170, 160, 150], t: 'Montag bis Samstag' },
+];
+const BINDUNG = ['1 Monat', '6 Monate', '12 Monate'];
+const koerper = $('#tarife-koerper'), rechnung = $('#rechnung');
+const postenPreise = $('#posten-preise');
+let wahlU = 1, wahlB = 2;
+
+UMFANG.forEach((u, ui) => {
+  const tr = document.createElement('tr');
+  const th = document.createElement('th');
+  th.scope = 'row';
+  th.innerHTML = '<span></span><small></small>';
+  th.querySelector('span').textContent = u.n + ' Einheiten';
+  th.querySelector('small').textContent = 'pro Woche';
+  if (u.tipp) { const i = document.createElement('span'); i.className = 'tipp';
+    i.textContent = u.tipp; th.appendChild(i); }
+  tr.appendChild(th);
+  u.p.forEach((preis, bi) => {
+    const td = document.createElement('td');
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'zelle';
+    b.textContent = preis + ' €';
+    b.setAttribute('aria-pressed', 'false');
+    b.setAttribute('aria-label', preis + ' Euro pro Monat bei ' + u.n +
+      ' Einheiten pro Woche und ' + BINDUNG[bi] + ' Bindung');
+    b.addEventListener('click', () => { wahlU = ui; wahlB = bi; preisZeigen(true); });
+    td.appendChild(b); tr.appendChild(td);
+  });
+  koerper.appendChild(tr);
+});
+const zellen = [...koerper.querySelectorAll('.zelle')];
+
+function preisZeigen(vomKlick) {
+  const u = UMFANG[wahlU], preis = u.p[wahlB];
+  const proE = (preis / u.e).toFixed(2).replace('.', ',');
+  zellen.forEach((z, i) => z.setAttribute('aria-pressed',
+    String(i === wahlU * 3 + wahlB)));
+  rechnung.innerHTML = '';
+  const b = document.createElement('b'); b.textContent = preis + ' €';
+  const s = document.createElement('span');
+  s.textContent = ' im Monat · ' + u.n + ' Einheiten pro Woche, ' + BINDUNG[wahlB] +
+    ' Bindung · ' + u.e + ' Einheiten im Monat, ' + u.t + ' · ' + proE + ' € pro Einheit';
+  rechnung.append(b, s);
+  const d = {
+    idx: '4', gross: String(preis), einheit: '€ pro Monat',
+    satz: u.n + ' × pro Woche · ' + BINDUNG[wahlB] + ' · ' + proE + ' € pro Einheit',
+  };
+  Object.assign(postenPreise.dataset, d);
+  if (vomKlick) { gesperrt = Date.now() + 900; anzeigen(d); }
+}
+preisZeigen(false);
+
+/* ── Die Woche ──────────────────────────────────────────── */
+const PLAN_STAND = [
+  [1,'06:00',75,'Performance'],   [3,'06:00',75,'Performance'],
+  [0,'08:15',75,'FBB/Strength & Power'], [1,'08:15',75,'Performance'],
+  [2,'08:15',75,'FBB/Strength & Power'], [4,'08:15',75,'Performance'],
+  [5,'08:15',75,'FBB/Strength & Power'], [5,'09:30',75,'Community TeamWOD'],
+  [4,'09:45',45,'Mama reloaded'],  [2,'10:00',45,'Mama reloaded'],
+  [4,'10:45',45,'Mama reloaded'],
+  [2,'16:00',75,'Powercircle'],    [4,'16:00',75,'FBB/Strength & Power'],
+  [0,'17:15',75,'Powercircle'],    [0,'17:15',75,'Performance'],
+  [1,'17:15',75,'FBB/Strength & Power'], [2,'17:15',75,'Team-WOD'],
+  [3,'17:15',75,'Performance'],    [4,'17:15',75,'Hyrox'],
+  [0,'18:30',75,'FBB/Strength & Power'], [1,'18:30',75,'Performance'],
+  [2,'18:30',75,'Hyrox'],          [3,'18:30',75,'FBB'],
+  [3,'18:30',75,'Powercircle']
+].map(([tag, zeit, dauer, name]) => ({ tag, zeit, dauer, name }));
+
+function planWoche() {
+  const jetzt = new Date(), versatz = (jetzt.getDay() + 6) % 7;
+  const mo = new Date(jetzt.getFullYear(), jetzt.getMonth(), jetzt.getDate() - versatz);
+  const so = new Date(mo.getFullYear(), mo.getMonth(), mo.getDate() + 7);
+  const f = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' +
+    String(d.getDate()).padStart(2, '0') + 'T00:00:00.000Z';
+  return [f(mo), f(so), mo];
+}
+
+const TAGE = ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
+const KURZ  = ['Mo','Di','Mi','Do','Fr','Sa','So'];
+const T0 = 360, T1 = 1320, SPANNE = T1 - T0;          // 06:00 – 22:00
+const min = z => (+z.slice(0, 2)) * 60 + (+z.slice(3, 5));
+const hhmm = m => String(Math.floor(m / 60)).padStart(2, '0') + ':' +
+                  String(m % 60).padStart(2, '0');
+
+const woTage = $('#wo-tage'), woTitel = $('#wo-titel'), woInhalt = $('#wo-inhalt'),
+      quelle = $('#quelle'), ortZeiten = $('#ort-zeiten'), postenWoche = $('#posten-woche'),
+      tafelZeiten = $('#tafel-zeiten');
+let nachTag = [], gewaehlt = 0;
+
+function fenster(liste) {                      // zusammenhängende Blöcke eines Tages
+  const s = [...liste].sort((a, b) => min(a.zeit) - min(b.zeit));
+  const bl = [];
+  for (const e of s) {
+    const a = min(e.zeit), z = a + e.dauer, l = bl[bl.length - 1];
+    if (l && a - l[1] <= 90) l[1] = Math.max(l[1], z); else bl.push([a, z]);
+  }
+  return bl.map(([a, z]) => hhmm(a) + '–' + hhmm(z));
+}
+
+function zeichnen(daten, live) {
+  nachTag = [[], [], [], [], [], [], []];
+  for (const e of daten) if (e.tag >= 0 && e.tag < 7 && e.name) nachTag[e.tag].push(e);
+  nachTag.forEach(l => l.sort((a, b) => min(a.zeit) - min(b.zeit)));
+
+  const heute = (new Date().getDay() + 6) % 7;
+  const jetztMin = new Date().getHours() * 60 + new Date().getMinutes();
+
+  woTage.textContent = '';
+  nachTag.forEach((liste, t) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'wo-tag'; b.dataset.tag = String(t);
+    b.setAttribute('aria-pressed', 'false');
+    b.setAttribute('aria-label', TAGE[t] + ': ' + liste.length +
+      (liste.length === 1 ? ' Einheit' : ' Einheiten'));
+    const n = document.createElement('span'); n.className = 'wo-name'; n.textContent = KURZ[t];
+    const band = document.createElement('span'); band.className = 'wo-band';
+    for (const e of liste) {
+      const i = document.createElement('i');
+      i.style.left = ((min(e.zeit) - T0) / SPANNE * 100) + '%';
+      i.style.width = Math.max(1.1, e.dauer / SPANNE * 100) + '%';
+      band.appendChild(i);
+    }
+    if (t === heute && jetztMin >= T0 && jetztMin <= T1) {
+      const j = document.createElement('i'); j.className = 'wo-jetzt';
+      j.style.left = ((jetztMin - T0) / SPANNE * 100) + '%'; j.style.width = '2px';
+      band.appendChild(j);
+    }
+    const z = document.createElement('span'); z.className = 'wo-zahl';
+    z.textContent = liste.length || '–';
+    b.append(n, band, z);
+    b.addEventListener('click', () => waehlen(t, true));
+    woTage.appendChild(b);
+  });
+
+  const gesamt = nachTag.reduce((s, l) => s + l.length, 0);
+
+  /* Kurszeiten ableiten: Vormittag und Nachmittag je Tag, dann
+     aufeinanderfolgende Tage mit demselben Muster zusammenfassen. */
+  const muster = nachTag.map(l => {
+    const m = { v: null, n: null };
+    for (const e of l) {
+      const a = min(e.zeit), z = a + e.dauer, k = a < 720 ? 'v' : 'n';
+      m[k] = m[k] ? [Math.min(m[k][0], a), Math.max(m[k][1], z)] : [a, z];
+    }
+    return m;
+  });
+  const gruppen = [];
+  muster.forEach((m, t) => {
+    if (!m.v && !m.n) { gruppen.push(null); return; }
+    const form = (m.v ? 'v' : '') + (m.n ? 'n' : '');
+    const v = gruppen[gruppen.length - 1];
+    if (v && v.form === form) {
+      v.bis = t;
+      for (const k of ['v', 'n']) if (m[k])
+        v.m[k] = [Math.min(v.m[k][0], m[k][0]), Math.max(v.m[k][1], m[k][1])];
+    } else gruppen.push({ von: t, bis: t, form, m: { v: m.v, n: m.n } });
+  });
+  const text = gruppen.filter(Boolean).map(g =>
+    (g.von === g.bis ? KURZ[g.von] : KURZ[g.von] + '–' + KURZ[g.bis]) + ' ' +
+    ['v', 'n'].filter(k => g.m[k]).map(k => hhmm(g.m[k][0]) + '–' + hhmm(g.m[k][1]))
+      .join(' und ')).join(' · ');
+  ortZeiten.textContent = text || 'derzeit keine Kurse eingetragen';
+  tafelZeiten.textContent = text || 'derzeit keine Kurse eingetragen';
+
+  const [, , mo] = planWoche();
+  const dat = d => d.getDate() + '. ' + ['Jan','Feb','März','Apr','Mai','Juni','Juli','Aug',
+    'Sep','Okt','Nov','Dez'][d.getMonth()];
+  const so = new Date(mo.getFullYear(), mo.getMonth(), mo.getDate() + 6);
+  quelle.textContent = '';
+  const spanne = dat(mo) + ' – ' + dat(so);
+  const qb = document.createElement('b');
+  qb.textContent = spanne;
+  const qs = document.createElement('span');
+  qs.textContent = live ? 'live aus dem Buchungssystem'
+                        : 'letzter gespeicherter Stand, das Buchungssystem antwortet gerade nicht';
+  quelle.append(qb, qs);
+
+  Object.assign(postenWoche.dataset, {
+    gross: String(gesamt), einheit: 'Einheiten',
+    satz: spanne + ' · ' + (live ? 'live aus dem Buchungssystem'
+                                 : 'letzter gespeicherter Stand'),
+  });
+  if (aktivIdx === 1) anzeigen(postenWoche.dataset);
+
+  const start = nachTag[heute] && nachTag[heute].length ? heute
+              : nachTag.findIndex(l => l.length);
+  waehlen(start < 0 ? 0 : start, false);
+}
+
+function waehlen(t, vomKlick) {
+  gewaehlt = t;
+  [...woTage.children].forEach((b, i) => b.setAttribute('aria-pressed', String(i === t)));
+  const liste = nachTag[t] || [];
+  woTitel.textContent = TAGE[t];
+  woInhalt.textContent = '';
+  if (!liste.length) {
+    const p = document.createElement('p'); p.className = 'wo-leer';
+    p.textContent = 'Keine Kurse. Open Gym läuft trotzdem, 06:00–22:00.';
+    woInhalt.appendChild(p);
+  } else {
+    for (const e of liste) {
+      const r = document.createElement('div'); r.className = 'wo-zeile';
+      const z = document.createElement('time'); z.textContent = e.zeit;
+      const n = document.createElement('em'); n.textContent = e.name;
+      const d = document.createElement('span'); d.textContent = e.dauer + ' min';
+      r.append(z, n, d); woInhalt.appendChild(r);
+    }
+  }
+  const f = liste.length ? fenster(liste).join(' und ') : 'keine Kurse';
+  const d = {
+    idx: '1', gross: String(liste.length || 0),
+    einheit: liste.length === 1 ? 'Einheit' : 'Einheiten',
+    satz: TAGE[t] + ' · ' + f,
+  };
+  if (vomKlick) { gesperrt = Date.now() + 900; anzeigen(d); }
+}
+
+(async () => {
+  const [von, bis] = planWoche();
+  try {
+    const r = await fetch('https://gymkloud.com/api/public/course-event/trojan_performance' +
+      '?from=' + von + '&to=' + bis + '&groupNames=Kurse');
+    if (!r.ok) throw new Error(String(r.status));
+    const d = await r.json();
+    if (!Array.isArray(d) || !d.length) throw new Error('leer');
+    zeichnen(d.map(e => ({
+      tag: (new Date(e.startTime).getDay() + 6) % 7,
+      zeit: e.startTime.slice(11, 16),
+      dauer: Math.round((new Date(e.endTime) - new Date(e.startTime)) / 60000) || 75,
+      name: (e.course && e.course.name || '').trim(),
+    })), true);
+  } catch (_) { zeichnen(PLAN_STAND, false); }
+})();
+
+/* ── Formular ───────────────────────────────────────────── */
+const formular = $('#formular'), antwort = $('#antwort');
+formular.addEventListener('submit', e => {
+  e.preventDefault();
+  antwort.textContent = '';
+  const t = document.createElement('span');
+  t.textContent = 'Dieses Formular hat im Entwurf keinen Empfänger — es wurde nichts ' +
+    'verschickt. Schreib bitte direkt an ';
+  const a = document.createElement('a');
+  a.href = 'mailto:office@trojanperformance.at';
+  a.textContent = 'office@trojanperformance.at';
+  const t2 = document.createElement('span');
+  t2.textContent = ' oder ruf an: +43 676 8227 7302.';
+  antwort.append(t, a, t2);
+  antwort.hidden = false;
+});
+
+/* Die Tat springt zum Formular und stellt das Anliegen ein */
+$('#tat').addEventListener('click', e => {
+  e.preventDefault();
+  const r = formular.querySelector('input[value="Probetraining"]');
+  if (r) r.checked = true;
+  springen('kontakt');
+});
+
+/* Platzhalter-Links dürfen nicht nach oben springen */
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href="#"]');
+  if (a) e.preventDefault();
+});
+
+})();
+</script>
+</body>
+</html>

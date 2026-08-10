@@ -31,9 +31,29 @@ import pathlib, re, sys
 
 # src-Datei -> Verzeichnis, unter dem die Variante ausgeliefert wird
 SEITEN = {
-    'trojan-A-matrix.src.html':  'matrix',
-    'trojan-B-phalanx.src.html': 'phalanx',
-    'trojan-C-arena.src.html':   'arena',
+    'trojan-A-matrix.src.html':    'matrix',
+    'trojan-B-phalanx.src.html':   'phalanx',
+    'trojan-C-arena.src.html':     'arena',
+    # zweite Runde: D und E aus Arena entwickelt, F bis H unabhaengig entstanden
+    'trojan-D-stele.src.html':     'stele',
+    'trojan-E-umbra.src.html':     'umbra',
+    'trojan-F-logbuch.src.html':   'logbuch',
+    'trojan-G-protokoll.src.html': 'protokoll',
+    'trojan-H-rotstift.src.html':  'rotstift',
+    # dritte Runde: die Seite als ein Satz, den der Besucher zu Ende spricht
+    'trojan-I-satz.src.html':      'satz',
+    # Protokoll in weichem Dunkel — Aufbau unverändert, nur das Farbsystem
+    'trojan-J-nacht.src.html':     'nacht',
+    # vierte Runde: je eine erzwungene Beschränkung, damit sie nicht konvergieren
+    'trojan-K-schrift.src.html':   'schrift',   # kein einziges Foto
+    'trojan-L-schirm.src.html':    'schirm',    # alles auf einem Schirm, kein Scrollen
+    'trojan-M-spalte.src.html':    'spalte',    # geteilt: eine Hälfte steht, eine läuft
+    # fünfte Runde, wieder je eine eigene Beschränkung
+    'trojan-N-quer.src.html':      'quer',      # wird geblättert, nicht gescrollt
+    'trojan-O-fluss.src.html':     'fluss',     # ein Text, keine Abschnitte
+    'trojan-P-spektrum.src.html':  'spektrum',  # die echten Kursfarben als System
+    'trojan-Q-grau.src.html':      'grau',      # kein einziger Farbwert
+    'trojan-R-wende.src.html':     'wende',     # zwei Fassungen in einer Seite
 }
 
 FEST = {

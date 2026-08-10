@@ -1,0 +1,1447 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Trojan Performance — Performance Center in Klagenfurt am Wörthersee</title>
+<meta name="description" content="Acht Kurse, 75 Minuten, in jedem ein Coach auf der Fläche. Erster offizieller HYROX Training Club in Kärnten. Wochenplan live aus dem Buchungssystem, Preise offen.">
+<style>
+@font-face{font-family:'Archivo';src:url('../assets/fonts/archivo-var.woff2') format('woff2');
+  font-weight:500 800;font-style:normal;font-display:swap}
+@font-face{font-family:'Archivo Black';src:url('../assets/fonts/archivo-black.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'IBM Plex Mono';src:url('../assets/fonts/plexmono-400.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'IBM Plex Mono';src:url('../assets/fonts/plexmono-500.woff2') format('woff2');
+  font-weight:500;font-style:normal;font-display:swap}
+
+/* ------------------------------------------------------------------
+   Farbe hat auf dieser Seite genau eine Bedeutung: sie benennt einen
+   Kurs. Alles andere — Preise, Coaches, Navigation, Formular — bleibt
+   grau. Die acht Kursfarben kommen zur Laufzeit aus dem Buchungssystem
+   und werden dort gehoben, wo sie als Schrift nicht tragen. Der Farbton
+   bleibt dabei unangetastet, nur Helligkeit und Sättigung wandern.
+   Die Werte hier sind der eingefrorene Stand derselben Rechnung.
+   ------------------------------------------------------------------ */
+:root{
+  --grund:#0d0d0e; --flaeche:#171718; --hoch:#212122;
+  --rand:#2b2c2d; --rand-hell:#3a3b3c;
+  --text:#ececeb; --text2:#98999a; --text3:#8a8b8c;
+  --auf-tint:#a3a4a3;   /* Grau, das auch auf der hellsten Kursfläche 4.5:1 hält */
+  --sp:clamp(1rem,4vw,3rem);
+  --breit:1240px;
+  --kopf:56px;
+  --ease:cubic-bezier(.2,.7,.3,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--grund);color:var(--text);
+  font-family:'Archivo',system-ui,sans-serif;font-weight:500;
+  font-size:1rem;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img{max-width:100%;height:auto;display:block}
+button{font:inherit;color:inherit}
+a{color:inherit}
+h1,h2,h3,h4{margin:0;font-weight:400;font-family:'Archivo Black','Archivo',system-ui,sans-serif;
+  line-height:.95;letter-spacing:-.02em;text-wrap:balance}
+p{margin:0}
+:focus-visible{outline:2px solid var(--text);outline-offset:3px;border-radius:2px}
+:focus:not(:focus-visible){outline:none}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:400;
+  font-variant-numeric:tabular-nums;letter-spacing:0}
+.nur-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+.sprung{position:fixed;top:8px;left:8px;z-index:200;background:var(--text);color:var(--grund);
+  padding:.7rem 1rem;font-weight:700;border-radius:3px;transform:translateY(-160%);
+  transition:transform .18s var(--ease)}
+.sprung:focus{transform:none}
+
+.bahn{max-width:var(--breit);margin:0 auto;padding-inline:var(--sp)}
+
+/* ---------------- Kopfleiste ---------------- */
+.kopf{position:sticky;top:0;z-index:100;background:rgba(13,13,14,.86);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--rand)}
+.kopf-in{max-width:var(--breit);margin:0 auto;padding-inline:var(--sp);
+  height:var(--kopf);display:flex;align-items:center;gap:.75rem}
+.marke{display:flex;align-items:center;gap:.6rem;text-decoration:none;
+  min-height:44px;padding-right:.25rem}
+.marke img{height:19px;width:auto;filter:brightness(0) invert(1)}
+.kopf-nav{display:none;margin-left:auto;gap:.25rem}
+.kopf-nav a{text-decoration:none;color:var(--text2);font-size:.8125rem;font-weight:600;
+  letter-spacing:.04em;text-transform:uppercase;padding:.8rem .6rem;border-radius:3px;
+  transition:color .15s var(--ease)}
+.kopf-nav a:hover{color:var(--text)}
+.kopf-tat{margin-left:auto;display:flex;align-items:center;gap:.4rem}
+.knopf{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  min-height:44px;padding:.55rem 1.05rem;border-radius:3px;text-decoration:none;
+  font-weight:700;font-size:.875rem;letter-spacing:.01em;border:1px solid var(--rand-hell);
+  background:transparent;color:var(--text);cursor:pointer;
+  transition:background .15s var(--ease),border-color .15s var(--ease),color .15s var(--ease)}
+.knopf:hover{background:var(--hoch);border-color:var(--text3)}
+.knopf.voll{background:var(--text);color:var(--grund);border-color:var(--text)}
+.knopf.voll:hover{background:#fff;border-color:#fff}
+.knopf.klein{min-height:44px;padding:.4rem .8rem;font-size:.8125rem}
+.menue-schalter{display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;border:1px solid var(--rand-hell);border-radius:3px;
+  background:transparent;cursor:pointer;padding:0}
+.menue-schalter span{display:block;width:17px;height:9px;position:relative}
+.menue-schalter span::before,.menue-schalter span::after{content:'';position:absolute;left:0;
+  width:100%;height:1.5px;background:var(--text);transition:transform .2s var(--ease)}
+.menue-schalter span::before{top:0}
+.menue-schalter span::after{bottom:0}
+.menue-schalter[aria-expanded=true] span::before{transform:translateY(3.75px) rotate(45deg)}
+.menue-schalter[aria-expanded=true] span::after{transform:translateY(-3.75px) rotate(-45deg)}
+.menue{display:none;border-top:1px solid var(--rand);background:var(--grund)}
+.menue.auf{display:block}
+.menue ul{list-style:none;margin:0;padding:.5rem var(--sp) 1rem}
+.menue a{display:flex;align-items:center;justify-content:space-between;
+  min-height:48px;text-decoration:none;border-bottom:1px solid var(--rand);
+  font-weight:700;font-size:1.0625rem}
+.menue a span{color:var(--text3);font-size:.75rem}
+@media(min-width:920px){
+  .kopf-nav{display:flex}
+  .kopf-tat{margin-left:.75rem}
+  .menue-schalter{display:none}
+  .menue{display:none!important}
+}
+
+/* ---------------- Anschlag ---------------- */
+.start{padding-top:clamp(2.5rem,7vw,5rem)}
+.zeile-oben{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;
+  font-size:.75rem;letter-spacing:.11em;text-transform:uppercase;color:var(--text3);
+  font-weight:700;margin-bottom:clamp(1.5rem,4vw,2.5rem)}
+.zeile-oben .punkt{width:5px;height:5px;background:var(--text3);border-radius:50%;flex:none}
+h1{font-size:clamp(2.6rem,11.5vw,6.5rem);margin-bottom:1.25rem}
+h1 em{font-style:normal;color:var(--text3)}
+.lead{font-size:clamp(1.0625rem,2.4vw,1.375rem);line-height:1.45;color:var(--text2);
+  max-width:34ch;margin-bottom:1.75rem;font-weight:500}
+.lead b{color:var(--text);font-weight:700}
+.tat-reihe{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:clamp(2.5rem,6vw,4rem)}
+
+/* ---------------- Spektrum (Wochenübersicht im Kopf) ---------------- */
+.spektrum{border:1px solid var(--rand);border-radius:4px;background:var(--flaeche);
+  padding:clamp(.9rem,2.5vw,1.35rem);margin-bottom:clamp(2rem,5vw,3rem)}
+.spektrum-kopf{display:flex;flex-wrap:wrap;gap:.35rem .9rem;align-items:baseline;
+  margin-bottom:.9rem}
+.spektrum-kopf h2{font-family:'Archivo',sans-serif;font-weight:700;font-size:.75rem;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--text2);line-height:1.4}
+.spektrum-kopf .stand{font-size:.75rem;color:var(--text3);letter-spacing:.02em;
+  margin-left:auto}
+.spektrum-kopf .stand b{color:var(--text2);font-weight:600}
+.sp-achse{display:flex;font-size:.6875rem;color:var(--text3);margin-bottom:.3rem;
+  padding-left:2.4rem;position:relative;height:1rem}
+.sp-achse i{position:absolute;font-style:normal;transform:translateX(-50%);white-space:nowrap}
+.sp-achse i:first-child{transform:none}
+@media(max-width:600px){.sp-achse i.innen{display:none}}
+.sp-zeile{display:flex;align-items:center;gap:.5rem;height:20px}
+.sp-zeile + .sp-zeile{margin-top:3px}
+.sp-tag{width:1.9rem;flex:none;font-size:.6875rem;color:var(--text3);letter-spacing:.06em}
+.sp-zeile.heute .sp-tag{color:var(--text)}
+.sp-spur{position:relative;flex:1;height:100%;border-radius:2px}
+.sp-spur::before{content:'';position:absolute;inset:50% 0 auto;height:1px;
+  background:var(--rand);transform:translateY(-50%)}
+.sp-zeile.heute .sp-spur{background:rgba(255,255,255,.045)}
+.sp-mark{position:absolute;top:5px;height:10px;border-radius:1px;min-width:3px;
+  transform-origin:left center}
+.sp-jetzt{position:absolute;top:-1px;bottom:-1px;width:1.5px;background:var(--text);
+  border-radius:1px}
+.sp-leer{font-size:.6875rem;color:var(--text3);position:absolute;left:0;top:50%;
+  transform:translateY(-50%);letter-spacing:.04em}
+.sp-fuss{display:flex;flex-wrap:wrap;gap:.35rem 1.6rem;margin-top:.9rem;padding-top:.75rem;
+  border-top:1px solid var(--rand);font-size:.75rem;color:var(--text3)}
+.sp-fuss b{color:var(--text2);font-weight:600}
+
+/* ---------------- Bildband ---------------- */
+.band{position:relative;margin-bottom:clamp(3rem,8vw,6rem)}
+.band img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:4px;
+  filter:contrast(1.1) saturate(1.06) brightness(1.08)}
+@media(min-width:760px){.band img{aspect-ratio:21/8}}
+.band figcaption{margin-top:.6rem;font-size:.75rem;color:var(--text3);
+  display:flex;flex-wrap:wrap;gap:.3rem 1.6rem}
+
+/* ---------------- Abschnitte ---------------- */
+section{scroll-margin-top:calc(var(--kopf) + 8px)}
+.abschnitt{padding-block:clamp(3rem,8vw,6rem);border-top:1px solid var(--rand)}
+.ab-kopf{margin-bottom:clamp(1.75rem,4vw,2.75rem)}
+.ab-nr{font-size:.6875rem;letter-spacing:.14em;color:var(--text3);display:block;
+  margin-bottom:.9rem}
+h2.gross{font-size:clamp(1.9rem,6.5vw,3.4rem);margin-bottom:.85rem}
+.ab-kopf p{color:var(--text2);max-width:56ch;font-size:1rem}
+
+/* ---------------- Wochenplan ---------------- */
+/* Die Tagesknöpfe springen in die gestapelte Liste. In der Breitansicht
+   steht die ganze Woche ohnehin auf einem Bildschirm — dort wären sie
+   Knöpfe ohne Ziel. */
+.plan-steuer{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-bottom:1.1rem}
+@media(min-width:900px){.plan-steuer{display:none}}
+.tag-knopf{min-height:44px;min-width:44px;padding:.4rem .7rem;border:1px solid var(--rand);
+  background:transparent;border-radius:3px;cursor:pointer;font-size:.8125rem;font-weight:700;
+  color:var(--text2);transition:border-color .15s var(--ease),color .15s var(--ease)}
+.tag-knopf:hover{border-color:var(--text3);color:var(--text)}
+.tag-knopf.heute{color:var(--text);border-color:var(--rand-hell)}
+.tag-knopf[disabled]{opacity:.35;cursor:default}
+.filter-fahne{display:none;align-items:center;gap:.6rem;flex-wrap:wrap;
+  padding:.6rem .75rem;border:1px solid var(--rand-hell);border-radius:3px;
+  background:var(--flaeche);margin-bottom:1.1rem;font-size:.875rem}
+.filter-fahne.an{display:flex}
+.filter-fahne .wort{font-weight:700}
+.filter-fahne .zahl{color:var(--text2)}
+
+/* Zwei Ansichten desselben Plans: schmal gestapelt, breit als Zeitachse */
+.gantt{display:none}
+.liste{display:block}
+@media(min-width:900px){
+  .gantt{display:block}
+  .liste{display:none}
+}
+.gantt-achse{position:relative;height:1.4rem;margin-left:3.2rem;font-size:.6875rem;
+  color:var(--text3);margin-bottom:.35rem}
+.gantt-achse i{position:absolute;font-style:normal;transform:translateX(-50%);white-space:nowrap}
+.gantt-achse i.rand{transform:none}
+.gantt-achse i.rechts{transform:translateX(-100%)}
+.gantt-zeile{display:flex;align-items:stretch;gap:.6rem;padding-block:3px}
+.gantt-zeile + .gantt-zeile{border-top:1px solid var(--rand)}
+.gantt-tag{width:2.6rem;flex:none;padding-top:.45rem;font-size:.8125rem;font-weight:700;
+  color:var(--text2);letter-spacing:.03em}
+.gantt-zeile.heute .gantt-tag{color:var(--text)}
+.gantt-zeile.heute .gantt-tag::after{content:'';display:block;width:14px;height:2px;
+  background:var(--text);margin-top:4px}
+.gantt-spur{position:relative;flex:1;min-height:52px}
+.gantt-spur .lueckelinie{position:absolute;top:0;bottom:0;width:1px;background:var(--rand)}
+.gantt-leer{position:absolute;left:0;top:50%;transform:translateY(-50%);
+  font-size:.75rem;color:var(--text3)}
+.klotz{position:absolute;border:0;border-left:3px solid var(--roh);border-radius:2px;
+  background:var(--tint);padding:.25rem .4rem;overflow:hidden;text-align:left;
+  cursor:pointer;display:block;
+  transition:background .2s var(--ease),opacity .2s var(--ease),filter .2s var(--ease)}
+.klotz .kn{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+  font-size:.75rem;font-weight:700;color:var(--ink);line-height:1.15;overflow:hidden;
+  overflow-wrap:break-word}
+.klotz .kz{display:block;font-size:.6875rem;color:var(--auf-tint);line-height:1.3;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.klotz.schmal .bis{display:none}
+.klotz:hover{background:var(--tint-hoch)}
+.gantt.gefiltert .klotz:not(.treffer){opacity:.28;filter:grayscale(1)}
+.gantt.gefiltert .klotz.treffer{box-shadow:0 0 0 1px var(--roh)}
+
+/* Schmalansicht: Tage gestapelt, Termine als Zeilen */
+.tag-block{border-top:1px solid var(--rand);padding-top:.9rem;margin-top:1.4rem;
+  scroll-margin-top:calc(var(--kopf) + 8px)}
+.tag-block:first-child{margin-top:0}
+.tag-titel{display:flex;align-items:baseline;gap:.6rem;margin-bottom:.55rem}
+.tag-titel h3{font-family:'Archivo',sans-serif;font-weight:800;font-size:1rem;
+  letter-spacing:.02em}
+.tag-titel .dat{font-size:.75rem;color:var(--text3)}
+.tag-titel .heutemark{font-size:.6875rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--grund);background:var(--text);
+  padding:.1rem .35rem;border-radius:2px}
+.termin{display:flex;gap:.7rem;align-items:stretch;width:100%;text-align:left;
+  background:transparent;border:0;border-radius:3px;padding:.55rem .5rem .55rem 0;
+  cursor:pointer;min-height:56px;
+  transition:background .2s var(--ease),opacity .2s var(--ease)}
+.termin + .termin{border-top:1px solid #1e1f20}
+.termin:hover{background:var(--flaeche)}
+.termin .zeit{width:3.1rem;flex:none;font-size:.8125rem;color:var(--text);padding-top:.1rem}
+.termin .streifen{width:3px;flex:none;background:var(--roh);border-radius:2px}
+.termin .mitte{flex:1;min-width:0}
+.termin .nm{display:block;font-weight:700;font-size:.9375rem;color:var(--ink);
+  line-height:1.25;overflow-wrap:break-word}
+.termin .zu{display:block;font-size:.75rem;color:var(--auf-tint);margin-top:.15rem}
+.termin .frei{flex:none;font-size:.75rem;color:var(--auf-tint);text-align:right;
+  padding-top:.15rem;white-space:nowrap}
+.termin .frei.eng{color:var(--text)}
+.liste.gefiltert .termin:not(.treffer){opacity:.3}
+.liste.gefiltert .termin.treffer{background:var(--tint)}
+
+.plan-hinweis{margin-top:1.5rem;font-size:.8125rem;color:var(--text3);
+  display:flex;flex-wrap:wrap;gap:.35rem 1.6rem;padding-top:1rem;border-top:1px solid var(--rand)}
+.plan-hinweis b{color:var(--text2);font-weight:600}
+.zeiten-satz{margin-top:1.25rem;font-size:.9375rem;color:var(--text2)}
+.zeiten-satz b{color:var(--text);font-weight:700}
+
+/* ---------------- Kursliste ---------------- */
+.kurse-gitter{display:grid;gap:1px;background:var(--rand);border-block:1px solid var(--rand)}
+@media(min-width:820px){.kurse-gitter{grid-template-columns:1fr 1fr}}
+.kurs{background:var(--grund);padding:1.15rem 0;position:relative}
+@media(min-width:820px){.kurs{padding:1.35rem 1.4rem}
+  .kurs:nth-child(odd){padding-left:0}
+  .kurs:nth-child(even){padding-right:0}}
+.kurs-kopf{display:flex;gap:.85rem;align-items:flex-start}
+.chip{width:44px;height:44px;flex:none;border-radius:3px;background:var(--roh);
+  color:var(--auf);display:flex;align-items:center;justify-content:center;
+  font-size:.8125rem;font-weight:500;letter-spacing:.04em}
+.kurs h3{font-family:'Archivo',sans-serif;font-weight:800;font-size:1.1875rem;
+  line-height:1.2;color:var(--ink);letter-spacing:-.005em;overflow-wrap:break-word}
+.kurs-meta{margin-top:.3rem;font-size:.8125rem;color:var(--text3);
+  display:flex;flex-wrap:wrap;gap:.15rem 1.15rem}
+.kurs-meta .tr{color:var(--text2)}
+.kurs-meta .aus{color:var(--text3);font-style:italic}
+.kurs p.txt{margin-top:.75rem;font-size:.9375rem;color:var(--text2);max-width:52ch}
+.kurs-tat{margin-top:.85rem;display:flex;gap:.5rem;flex-wrap:wrap}
+.kurs.gewaehlt::before{content:'';position:absolute;left:-1px;top:0;bottom:0;width:3px;
+  background:var(--roh)}
+@media(min-width:820px){.kurs.gewaehlt::before{left:0}}
+.kurs.gewaehlt{background:var(--tint)}
+.weitere{margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--rand)}
+.weitere h3{font-family:'Archivo',sans-serif;font-size:.75rem;font-weight:700;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--text3);margin-bottom:.75rem}
+.weitere ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.5rem}
+.weitere li{display:flex;align-items:center;gap:.5rem;border:1px solid var(--rand);
+  border-radius:3px;padding:.35rem .6rem;font-size:.8125rem;color:var(--text2)}
+.weitere li i{width:8px;height:8px;border-radius:1px;background:var(--roh);flex:none;
+  display:block}
+.weitere p{margin-top:.7rem;font-size:.8125rem;color:var(--text3)}
+
+/* ---------------- allgemeine Bausteine ---------------- */
+.zwei{display:grid;gap:clamp(1.5rem,4vw,3rem)}
+@media(min-width:860px){.zwei{grid-template-columns:1fr 1fr;align-items:start}}
+.karte{border:1px solid var(--rand);border-radius:4px;padding:clamp(1.1rem,3vw,1.6rem);
+  background:var(--flaeche)}
+.karte h3{font-family:'Archivo',sans-serif;font-weight:800;font-size:1.125rem;
+  margin-bottom:.6rem}
+.karte p{color:var(--text2);font-size:.9375rem}
+.liste-strich{list-style:none;margin:0;padding:0}
+.liste-strich li{display:flex;gap:.75rem;padding-block:.6rem;font-size:.9375rem;
+  color:var(--text2);border-top:1px solid var(--rand)}
+.liste-strich li:first-child{border-top:0}
+.liste-strich li b{color:var(--text);font-weight:700;flex:none}
+.liste-strich li span:last-child{margin-left:auto;text-align:right;color:var(--text)}
+
+/* ---------------- Hyrox ---------------- */
+#hyrox{--hx:#f2ff00}
+.hx-kopf h2{color:var(--hx)}
+.hx-zahlen{display:flex;flex-wrap:wrap;gap:1.5rem 2.5rem;margin-block:1.5rem 2rem}
+.hx-zahlen div{min-width:5rem}
+.hx-zahlen .z{display:block;font-family:'Archivo Black',sans-serif;
+  font-size:clamp(2rem,7vw,3.2rem);line-height:.9;color:var(--hx)}
+.hx-zahlen .b{display:block;font-size:.75rem;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--text3);margin-top:.45rem;font-weight:700}
+.stationen{list-style:none;margin:1.5rem 0 0;padding:0;counter-reset:st}
+.stationen li{counter-increment:st;display:flex;gap:.85rem;align-items:baseline;
+  padding-block:.6rem;border-top:1px solid var(--rand);font-size:.9375rem}
+.stationen li::before{content:counter(st,decimal-leading-zero);flex:none;width:1.6rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--hx)}
+.stationen li .lauf{margin-left:auto;font-size:.75rem;color:var(--text3);white-space:nowrap}
+.stationen li b{font-weight:700;color:var(--text)}
+
+/* ---------------- Preise ---------------- */
+.tarif-gitter{display:grid;gap:1rem}
+@media(min-width:820px){.tarif-gitter{grid-template-columns:repeat(3,1fr)}}
+.tarif{border:1px solid var(--rand);border-radius:4px;padding:1.15rem;background:var(--flaeche);
+  display:flex;flex-direction:column}
+.tarif.tipp{border-color:var(--text3);background:var(--hoch)}
+.tarif .tipp-fahne{font-size:.6875rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--grund);background:var(--text);padding:.15rem .4rem;border-radius:2px;
+  align-self:flex-start;margin-bottom:.7rem}
+.tarif h3{font-family:'Archivo Black',sans-serif;font-size:1.5rem;margin-bottom:.15rem}
+.tarif .unter{font-size:.8125rem;color:var(--text3);margin-bottom:.9rem}
+.preisreihe{display:flex;justify-content:space-between;align-items:baseline;
+  padding-block:.5rem;border-top:1px solid var(--rand);font-size:.9375rem}
+.preisreihe .bind{color:var(--text2)}
+.preisreihe .pr{font-weight:800;font-size:1.0625rem;font-variant-numeric:tabular-nums}
+.tarif .rechnung{margin-top:.9rem;padding-top:.75rem;border-top:1px solid var(--rand);
+  font-size:.8125rem;color:var(--text3)}
+.einzeln{display:grid;gap:1px;background:var(--rand);border:1px solid var(--rand);
+  border-radius:4px;overflow:hidden;margin-top:1rem}
+@media(min-width:620px){.einzeln{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:980px){.einzeln{grid-template-columns:repeat(5,1fr)}}
+.einzeln div{background:var(--flaeche);padding:.85rem .95rem}
+.einzeln .p{display:block;font-family:'Archivo Black',sans-serif;font-size:1.375rem;
+  line-height:1;margin-bottom:.3rem;font-variant-numeric:tabular-nums}
+.einzeln .t{display:block;font-size:.8125rem;color:var(--text2)}
+.einzeln .n{display:block;font-size:.75rem;color:var(--text3);margin-top:.2rem}
+
+/* ---------------- Coaches ---------------- */
+.coach-gitter{display:grid;gap:1.25rem;grid-template-columns:repeat(2,1fr)}
+@media(min-width:860px){.coach-gitter{grid-template-columns:repeat(4,1fr)}}
+.coach img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:3px;
+  filter:contrast(1.06) brightness(1.05)}
+.coach h3{font-family:'Archivo',sans-serif;font-weight:800;font-size:1.0625rem;
+  margin-top:.7rem}
+.coach p{font-size:.8125rem;color:var(--text2);margin-top:.3rem}
+
+/* ---------------- Ort / Kontakt ---------------- */
+.feld{display:block;margin-bottom:.85rem}
+.feld span{display:block;font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--text3);font-weight:700;margin-bottom:.35rem}
+.feld input,.feld select,.feld textarea{width:100%;background:var(--grund);color:var(--text);
+  border:1px solid var(--rand-hell);border-radius:3px;padding:.65rem .7rem;font:inherit;
+  font-size:.9375rem;min-height:44px}
+.feld textarea{min-height:104px;resize:vertical}
+.feld input:hover,.feld select:hover,.feld textarea:hover{border-color:var(--text3)}
+.form-hinweis{font-size:.8125rem;color:var(--text3);margin-top:.75rem}
+.form-antwort{margin-top:.85rem;font-size:.875rem;border:1px solid var(--rand-hell);
+  border-radius:3px;padding:.7rem .8rem;background:var(--hoch);display:none}
+.form-antwort.an{display:block}
+.kontaktliste{list-style:none;margin:0;padding:0}
+.kontaktliste li{border-top:1px solid var(--rand);padding-block:.5rem}
+.kontaktliste li:first-child{border-top:0}
+.kontaktliste a{color:var(--text);text-decoration:none;border-bottom:1px solid var(--rand-hell);
+  display:inline-block;padding-block:.6rem;line-height:1.5}
+.kontaktliste a:hover{border-color:var(--text)}
+.kontaktliste .lab{display:block;font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--text3);font-weight:700;margin-bottom:.2rem}
+.sozial{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+
+/* ---------------- Fuss ---------------- */
+.fuss{border-top:1px solid var(--rand);padding-block:clamp(2.5rem,6vw,4rem);
+  margin-top:clamp(2rem,6vw,4rem)}
+.fuss-oben{display:flex;flex-wrap:wrap;gap:1.5rem;align-items:flex-start;
+  justify-content:space-between;margin-bottom:2rem}
+.fuss img{height:22px;width:auto;filter:brightness(0) invert(1);opacity:.85}
+.offen{border:1px solid var(--rand);border-radius:4px;padding:1rem 1.1rem;background:var(--flaeche)}
+.offen h2{font-family:'Archivo',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--text2);margin-bottom:.6rem}
+.offen ul{list-style:none;margin:0;padding:0;font-size:.875rem;color:var(--text3)}
+.offen li{padding-block:.3rem;display:flex;gap:.6rem}
+.offen li::before{content:'—';color:#5e5f60;flex:none}
+.fuss-unten{margin-top:1.75rem;font-size:.75rem;color:var(--text3);display:flex;flex-wrap:wrap;
+  gap:.4rem 1.2rem}
+
+/* ---------------- Bewegung ---------------- */
+.auf-zu{opacity:0;transform:translateY(10px);
+  transition:opacity .55s var(--ease),transform .55s var(--ease)}
+.auf-zu.da{opacity:1;transform:none}
+.sp-mark{transform:scaleX(0);animation:wachsen .5s var(--ease) forwards}
+@keyframes wachsen{to{transform:scaleX(1)}}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important;scroll-behavior:auto!important}
+  .auf-zu{opacity:1;transform:none}
+  .sp-mark{transform:none;animation:none}
+  .knopf:hover,.termin:hover,.klotz:hover{transform:none}
+}
+</style>
+</head>
+<body>
+<a class="sprung" href="#inhalt">Zum Inhalt springen</a>
+
+<header class="kopf">
+  <div class="kopf-in">
+    <a class="marke" href="#inhalt"><img src="__LOGO__" alt="Trojan Performance" width="120" height="19"></a>
+    <nav class="kopf-nav" aria-label="Hauptbereiche">
+      <a href="#woche">Woche</a>
+      <a href="#kurse">Kurse</a>
+      <a href="#einstieg">Einstieg</a>
+      <a href="#preise">Preise</a>
+      <a href="#hyrox">Hyrox</a>
+      <a href="#ort">Ort</a>
+    </nav>
+    <div class="kopf-tat">
+      <a class="knopf voll klein" href="#ort">Probetraining 15&nbsp;€</a>
+      <button class="menue-schalter" type="button" aria-expanded="false" aria-controls="menue">
+        <span></span><span class="nur-sr">Menü öffnen</span>
+      </button>
+    </div>
+  </div>
+  <nav class="menue" id="menue" aria-label="Alle Bereiche">
+    <ul>
+      <li><a href="#woche">Wochenplan<span>01</span></a></li>
+      <li><a href="#kurse">Die acht Kurse<span>02</span></a></li>
+      <li><a href="#einstieg">Einstieg<span>03</span></a></li>
+      <li><a href="#preise">Preise<span>04</span></a></li>
+      <li><a href="#hyrox">Hyrox<span>05</span></a></li>
+      <li><a href="#coaches">Coaches<span>06</span></a></li>
+      <li><a href="#ort">Ort und Kontakt<span>07</span></a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="inhalt">
+
+  <!-- ============ Anschlag ============ -->
+  <section class="start bahn" aria-labelledby="h1">
+    <p class="zeile-oben">
+      <span>Performance Center</span><span class="punkt"></span>
+      <span>Klagenfurt am Wörthersee</span><span class="punkt"></span>
+      <span>seit 2017</span>
+    </p>
+    <h1 id="h1">Acht Kurse.<br>Jeder hat<br>seine Farbe.</h1>
+    <p class="lead">In jeder Einheit steht ein Coach auf der Fläche und korrigiert —
+      er sagt nicht nur an. <b>75 Minuten</b> pro Kurs.
+      Erster offizieller <b>HYROX Training Club</b> in Kärnten.</p>
+    <p class="tat-reihe">
+      <a class="knopf voll" href="#ort">Probetraining anfragen — 15&nbsp;€</a>
+      <a class="knopf" href="#woche">Wochenplan ansehen</a>
+    </p>
+
+    <div class="spektrum" id="spektrum">
+      <div class="spektrum-kopf">
+        <h2>Diese Woche</h2>
+        <p class="stand" id="sp-stand">wird geladen …</p>
+      </div>
+      <div id="sp-bau" role="img" aria-label="Übersicht der Kurswoche wird geladen"></div>
+      <p class="sp-fuss" id="sp-fuss"></p>
+    </div>
+
+    <figure class="band">
+      <img src="__PH_HERO__" width="1365" height="768" fetchpriority="high"
+           alt="Blick von der Galerie auf die Trainingsfläche: Hantelracks an der Wand, eine Gruppe trainiert im Hintergrund.">
+      <figcaption>
+        <span>Sebastiangasse 1, Klagenfurt am Wörthersee</span>
+        <span>Gratis Parkplätze rund ums Gebäude</span>
+        <span>Zwei Garderoben, je ein Duschraum mit drei Duschen</span>
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ Wochenplan ============ -->
+  <section class="abschnitt bahn" id="woche" aria-labelledby="h-woche">
+    <div class="ab-kopf auf-zu">
+      <span class="ab-nr mono">01 — WOCHENPLAN</span>
+      <h2 class="gross" id="h-woche">Passt das in deine Woche?</h2>
+      <p>Der Plan kommt direkt aus dem Buchungssystem — dieselbe Quelle, aus der die App
+         bucht. Was hier steht, steht auch dort.</p>
+    </div>
+
+    <div class="plan-steuer" id="tag-knoepfe"></div>
+    <p class="filter-fahne" id="filter-fahne">
+      <span class="wort" id="filter-wort"></span>
+      <span class="zahl" id="filter-zahl"></span>
+      <button class="knopf klein" type="button" id="filter-weg">Filter aufheben</button>
+    </p>
+
+    <div class="gantt" id="gantt"></div>
+    <div class="liste" id="liste"></div>
+    <noscript><p class="zeiten-satz">Der Wochenplan wird aus dem Buchungssystem geladen und
+      braucht dafür JavaScript. Die Kurszeiten stehen auch in der App.</p></noscript>
+
+    <p class="zeiten-satz" id="zeiten-satz"></p>
+    <p class="plan-hinweis" id="plan-hinweis"></p>
+  </section>
+
+  <!-- ============ Kurse ============ -->
+  <section class="abschnitt bahn" id="kurse" aria-labelledby="h-kurse">
+    <div class="ab-kopf auf-zu">
+      <span class="ab-nr mono">02 — DIE ACHT KURSE</span>
+      <h2 class="gross" id="h-kurse">Was sich unterscheidet, ist die Mischung.</h2>
+      <p>Jede Einheit dauert 75 Minuten, Mama reloaded 45. Der Unterschied liegt darin,
+         woraus die Einheit besteht, wie hart sie ausfällt und wie viele mitmachen.</p>
+    </div>
+    <div class="kurse-gitter" id="kurse-gitter"></div>
+    <div class="weitere" id="weitere" hidden>
+      <h3>Weitere Termine diese Woche</h3>
+      <ul id="weitere-liste"></ul>
+      <p>Stehen so im Buchungssystem und laufen im Wochenplan mit.</p>
+    </div>
+  </section>
+
+  <!-- ============ Einstieg ============ -->
+  <section class="abschnitt bahn" id="einstieg" aria-labelledby="h-einstieg">
+    <div class="ab-kopf auf-zu">
+      <span class="ab-nr mono">03 — EINSTIEG</span>
+      <h2 class="gross" id="h-einstieg">Oder trainieren da nur Fortgeschrittene?</h2>
+      <p>Vorkenntnisse braucht es keine. In jedem Kurs steht ein Coach auf der Fläche,
+         und die Belastung wird auf dich angepasst.</p>
+    </div>
+    <div class="zwei">
+      <div class="karte auf-zu">
+        <h3>Probetraining — eine Einheit, 15&nbsp;€</h3>
+        <p>Eine Einheit, ein Coach, 75 Minuten. Mitbringen: Handtuch, Trinkflasche,
+           Hallenschuhe mit sauberer Sohle. Mehr nicht.</p>
+        <p class="kurs-tat" style="margin-top:1rem">
+          <a class="knopf voll" href="#ort">Probetraining anfragen</a>
+        </p>
+      </div>
+      <div class="karte auf-zu">
+        <h3>Die Empfehlung des Gyms zum Einstieg</h3>
+        <p><b style="color:var(--text)">Drei Einheiten pro Woche</b> — zwei für die Kraft,
+           eine für die Ausdauer.</p>
+        <ul class="liste-strich" style="margin-top:.9rem">
+          <li><b>Technisch anspruchslos</b><span data-kursfarbe="Powercircle">Powercircle</span></li>
+          <li><b>Ohne Bindung testen</b><span>Drop-in 25&nbsp;€</span></li>
+          <li><b>In jedem Tarif enthalten</b><span>eigener Kraftaufbauplan</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Preise ============ -->
+  <section class="abschnitt bahn" id="preise" aria-labelledby="h-preise">
+    <div class="ab-kopf auf-zu">
+      <span class="ab-nr mono">04 — PREISE</span>
+      <h2 class="gross" id="h-preise">Was es kostet.</h2>
+      <p>Kurstarife, Preis pro Monat. Die Bindung wählst du: 1, 6 oder 12 Monate.
+         Keine Einschreibgebühr.</p>
+    </div>
+
+    <div class="tarif-gitter">
+      <div class="tarif auf-zu">
+        <h3>2×</h3>
+        <p class="unter">Einheiten pro Woche</p>
+        <p class="preisreihe"><span class="bind">1 Monat</span><span class="pr">130&nbsp;€</span></p>
+        <p class="preisreihe"><span class="bind">6 Monate</span><span class="pr">120&nbsp;€</span></p>
+        <p class="preisreihe"><span class="bind">12 Monate</span><span class="pr">110&nbsp;€</span></p>
+        <p class="rechnung">9 Einheiten im Monat, frei einteilbar. 14,44&nbsp;€ pro Einheit.</p>
+      </div>
+      <div class="tarif tipp auf-zu">
+        <span class="tipp-fahne">Empfehlung zum Einstieg</span>
+        <h3>3×</h3>
+        <p class="unter">Einheiten pro Woche</p>
+        <p class="preisreihe"><span class="bind">1 Monat</span><span class="pr">150&nbsp;€</span></p>
+        <p class="preisreihe"><span class="bind">6 Monate</span><span class="pr">140&nbsp;€</span></p>
+        <p class="preisreihe"><span class="bind">12 Monate</span><span class="pr">130&nbsp;€</span></p>
+        <p class="rechnung">13 Einheiten im Monat. 11,54&nbsp;€ pro Einheit — mit 12 Monaten
+          Bindung 10,00&nbsp;€.</p>
+      </div>
+      <div class="tarif auf-zu">
+        <h3>6×</h3>
+        <p class="unter">Einheiten pro Woche</p>
+        <p class="preisreihe"><span class="bind">1 Monat</span><span class="pr">170&nbsp;€</span></p>
+        <p class="preisreihe"><span class="bind">6 Monate</span><span class="pr">160&nbsp;€</span></p>
+        <p class="preisreihe"><span class="bind">12 Monate</span><span class="pr">150&nbsp;€</span></p>
+        <p class="rechnung">26 Einheiten, Montag bis Samstag. 6,54&nbsp;€ pro Einheit.</p>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Archivo',sans-serif;font-weight:700;font-size:.75rem;
+      letter-spacing:.11em;text-transform:uppercase;color:var(--text3);
+      margin-top:2.25rem">Ohne Bindung</h3>
+    <div class="einzeln auf-zu">
+      <div><span class="p">15&nbsp;€</span><span class="t">Probetraining</span><span class="n">eine Einheit</span></div>
+      <div><span class="p">25&nbsp;€</span><span class="t">Drop-in</span><span class="n">einmalig</span></div>
+      <div><span class="p">200&nbsp;€</span><span class="t">10er-Block</span><span class="n">ein Jahr gültig</span></div>
+      <div><span class="p">100&nbsp;€</span><span class="t">Personal Training</span><span class="n">1:1</span></div>
+      <div><span class="p">60&nbsp;€</span><span class="t">Open Gym</span><span class="n">monatlich kündbar</span></div>
+    </div>
+
+    <div class="zwei auf-zu" style="margin-top:1.75rem">
+      <div class="karte">
+        <h3>Vertrag und Pause</h3>
+        <ul class="liste-strich">
+          <li><b>Bindung</b><span>1, 6 oder 12 Monate</span></li>
+          <li><b>Pause bei 6 Monaten</b><span>einmal, bis 4 Wochen</span></li>
+          <li><b>Pause bei 12 Monaten</b><span>zweimal, je bis 4 Wochen</span></li>
+          <li><b>Übertragbar</b><span>bei triftigem Grund</span></li>
+        </ul>
+      </div>
+      <div class="karte">
+        <h3>SVS: 100&nbsp;€ zurück</h3>
+        <p>Selbstständig und SVS-versichert? Dann überweist die SVS 100&nbsp;€ aufs Konto —
+           für jeden Tarif ausser Open Gym, und für den 10er-Block.</p>
+        <ul class="liste-strich" style="margin-top:.9rem">
+          <li><b>Open Gym</b><span>täglich 06:00–22:00</span></li>
+          <li><b>Zutritt</b><span>per App</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Hyrox ============ -->
+  <section class="abschnitt bahn" id="hyrox" aria-labelledby="h-hyrox">
+    <div class="ab-kopf hx-kopf auf-zu">
+      <span class="ab-nr mono">05 — HYROX</span>
+      <h2 class="gross" id="h-hyrox">Acht Kilometer, acht Stationen, überall dieselben Regeln.</h2>
+      <p>Ein Rennformat, das weltweit gleich läuft. Einer der acht Kurse bereitet darauf vor,
+         zweimal pro Woche — für Open, Pro, Doubles und Relay. Mitmachen kannst du ihn,
+         ohne je an den Start zu gehen.</p>
+    </div>
+    <div class="zwei">
+      <div class="auf-zu">
+        <p class="hx-zahlen">
+          <span><span class="z mono">8</span><span class="b">Kilometer Laufen</span></span>
+          <span><span class="z mono">8</span><span class="b">Kraftstationen</span></span>
+          <span><span class="z mono">1</span><span class="b">km vor jeder Station</span></span>
+        </p>
+        <ol class="stationen">
+          <li><b>SkiErg</b><span class="lauf">1000 m</span></li>
+          <li><b>Sled Push</b><span class="lauf">50 m</span></li>
+          <li><b>Sled Pull</b><span class="lauf">50 m</span></li>
+          <li><b>Burpee Broad Jumps</b><span class="lauf">80 m</span></li>
+          <li><b>Rudern</b><span class="lauf">1000 m</span></li>
+          <li><b>Farmers Carry</b><span class="lauf">200 m</span></li>
+          <li><b>Sandbag Lunges</b><span class="lauf">100 m</span></li>
+          <li><b>Wall Balls</b><span class="lauf">100 Stück</span></li>
+        </ol>
+      </div>
+      <figure class="auf-zu" style="margin:0">
+        <img src="__PH_HYROX__" width="700" height="557" loading="lazy"
+             style="border-radius:4px;filter:contrast(1.1) saturate(1.05) brightness(1.06)"
+             alt="Ein Mann am Ruderergometer, dahinter eine beschriebene Tafel mit dem Workout.">
+        <figcaption style="margin-top:.6rem;font-size:.75rem;color:var(--text3)">
+          Erster offizieller HYROX Training Club in Kärnten.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ Coaches ============ -->
+  <section class="abschnitt bahn" id="coaches" aria-labelledby="h-coaches">
+    <div class="ab-kopf auf-zu">
+      <span class="ab-nr mono">06 — COACHES</span>
+      <h2 class="gross" id="h-coaches">Wer auf der Fläche steht.</h2>
+      <p>Mike und Dominik haben das Gym 2017 als Brüder aufgemacht.</p>
+    </div>
+    <div class="coach-gitter">
+      <figure class="coach auf-zu" style="margin:0">
+        <img src="__PH_COACHMIKE__" width="536" height="720" loading="lazy" alt="Porträt von Mike.">
+        <h3>Mike</h3>
+        <p>Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien.
+           Hat das Gym 2017 mit seinem Bruder Dominik aufgemacht.</p>
+      </figure>
+      <figure class="coach auf-zu" style="margin:0">
+        <img src="__PH_COACHDOMINIK__" width="443" height="720" loading="lazy" alt="Porträt von Dominik.">
+        <h3>Dominik</h3>
+        <p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und
+           Instruktor für die olympischen Züge.</p>
+      </figure>
+      <figure class="coach auf-zu" style="margin:0">
+        <img src="__PH_COACHDIEGO__" width="537" height="720" loading="lazy" alt="Porträt von Diego.">
+        <h3>Diego</h3>
+        <p>Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf regionaler
+           Ebene Wettkämpfe bestritten hat.</p>
+      </figure>
+      <figure class="coach auf-zu" style="margin:0">
+        <img src="__PH_COACHBENNI__" width="480" height="720" loading="lazy" alt="Porträt von Benni.">
+        <h3>Benni</h3>
+        <p>Aktiver Eishockeyspieler, studiert Lehramt für Bewegung und Sport in Klagenfurt.
+           Schwerpunkt Konditionstraining.</p>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ Ort und Kontakt ============ -->
+  <section class="abschnitt bahn" id="ort" aria-labelledby="h-ort">
+    <div class="ab-kopf auf-zu">
+      <span class="ab-nr mono">07 — ORT UND KONTAKT</span>
+      <h2 class="gross" id="h-ort">Sebastiangasse 1, 9020 Klagenfurt.</h2>
+      <p>Gratis Parkplätze rund ums Gebäude. Zwei Garderoben, je ein Duschraum mit
+         drei Duschen. Open Gym täglich 06:00–22:00, Zutritt per App.</p>
+    </div>
+    <div class="zwei">
+      <div class="auf-zu">
+        <ul class="kontaktliste">
+          <li><span class="lab">E-Mail</span>
+            <a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a></li>
+          <li><span class="lab">Telefon</span>
+            <a href="tel:+4367682277302">+43 676 8227 7302</a></li>
+          <li><span class="lab">Adresse</span>
+            Sebastiangasse 1, 9020 Klagenfurt am Wörthersee</li>
+        </ul>
+        <p class="sozial">
+          <a class="knopf klein" href="https://www.instagram.com/trojan.performance/"
+             rel="noopener noreferrer" target="_blank">Instagram</a>
+          <a class="knopf klein" href="https://www.facebook.com/trojanperformanceofficial"
+             rel="noopener noreferrer" target="_blank">Facebook</a>
+          <a class="knopf klein" href="https://www.youtube.com/channel/UChUZebvjDwrWEdOCa86xNiA"
+             rel="noopener noreferrer" target="_blank">YouTube</a>
+        </p>
+      </div>
+      <form class="karte auf-zu" id="formular" novalidate>
+        <h3>Anfrage schreiben</h3>
+        <label class="feld"><span>Anliegen</span>
+          <select name="anliegen">
+            <option>Probetraining</option>
+            <option>Allgemeine Anfrage</option>
+            <option>1:1 Coaching</option>
+            <option>Firmentraining</option>
+          </select>
+        </label>
+        <label class="feld"><span>Name</span><input type="text" name="name" autocomplete="name"></label>
+        <label class="feld"><span>E-Mail</span><input type="email" name="mail" autocomplete="email"></label>
+        <label class="feld"><span>Nachricht</span><textarea name="text"></textarea></label>
+        <button class="knopf voll" type="submit">Absenden</button>
+        <p class="form-hinweis">Dieses Formular hat im Entwurf noch keinen Empfänger.
+          Bis es angebunden ist, geht eine Anfrage per E-Mail oder Telefon.</p>
+        <p class="form-antwort" id="form-antwort" role="status"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="fuss bahn">
+  <div class="fuss-oben">
+    <div>
+      <img src="__LOGO__" alt="" width="140" height="22" loading="lazy">
+      <p style="margin-top:.7rem;font-size:.875rem;color:var(--text3);max-width:32ch">
+        Performance Center in Klagenfurt am Wörthersee. Seit 2017, von den Brüdern
+        Mike und Dominik.</p>
+    </div>
+    <div class="offen">
+      <h2>Was hier noch nicht angebunden ist</h2>
+      <ul>
+        <li>Das Kontaktformular verschickt nichts — es gibt noch keinen Empfänger.</li>
+        <li>Buchen geht auf dieser Seite nicht, nur in der App.</li>
+        <li>Kein Routenplaner, nur die Adresse als Text.</li>
+        <li>Impressum und Datenschutz fehlen noch.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="fuss-unten">
+    <span>Entwurf, nicht veröffentlicht</span>
+    <span>Kursfarben und Termine live aus dem Buchungssystem</span>
+    <span>Impressum und Datenschutz: noch offen</span>
+  </p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+/* ===================================================================
+   1. FARBE
+   Die acht Kursfarben sind fremdbestimmt: sie kommen aus dem
+   Buchungssystem und dürfen ihren Farbton nicht verlieren, sonst ist
+   Hyrox nicht mehr gelb. Erlaubt ist, Helligkeit und Sättigung zu
+   rechnen. Genau das passiert hier: OKLCH, H bleibt fest, L wandert
+   per Halbierung, bis der WCAG-Kontrast gegen den Grund stimmt, und C
+   wird auf den sRGB-Raum zurückgestutzt. Damit trägt das System auch
+   Farben, die heute noch keiner kennt.
+   =================================================================== */
+var GRUND='#0d0d0e', FLAECHE='#171718';
+
+function s2l(c){ return c<=0.04045 ? c/12.92 : Math.pow((c+0.055)/1.055,2.4); }
+function l2s(c){ return c<=0.0031308 ? 12.92*c : 1.055*Math.pow(c,1/2.4)-0.055; }
+
+function hexRgb(h){
+  h=String(h||'').trim().replace('#','');
+  if(h.length===3) h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+  if(!/^[0-9a-fA-F]{6}$/.test(h)) return null;
+  return [parseInt(h.slice(0,2),16)/255,parseInt(h.slice(2,4),16)/255,parseInt(h.slice(4,6),16)/255];
+}
+function rgbHex(r,g,b){
+  function f(v){ var n=Math.max(0,Math.min(255,Math.round(v*255))); return (n<16?'0':'')+n.toString(16); }
+  return '#'+f(r)+f(g)+f(b);
+}
+function rgbLab(r,g,b){
+  r=s2l(r); g=s2l(g); b=s2l(b);
+  var l=Math.cbrt(0.4122214708*r+0.5363325363*g+0.0514459929*b),
+      m=Math.cbrt(0.2119034982*r+0.6806995451*g+0.1073969566*b),
+      s=Math.cbrt(0.0883024619*r+0.2817188376*g+0.6299787005*b);
+  return [0.2104542553*l+0.7936177850*m-0.0040720468*s,
+          1.9779984951*l-2.4285922050*m+0.4505937099*s,
+          0.0259040371*l+0.7827717662*m-0.8086757660*s];
+}
+function lchLin(L,C,H){
+  var a=C*Math.cos(H), bb=C*Math.sin(H);
+  var l=Math.pow(L+0.3963377774*a+0.2158037573*bb,3),
+      m=Math.pow(L-0.1055613458*a-0.0638541728*bb,3),
+      s=Math.pow(L-0.0894841775*a-1.2914855480*bb,3);
+  return [ 4.0767416621*l-3.3077115913*m+0.2309699292*s,
+          -1.2684380046*l+2.6097574011*m-0.3413193965*s,
+          -0.0041960863*l-0.7034186147*m+1.7076147010*s];
+}
+function drin(L,C,H){
+  var v=lchLin(L,C,H);
+  for(var i=0;i<3;i++){ if(v[i]<-1e-4||v[i]>1+1e-4) return false; }
+  return true;
+}
+function lchHex(L,C,H){
+  if(!drin(L,C,H)){
+    var lo=0, hi=C;
+    for(var i=0;i<24;i++){ var mid=(lo+hi)/2; if(drin(L,mid,H)) lo=mid; else hi=mid; }
+    C=lo;
+  }
+  var v=lchLin(L,C,H);
+  return rgbHex(l2s(Math.min(Math.max(v[0],0),1)),
+                l2s(Math.min(Math.max(v[1],0),1)),
+                l2s(Math.min(Math.max(v[2],0),1)));
+}
+function leucht(hex){
+  var c=hexRgb(hex)||[0,0,0];
+  return 0.2126*s2l(c[0])+0.7152*s2l(c[1])+0.0722*s2l(c[2]);
+}
+function kontrast(a,b){
+  var x=leucht(a), y=leucht(b);
+  return x>y ? (x+0.05)/(y+0.05) : (y+0.05)/(x+0.05);
+}
+function mischen(vorn,hinten,teil){
+  var a=hexRgb(vorn)||[0,0,0], b=hexRgb(hinten)||[0,0,0];
+  return rgbHex(a[0]*teil+b[0]*(1-teil), a[1]*teil+b[1]*(1-teil), a[2]*teil+b[2]*(1-teil));
+}
+/* L anheben, bis der Kontrast gegen bg passt. H bleibt, wo er ist. */
+function heben(hex,bg,ziel){
+  var c=hexRgb(hex); if(!c) return '#e0dee0';
+  var lab=rgbLab(c[0],c[1],c[2]);
+  var L=lab[0], C=Math.sqrt(lab[1]*lab[1]+lab[2]*lab[2]), H=Math.atan2(lab[2],lab[1]);
+  if(kontrast(lchHex(L,C,H),bg)>=ziel) return lchHex(L,C,H);
+  var lo=L, hi=1, gut=null;
+  for(var i=0;i<28;i++){
+    var mid=(lo+hi)/2, h=lchHex(mid,C,H);
+    if(kontrast(h,bg)>=ziel){ gut=h; hi=mid; } else { lo=mid; }
+  }
+  return gut||lchHex(1,C,H);
+}
+/* Vollflächiger Farbchip: Schrift schwarz oder weiss, was misst besser. */
+function aufFarbe(hex){
+  return kontrast(hex,'#000000') >= kontrast(hex,'#ffffff') ? '#000000' : '#ffffff';
+}
+var farbSpeicher={};
+function rollen(roh){
+  if(farbSpeicher[roh]) return farbSpeicher[roh];
+  var sicher=hexRgb(roh)?roh:'#e0dee0';
+  var tint=mischen(sicher,FLAECHE,0.12);
+  var r={ roh:sicher, tint:tint, tintHoch:mischen(sicher,FLAECHE,0.19),
+          ink:heben(sicher,tint,4.5), auf:aufFarbe(sicher) };
+  farbSpeicher[roh]=r;
+  return r;
+}
+function farbenSetzen(el,roh){
+  var r=rollen(roh);
+  el.style.setProperty('--roh',r.roh);
+  el.style.setProperty('--ink',r.ink);
+  el.style.setProperty('--tint',r.tint);
+  el.style.setProperty('--tint-hoch',r.tintHoch);
+  el.style.setProperty('--auf',r.auf);
+  return r;
+}
+
+/* ===================================================================
+   2. STAMMDATEN — nur das, was der Betreiber selbst sagt
+   =================================================================== */
+var KURSE=[
+ {n:'Performance',          k:'PF', f:'#ffb300', kurz:'Performance', wie:'7× pro Woche', pl:'12–16 Plätze', dau:75,
+  t:'Crosstraining aus Powerlifting, Weightlifting, Gymnastics, Calisthenics, Strongman und Ausdauer. Die Reize sind nicht willkürlich kombiniert, sondern folgen einer periodisierten Planung.'},
+ {n:'FBB/Strength & Power', k:'SP', f:'#00b825', kurz:'Strength & Power', wie:'6× pro Woche', pl:'16 Plätze', dau:75,
+  t:'Muskelaufbau nach festem Schema, kombiniert mit kurzen intensiven Ausdauerblöcken. Kraft und Ausdauer in einer Einheit.'},
+ {n:'Powercircle',          k:'PC', f:'#593499', kurz:'Powercircle', wie:'3× pro Woche', pl:'24 Plätze', dau:75,
+  t:'Airbike, SkiErg, Schlitten, Jump-Box, Battle-Rope, Wallballs im Wechsel. Kurze harte Intervalle, kurze Pausen. Technisch anspruchslos, deshalb auch für Einsteiger geeignet.'},
+ {n:'Mama reloaded',        k:'MR', f:'#ed1a6b', kurz:'Mama reloaded', wie:'3× pro Woche', pl:'', dau:45,
+  t:'Wiedereinstieg nach der Schwangerschaft. Beckenboden, Rumpf und Kraft in einem Tempo, das sich an den Tag anpasst.'},
+ {n:'Hyrox',                k:'HX', f:'#f2ff00', kurz:'Hyrox', wie:'2× pro Woche', pl:'24 Plätze', dau:75,
+  t:'Vorbereitung auf das Rennformat, das weltweit unter denselben Bedingungen läuft — für Open, Pro, Doubles und Relay. Für jedes Level, vom Einstieg bis zum Wettkampf.'},
+ {n:'Team-WOD',             k:'TW', f:'#ff6f00', kurz:'Team-WOD', wie:'1× pro Woche', pl:'16 Plätze', dau:75,
+  t:'Zu zweit mit deinem Trainingsbuddy. Jede Woche ein anderes Workout, Intensität und Schwierigkeitsgrad werden auf euch beide angepasst.'},
+ {n:'FBB',                  k:'FB', f:'#0cb00c', kurz:'FBB', wie:'1× pro Woche', pl:'12 Plätze', dau:75,
+  t:'Nach dem gemeinsamen Warm-up wählst du Ober- oder Unterkörper, je vier Übungen mit vorgegebenen Sätzen, Wiederholungen und Pausen. Zum Abschluss eine kurze, intensive Belastung.'},
+ {n:'Community TeamWOD',    k:'CT', f:'#ffa200', kurz:'Community WOD', wie:'1× pro Woche', pl:'24 Plätze', dau:75,
+  t:'Team-Workout in grosser Runde. Jede Woche ein anderes Programm, Intensität und Schwierigkeitsgrad individuell angepasst.'}
+];
+var NACH_NAME={}; KURSE.forEach(function(k){ NACH_NAME[k.n]=k; });
+
+/* Eingefrorener Stand — greift, wenn die Abfrage ausfällt.
+   Eine Woche alt ist besser als leer. */
+var PLAN_STAND=[
+  [1,'06:00',75,'Performance'],   [3,'06:00',75,'Performance'],
+  [0,'08:15',75,'FBB/Strength & Power'], [1,'08:15',75,'Performance'],
+  [2,'08:15',75,'FBB/Strength & Power'], [4,'08:15',75,'Performance'],
+  [5,'08:15',75,'FBB/Strength & Power'], [5,'09:30',75,'Community TeamWOD'],
+  [4,'09:45',45,'Mama reloaded'],  [2,'10:00',45,'Mama reloaded'],
+  [4,'10:45',45,'Mama reloaded'],
+  [2,'16:00',75,'Powercircle'],    [4,'16:00',75,'FBB/Strength & Power'],
+  [0,'17:15',75,'Powercircle'],    [0,'17:15',75,'Performance'],
+  [1,'17:15',75,'FBB/Strength & Power'], [2,'17:15',75,'Team-WOD'],
+  [3,'17:15',75,'Performance'],    [4,'17:15',75,'Hyrox'],
+  [0,'18:30',75,'FBB/Strength & Power'], [1,'18:30',75,'Performance'],
+  [2,'18:30',75,'Hyrox'],          [3,'18:30',75,'FBB'],
+  [3,'18:30',75,'Powercircle']
+].map(function(a){
+  return { tag:a[0], zeit:a[1], dauer:a[2], name:a[3],
+           farbe:(NACH_NAME[a[3]]||{}).f||'#e0dee0', frei:null, max:null };
+});
+
+var TAGE=['Mo','Di','Mi','Do','Fr','Sa','So'];
+var TAGE_LANG=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
+
+function planWoche(){
+  var jetzt=new Date(), versatz=(jetzt.getDay()+6)%7;
+  var mo=new Date(jetzt.getFullYear(),jetzt.getMonth(),jetzt.getDate()-versatz);
+  var so=new Date(mo.getFullYear(),mo.getMonth(),mo.getDate()+7);
+  function f(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+
+                        String(d.getDate()).padStart(2,'0')+'T00:00:00.000Z'; }
+  return [f(mo),f(so),mo];
+}
+function minuten(hhmm){ var p=hhmm.split(':'); return (+p[0])*60+(+p[1]); }
+function uhr(m){ return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); }
+
+/* ===================================================================
+   3. BÄNDER — die Öffnungszeiten werden nicht hingeschrieben,
+   sie fallen aus den Terminen heraus. Zwischen Vormittag und Abend
+   liegt eine Lücke; die wird zusammengeschoben, nicht als Leere gezeigt.
+   =================================================================== */
+function baender(daten){
+  var sp=daten.map(function(e){ return [minuten(e.zeit), minuten(e.zeit)+e.dauer]; })
+              .sort(function(a,b){ return a[0]-b[0]; });
+  if(!sp.length) return [];
+  var out=[sp[0].slice()];
+  for(var i=1;i<sp.length;i++){
+    var letzte=out[out.length-1];
+    if(sp[i][0] - letzte[1] > 90) out.push(sp[i].slice());
+    else letzte[1]=Math.max(letzte[1], sp[i][1]);
+  }
+  return out.map(function(b){ return [Math.floor(b[0]/15)*15, Math.ceil(b[1]/15)*15]; });
+}
+/* Minute -> Anteil der Breite, Lücken auf einen schmalen Spalt gestaucht */
+function skala(bd){
+  var summe=bd.reduce(function(s,b){ return s+(b[1]-b[0]); },0);
+  var spalt=0.028, nutz=1-spalt*(bd.length-1);
+  var vor=[], lauf=0;
+  bd.forEach(function(b){ vor.push(lauf); lauf+=b[1]-b[0]; });
+  return function(m){
+    for(var i=0;i<bd.length;i++){
+      if(m<=bd[i][1] || i===bd.length-1){
+        var mm=Math.max(bd[i][0],Math.min(m,bd[i][1]));
+        return (vor[i]+(mm-bd[i][0]))/summe*nutz + i*spalt;
+      }
+    }
+    return 0;
+  };
+}
+
+/* ===================================================================
+   4. ZEICHNEN
+   =================================================================== */
+var Z={
+  spStand:document.getElementById('sp-stand'),
+  spBau:document.getElementById('sp-bau'),
+  spFuss:document.getElementById('sp-fuss'),
+  gantt:document.getElementById('gantt'),
+  liste:document.getElementById('liste'),
+  tagKnoepfe:document.getElementById('tag-knoepfe'),
+  zeiten:document.getElementById('zeiten-satz'),
+  hinweis:document.getElementById('plan-hinweis'),
+  gitter:document.getElementById('kurse-gitter'),
+  weitere:document.getElementById('weitere'),
+  weitereListe:document.getElementById('weitere-liste'),
+  fahne:document.getElementById('filter-fahne'),
+  fahneWort:document.getElementById('filter-wort'),
+  fahneZahl:document.getElementById('filter-zahl'),
+  fahneWeg:document.getElementById('filter-weg')
+};
+var AKTIV=null, DATEN=[], MONTAG=planWoche()[2];
+
+function el(tag,klasse,text){
+  var e=document.createElement(tag);
+  if(klasse) e.className=klasse;
+  if(text!=null) e.textContent=text;
+  return e;
+}
+function datumKurz(i){
+  var d=new Date(MONTAG.getFullYear(),MONTAG.getMonth(),MONTAG.getDate()+i);
+  return d.getDate()+'.'+(d.getMonth()+1)+'.';
+}
+var heuteIdx=(new Date().getDay()+6)%7;
+
+function nachTagen(daten){
+  var t=[[],[],[],[],[],[],[]];
+  daten.forEach(function(e){ if(t[e.tag]) t[e.tag].push(e); });
+  t.forEach(function(l){ l.sort(function(a,b){ return minuten(a.zeit)-minuten(b.zeit); }); });
+  return t;
+}
+/* Ein 45-Minuten-Klotz ist schmaler als seine Beschriftung. Statt die
+   Uhrzeit auf halbem Weg abzuschneiden — was wie ein falscher Wert aussieht —
+   fällt das Ende weg. Gemessen, nicht geschätzt. */
+function kloetzeMessen(){
+  [].forEach.call(document.querySelectorAll('.klotz'),function(k){
+    k.classList.toggle('schmal', k.getBoundingClientRect().width < 104);
+  });
+}
+var messUhr;
+window.addEventListener('resize',function(){
+  clearTimeout(messUhr);
+  messUhr=setTimeout(kloetzeMessen,150);
+});
+
+/* Gleichzeitige Termine bekommen eigene Spuren */
+function spuren(liste){
+  var enden=[];
+  liste.forEach(function(e){
+    var a=minuten(e.zeit), z=a+e.dauer, gesetzt=false;
+    for(var i=0;i<enden.length;i++){
+      if(enden[i]<=a){ enden[i]=z; e.spur=i; gesetzt=true; break; }
+    }
+    if(!gesetzt){ e.spur=enden.length; enden.push(z); }
+  });
+  return Math.max(1,enden.length);
+}
+
+function zeichnen(daten,live){
+  DATEN=daten;
+  var bd=baender(daten);
+  var pos=skala(bd);
+  var tage=nachTagen(daten);
+
+  /* ---- Spektrum im Kopf: dieselbe Geometrie wie der Plan, nur klein ---- */
+  Z.spBau.textContent='';
+  var achse=el('div','sp-achse');
+  bd.forEach(function(b,i){
+    /* Nur die äusseren Marken stehen immer. Die inneren treffen sich am
+       gestauchten Spalt und werden auf schmalen Geräten ausgeblendet —
+       ausgeschrieben stehen die Bänder ohnehin in der Fusszeile. */
+    var a=el('i',i>0?'innen':null,uhr(b[0])); a.style.left=(pos(b[0])*100)+'%';
+    if(i===0) a.style.transform='none';
+    achse.appendChild(a);
+    var z=el('i',i<bd.length-1?'innen':null,uhr(b[1])); z.style.left=(pos(b[1])*100)+'%';
+    if(i===bd.length-1) z.style.transform='translateX(-100%)';
+    achse.appendChild(z);
+  });
+  Z.spBau.appendChild(achse);
+
+  var jetztMin=new Date().getHours()*60+new Date().getMinutes();
+  tage.forEach(function(liste,i){
+    var zeile=el('div','sp-zeile'+(i===heuteIdx?' heute':''));
+    zeile.appendChild(el('span','sp-tag mono',TAGE[i]));
+    var spur=el('span','sp-spur');
+    if(!liste.length){
+      spur.appendChild(el('span','sp-leer','—'));
+    } else {
+      liste.forEach(function(e,j){
+        var a=minuten(e.zeit), mark=el('span','sp-mark');
+        mark.style.left=(pos(a)*100)+'%';
+        mark.style.width=Math.max(0.6,(pos(a+e.dauer)-pos(a))*100)+'%';
+        mark.style.background=rollen(e.farbe).roh;
+        mark.style.animationDelay=(i*45+j*18)+'ms';
+        spur.appendChild(mark);
+      });
+    }
+    if(i===heuteIdx && bd.length && jetztMin>=bd[0][0] && jetztMin<=bd[bd.length-1][1]){
+      var nun=el('span','sp-jetzt'); nun.style.left=(pos(jetztMin)*100)+'%';
+      spur.appendChild(nun);
+    }
+    zeile.appendChild(spur);
+    Z.spBau.appendChild(zeile);
+  });
+
+  /* Für Screenreader ist die Grafik ein Bild mit Beschreibung —
+     die Einzelheiten stehen als Text im Wochenplan darunter. */
+  var summe=tage.map(function(l,i){
+    return TAGE_LANG[i]+': '+(l.length? l.length+' Einheiten von '+l[0].zeit+' bis '+
+      uhr(Math.max.apply(null,l.map(function(e){return minuten(e.zeit)+e.dauer;}))) : 'keine Einheit');
+  }).join('. ');
+  Z.spBau.setAttribute('aria-label','Überblick der Kurswoche. '+summe+
+    '. Alle Einheiten stehen ausgeschrieben im Wochenplan.');
+
+  Z.spStand.textContent='';
+  Z.spStand.appendChild(el('b',null,daten.length+' Einheiten'));
+  Z.spStand.appendChild(document.createTextNode(
+    live ? ' · live aus dem Buchungssystem' : ' · gespeicherter Stand'));
+
+  var namen={}; daten.forEach(function(e){ namen[e.name]=(namen[e.name]||0)+1; });
+  var eigene=Object.keys(namen).filter(function(n){ return NACH_NAME[n]; }).length;
+  Z.spFuss.textContent='';
+  [eigene+' der acht Kurse',
+   bd.map(function(b){ return uhr(b[0])+'–'+uhr(b[1]); }).join(' und '),
+   'Open Gym täglich 06:00–22:00'].forEach(function(t){
+    var s=el('span'); s.appendChild(el('b',null,t)); Z.spFuss.appendChild(s);
+  });
+
+  /* ---- Tagesknöpfe ---- */
+  Z.tagKnoepfe.textContent='';
+  tage.forEach(function(liste,i){
+    var b=el('button','tag-knopf'+(i===heuteIdx?' heute':''));
+    b.type='button';
+    b.textContent=TAGE[i];
+    b.setAttribute('aria-label',TAGE_LANG[i]+', '+(liste.length||'keine')+
+      (liste.length===1?' Einheit':' Einheiten'));
+    if(!liste.length){ b.disabled=true; }
+    else b.addEventListener('click',function(){
+      var ziel=document.getElementById('tag-'+i);
+      if(ziel) ziel.scrollIntoView({behavior:ruhig()?'auto':'smooth',block:'start'});
+    });
+    Z.tagKnoepfe.appendChild(b);
+  });
+
+  /* ---- Breitansicht: Tage als Zeilen ---- */
+  Z.gantt.textContent='';
+  var gachse=el('div','gantt-achse');
+  bd.forEach(function(b,i){
+    for(var m=b[0]; m<=b[1]; m+=120){
+      var t=el('i',null,uhr(m)); t.style.left=(pos(m)*100)+'%';
+      if(i===0 && m===b[0]) t.className='rand';
+      gachse.appendChild(t);
+    }
+    var ende=el('i','rechts',uhr(b[1])); ende.style.left=(pos(b[1])*100)+'%';
+    gachse.appendChild(ende);
+  });
+  Z.gantt.appendChild(gachse);
+
+  tage.forEach(function(liste,i){
+    var n=spuren(liste);
+    var zeile=el('div','gantt-zeile'+(i===heuteIdx?' heute':''));
+    var lab=el('div','gantt-tag'); lab.appendChild(document.createTextNode(TAGE[i]));
+    zeile.appendChild(lab);
+    var spur=el('div','gantt-spur');
+    /* jede Bahn mindestens 47 px, damit auch ein doppelt belegter Tag
+       noch Klötze über 44 px liefert */
+    spur.style.minHeight=Math.max(53,n*47+6)+'px';
+    for(var g=1;g<bd.length;g++){
+      var lin=el('div','lueckelinie'); lin.style.left=(pos(bd[g][0])*100-1.4)+'%';
+      spur.appendChild(lin);
+    }
+    if(!liste.length){
+      spur.appendChild(el('div','gantt-leer','kein Kurs'));
+    }
+    liste.forEach(function(e){
+      var a=minuten(e.zeit);
+      var k=el('button','klotz'); k.type='button';
+      k.style.left=(pos(a)*100)+'%';
+      k.style.width=Math.max(3,(pos(a+e.dauer)-pos(a))*100)+'%';
+      k.style.top=(e.spur*(100/n))+'%';
+      k.style.height='calc('+(100/n)+'% - 3px)';
+      farbenSetzen(k,e.farbe);
+      k.appendChild(el('span','kn',(NACH_NAME[e.name]||{}).kurz||e.name));
+      var zt=el('span','kz mono',e.zeit);
+      zt.appendChild(el('span','bis','–'+uhr(a+e.dauer)));
+      k.appendChild(zt);
+      k.setAttribute('aria-label',TAGE_LANG[i]+' '+e.zeit+', '+e.name+', '+e.dauer+' Minuten'+
+        (e.frei!=null?', noch '+e.frei+' Plätze frei':''));
+      k.dataset.kurs=e.name;
+      k.addEventListener('click',function(){ waehlen(AKTIV===e.name?null:e.name,false); });
+      spur.appendChild(k);
+    });
+    zeile.appendChild(spur);
+    Z.gantt.appendChild(zeile);
+  });
+  kloetzeMessen();
+
+  /* ---- Schmalansicht: Tage gestapelt ---- */
+  Z.liste.textContent='';
+  tage.forEach(function(liste,i){
+    var block=el('div','tag-block'); block.id='tag-'+i;
+    var titel=el('div','tag-titel');
+    titel.appendChild(el('h3',null,TAGE_LANG[i]));
+    titel.appendChild(el('span','dat mono',datumKurz(i)));
+    if(i===heuteIdx) titel.appendChild(el('span','heutemark','heute'));
+    block.appendChild(titel);
+    if(!liste.length){
+      block.appendChild(el('p','zeiten-satz','Kein Kurs an diesem Tag. Open Gym läuft.'));
+    }
+    liste.forEach(function(e){
+      var a=minuten(e.zeit);
+      var b=el('button','termin'); b.type='button';
+      farbenSetzen(b,e.farbe);
+      b.appendChild(el('span','zeit mono',e.zeit));
+      b.appendChild(el('span','streifen'));
+      var mitte=el('span','mitte');
+      mitte.appendChild(el('span','nm',e.name));
+      mitte.appendChild(el('span','zu',e.dauer+' Min · bis '+uhr(a+e.dauer)));
+      b.appendChild(mitte);
+      if(e.frei!=null){
+        var f=el('span','frei'+(e.frei<=3?' eng':''), e.frei>0 ? e.frei+' frei' : 'voll');
+        b.appendChild(f);
+      }
+      b.setAttribute('aria-label',TAGE_LANG[i]+' '+e.zeit+', '+e.name+', '+e.dauer+' Minuten'+
+        (e.frei!=null?', '+(e.frei>0?'noch '+e.frei+' Plätze frei':'ausgebucht'):''));
+      b.dataset.kurs=e.name;
+      b.addEventListener('click',function(){ waehlen(AKTIV===e.name?null:e.name,false); });
+      block.appendChild(b);
+    });
+    Z.liste.appendChild(block);
+  });
+
+  /* ---- abgeleitete Zeiten ---- */
+  var proTag={};
+  tage.forEach(function(liste,i){
+    if(!liste.length) return;
+    var von=Math.min.apply(null,liste.map(function(e){ return minuten(e.zeit); }));
+    var bis=Math.max.apply(null,liste.map(function(e){ return minuten(e.zeit)+e.dauer; }));
+    proTag[i]=uhr(von)+'–'+uhr(bis);
+  });
+  Z.zeiten.textContent='';
+  Z.zeiten.appendChild(document.createTextNode('Kurszeiten diese Woche: '));
+  Object.keys(proTag).forEach(function(i,j,arr){
+    Z.zeiten.appendChild(el('b',null,TAGE[i]+' '+proTag[i]));
+    Z.zeiten.appendChild(document.createTextNode(j<arr.length-1?' · ':'. '));
+  });
+  Z.zeiten.appendChild(document.createTextNode(
+    'Open Gym läuft täglich von 06:00 bis 22:00, mit eigenem Tarif und Zutritt per App.'));
+
+  Z.hinweis.textContent='';
+  [live?'Stand: eben abgerufen':'Verbindung zum Buchungssystem nicht möglich — gespeicherter Stand',
+   'Gebucht wird in der App, nicht hier',
+   'Ein Termin antippen hebt den Kurs hervor'].forEach(function(t){
+    Z.hinweis.appendChild(el('span',null,t));
+  });
+
+  kurseZeichnen(namen, daten);
+
+  /* Wo ein Kursname im festen Text steht, trägt er dieselbe Farbe wie
+     überall sonst — sonst wäre die Farbe Dekoration statt Kennzeichnung. */
+  function farbeVon(name){
+    var vor=daten.filter(function(d){ return d.name===name; })[0];
+    return (vor&&vor.farbe) || (NACH_NAME[name]||{}).f || '#e0dee0';
+  }
+  [].forEach.call(document.querySelectorAll('[data-kursfarbe]'),function(e){
+    e.style.color=rollen(farbeVon(e.dataset.kursfarbe)).ink;
+    e.style.fontWeight='700';
+  });
+  document.getElementById('hyrox').style.setProperty('--hx',rollen(farbeVon('Hyrox')).ink);
+
+  if(AKTIV) waehlen(AKTIV,true);
+}
+
+/* ---- Kursliste ---- */
+function kurseZeichnen(namen, daten){
+  Z.gitter.textContent='';
+  KURSE.forEach(function(k){
+    var karte=el('div','kurs'); karte.dataset.kurs=k.n;
+    farbenSetzen(karte,k.f);
+    var kopf=el('div','kurs-kopf');
+    var chip=el('span','chip mono',k.k);
+    chip.setAttribute('aria-hidden','true');
+    kopf.appendChild(chip);
+    var rechts=el('div');
+    rechts.appendChild(el('h3',null,k.n));
+    var meta=el('p','kurs-meta');
+    meta.appendChild(el('span',null,k.dau+' Min'));
+    if(k.pl) meta.appendChild(el('span',null,k.pl));
+    meta.appendChild(el('span',null,k.wie));
+    var anz=namen[k.n]||0;
+    meta.appendChild(el('span',anz?'tr':'aus',
+      anz? 'diese Woche '+anz+(anz===1?' Termin':' Termine') : 'diese Woche kein Termin'));
+    rechts.appendChild(meta);
+    kopf.appendChild(rechts);
+    karte.appendChild(kopf);
+    karte.appendChild(el('p','txt',k.t));
+    if(anz){
+      var tat=el('p','kurs-tat');
+      var b=el('button','knopf klein');
+      b.type='button';
+      b.textContent='Im Plan zeigen';
+      b.setAttribute('aria-pressed','false');
+      b.dataset.wahl=k.n;
+      b.addEventListener('click',function(){ waehlen(AKTIV===k.n?null:k.n,true); });
+      tat.appendChild(b);
+      karte.appendChild(tat);
+    }
+    Z.gitter.appendChild(karte);
+  });
+
+  /* Kurse, die im Buchungssystem stehen, aber nicht zu den acht gehören.
+     Sie werden nicht erfunden und nicht beschrieben — nur benannt. */
+  var fremd=Object.keys(namen).filter(function(n){ return !NACH_NAME[n]; });
+  Z.weitereListe.textContent='';
+  if(!fremd.length){ Z.weitere.hidden=true; return; }
+  Z.weitere.hidden=false;
+  fremd.forEach(function(n){
+    var e=daten.filter(function(d){ return d.name===n; })[0];
+    var li=el('li');
+    farbenSetzen(li,e.farbe);
+    li.appendChild(el('i'));
+    li.appendChild(el('span',null,n+' · '+namen[n]+(namen[n]===1?' Termin':' Termine')));
+    Z.weitereListe.appendChild(li);
+  });
+}
+
+/* ---- Auswahl: die Farbe zieht sich überall dorthin zurück,
+       wo der gewählte Kurs vorkommt. Der Rest wird grau. ---- */
+function waehlen(name,springen){
+  AKTIV=name;
+  var an=!!name;
+  Z.gantt.classList.toggle('gefiltert',an);
+  Z.liste.classList.toggle('gefiltert',an);
+  var treffer=0;
+  [].forEach.call(document.querySelectorAll('.klotz,.termin'),function(e){
+    var ok=an && e.dataset.kurs===name;
+    e.classList.toggle('treffer',ok);
+    if(ok && e.classList.contains('termin')) treffer++;
+  });
+  [].forEach.call(document.querySelectorAll('.kurs'),function(e){
+    e.classList.toggle('gewaehlt', an && e.dataset.kurs===name);
+  });
+  [].forEach.call(document.querySelectorAll('[data-wahl]'),function(b){
+    var ok=an && b.dataset.wahl===name;
+    b.setAttribute('aria-pressed',ok?'true':'false');
+    b.textContent = ok ? 'Hervorhebung aufheben' : 'Im Plan zeigen';
+  });
+  Z.fahne.classList.toggle('an',an);
+  if(an){
+    Z.fahneWort.textContent=name;
+    var vor=DATEN.filter(function(d){ return d.name===name; })[0];
+    Z.fahneWort.style.color=rollen(
+      (NACH_NAME[name]||{}).f || (vor||{}).farbe || '#e0dee0').ink;
+    Z.fahneZahl.textContent = treffer
+      ? treffer+(treffer===1?' Termin diese Woche':' Termine diese Woche')
+      : 'diese Woche kein Termin';
+    if(springen){
+      var ziel=document.getElementById('woche');
+      if(ziel) ziel.scrollIntoView({behavior:ruhig()?'auto':'smooth',block:'start'});
+    }
+  }
+}
+Z.fahneWeg.addEventListener('click',function(){ waehlen(null,false); });
+
+/* ===================================================================
+   5. ABRUF
+   =================================================================== */
+function abrufen(){
+  var w=planWoche(), von=w[0], bis=w[1];
+  var abbruch=new AbortController();
+  var uhrZeit=setTimeout(function(){ abbruch.abort(); },6000);
+  fetch('https://gymkloud.com/api/public/course-event/trojan_performance'+
+        '?from='+encodeURIComponent(von)+'&to='+encodeURIComponent(bis)+'&groupNames=Kurse',
+        {signal:abbruch.signal})
+  .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+  .then(function(d){
+    clearTimeout(uhrZeit);
+    if(!Array.isArray(d)||!d.length) throw new Error('leer');
+    var auf=d.map(function(e){
+      var s=new Date(e.startTime), z=new Date(e.endTime);
+      var k=e.course||{};
+      var max=(k.maxParticipants!=null)?k.maxParticipants:e.maxParticipants;
+      var frei=(max!=null && e.bookingCount!=null)?Math.max(0,max-e.bookingCount):null;
+      return { tag:(s.getDay()+6)%7,
+               zeit:String(e.startTime).slice(11,16),
+               dauer:Math.round((z-s)/60000)||75,
+               name:String(k.name||'').trim()||'Kurs',
+               farbe:k.color||'#e0dee0',
+               frei:frei, max:max };
+    }).filter(function(e){ return e.tag>=0 && e.tag<7; });
+    zeichnen(auf,true);
+  })
+  .catch(function(){ clearTimeout(uhrZeit); zeichnen(PLAN_STAND,false); });
+}
+
+/* ===================================================================
+   6. KLEINKRAM
+   =================================================================== */
+function ruhig(){
+  return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+/* Menü */
+var schalter=document.querySelector('.menue-schalter'), menue=document.getElementById('menue');
+function menueZu(){ schalter.setAttribute('aria-expanded','false'); menue.classList.remove('auf');
+  schalter.querySelector('.nur-sr').textContent='Menü öffnen'; }
+schalter.addEventListener('click',function(){
+  var auf=schalter.getAttribute('aria-expanded')==='true';
+  schalter.setAttribute('aria-expanded',auf?'false':'true');
+  menue.classList.toggle('auf',!auf);
+  schalter.querySelector('.nur-sr').textContent=auf?'Menü öffnen':'Menü schliessen';
+});
+menue.addEventListener('click',function(e){ if(e.target.closest('a')) menueZu(); });
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    if(menue.classList.contains('auf')){ menueZu(); schalter.focus(); }
+    else if(AKTIV) waehlen(null,false);
+  }
+});
+
+/* Formular ohne Empfänger sagt das, statt so zu tun, als wäre es weg */
+var form=document.getElementById('formular'), antwort=document.getElementById('form-antwort');
+form.addEventListener('submit',function(e){
+  e.preventDefault();
+  antwort.classList.add('an');
+  antwort.textContent='Nicht abgeschickt: dieses Formular hat noch keinen Empfänger. '+
+    'Schreib bitte an office@trojanperformance.at oder ruf unter +43 676 8227 7302 an.';
+});
+
+/* Platzhalter-Links dürften nirgends stehen — falls doch, springen sie nicht */
+document.addEventListener('click',function(e){
+  var a=e.target.closest && e.target.closest('a[href="#"]');
+  if(a) e.preventDefault();
+});
+
+/* Einblenden */
+if('IntersectionObserver' in window && !ruhig()){
+  var beob=new IntersectionObserver(function(eintraege){
+    eintraege.forEach(function(x){
+      if(x.isIntersecting){ x.target.classList.add('da'); beob.unobserve(x.target); }
+    });
+  },{rootMargin:'0px 0px -8% 0px',threshold:.05});
+  [].forEach.call(document.querySelectorAll('.auf-zu'),function(e){ beob.observe(e); });
+} else {
+  [].forEach.call(document.querySelectorAll('.auf-zu'),function(e){ e.classList.add('da'); });
+}
+
+abrufen();
+})();
+</script>
+</body>
+</html>

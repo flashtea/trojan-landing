@@ -1,0 +1,941 @@
+<!doctype html>
+<html lang="de">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Trojan Performance — Klagenfurt. Ein Text, der alles sagt.</title>
+<meta name="description" content="Performance Center in Klagenfurt am Wörthersee. Acht Kurse, 75 Minuten, immer ein Coach auf der Fläche. Preise, Kurszeiten und alles Übrige in einem durchgehenden Text.">
+<script>document.documentElement.className='js'</script>
+<style>
+@font-face{font-family:'Archivo';src:url('../assets/fonts/archivo-var.woff2') format('woff2');
+  font-weight:500 800;font-style:normal;font-display:swap}
+@font-face{font-family:'Archivo Black';src:url('../assets/fonts/archivo-black.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+
+/* ------------------------------------------------------------------ *
+   fluss — eine Seite, ein Text.
+   Kein Abschnitt, keine Karte, keine Tabelle, kein Raster. Geordnet wird
+   ausschliesslich mit Schrift: Grad, Gewicht, Farbe, Einzug, Linie.
+   Drei Sachen tragen die ganze Orientierung:
+     1. Die ersten hundert Wörter beantworten alle drei Fragen (die Kurzfassung).
+     2. Gelb heisst durchgehend: harte Zahl. Wer scrollt, sieht die Fakten blinken.
+     3. Drei Preisziffern im Riesengrad sind die einzigen Landmarken der Seite.
+ * ------------------------------------------------------------------ */
+
+:root{
+  --grund:#132C74;              /* oben  */
+  --grund-t:#0A1A40;            /* Mitte */
+  --grund-u:#06102A;            /* unten */
+  --text:#EAF0FF;
+  --matt:#A6B8E4;
+  --signal:#FFC64E;
+  --signal-d:#FFB01F;
+  --haar:rgba(234,240,255,.20);
+  --haar-s:rgba(234,240,255,.42);
+  --rand:clamp(18px,5vw,40px);
+  --pl:var(--rand);                       /* linker Einzug von .text/.fuss   */
+  --aussen:max(0px,(100vw - 1180px)/2);   /* was .text vom Fensterrand trennt */
+  --mass:34rem;                 /* Zeilenlaenge des Fliesstexts */
+  --grot:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --schwer:'Archivo Black','Archivo',system-ui,sans-serif;
+  --kurve:cubic-bezier(.16,1,.3,1);
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+html:focus-within{scroll-behavior:smooth}
+
+body{
+  font-family:var(--grot);
+  font-weight:500;
+  font-size:clamp(19px,1.05rem + .4vw,21.5px);
+  line-height:1.62;
+  letter-spacing:.002em;
+  color:var(--text);
+  background:var(--grund-u);
+  background-image:linear-gradient(180deg,var(--grund) 0%,var(--grund) 8%,
+                   var(--grund-t) 52%,var(--grund-u) 88%);
+  background-repeat:no-repeat;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+
+/* ---- Sprunglink -------------------------------------------------- */
+.spring{
+  position:fixed;top:8px;left:8px;z-index:60;
+  transform:translateY(-160%);
+  background:var(--signal);color:#0A1A40;
+  font:700 15px/1 var(--grot);
+  padding:15px 18px;border-radius:2px;text-decoration:none;
+  transition:transform .18s var(--kurve);
+}
+.spring:focus{transform:none}
+
+/* ---- Lesestand: eine Haarlinie oben ------------------------------ */
+.stand{
+  position:fixed;inset:0 auto auto 0;z-index:55;
+  height:2px;width:100%;transform-origin:0 50%;transform:scaleX(0);
+  background:var(--signal);
+  will-change:transform;
+}
+
+/* ---- Kopf: nur die Wortmarke ------------------------------------- */
+.kopf{
+  padding:clamp(22px,5vw,40px) var(--rand) 0;
+  max-width:1180px;margin-inline:auto;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+}
+.kopf img{height:clamp(19px,4.4vw,26px);width:auto;display:block;
+  filter:brightness(0) invert(1);opacity:.94}
+.kopf a{
+  color:var(--matt);text-decoration:none;font-weight:600;
+  font-size:clamp(13px,3.2vw,15px);letter-spacing:.09em;text-transform:uppercase;
+  display:inline-flex;align-items:center;min-height:44px;
+  border-bottom:1px solid transparent;
+}
+.kopf a:hover{color:var(--signal);border-bottom-color:var(--signal)}
+
+/* ---- Der Text ---------------------------------------------------- */
+.text{
+  max-width:1180px;margin-inline:auto;
+  padding:clamp(30px,7vw,64px) var(--rand) 0 var(--pl);
+}
+.text > *{max-width:var(--mass)}
+
+p{margin-block:0 1.05em;text-wrap:pretty}
+p + p{margin-top:0}
+
+/* Absatzgruppen bekommen Luft statt Ueberschriften: der Rhythmus
+   entsteht durch unterschiedlich grosse Abstaende, nicht durch Kaesten. */
+.luft{margin-top:2.6em}
+.luft-gross{margin-top:clamp(3.4em,10vw,5em)}
+
+/* ---- Der Takt: Saetze im Anzeigengrad ---------------------------- */
+.beat{
+  clear:both;
+  font-family:var(--schwer);font-weight:400;
+  line-height:.94;letter-spacing:-.028em;
+  text-wrap:balance;
+  max-width:16ch;
+  margin-block:0 .5em;
+}
+.beat-xl{font-size:clamp(2.55rem,12.4vw,7.6rem);max-width:13ch}
+.beat-l {font-size:clamp(1.95rem,8.4vw,4.4rem);max-width:15ch;margin-block:0 .44em}
+.beat-m {font-size:clamp(1.5rem,6.2vw,2.9rem);max-width:19ch;line-height:1.02;
+         letter-spacing:-.02em}
+.beat .h{color:var(--signal)}
+
+/* ---- Fakten: gelb heisst „das ist eine Zahl, die stimmt" ---------- */
+.z{color:var(--signal);font-weight:700;font-variant-numeric:tabular-nums;
+   white-space:nowrap}
+.z-w{white-space:normal}
+strong{font-weight:800;color:#fff}
+em{font-style:normal;font-weight:700;color:#fff}
+
+/* ---- Die drei Landmarken: Preise im Riesengrad ------------------- */
+.preis{
+  clear:both;
+  display:flex;flex-wrap:wrap;align-items:baseline;
+  column-gap:.55em;row-gap:.06em;
+  margin-top:2.1em;
+}
+.preis .zahl{
+  font-family:var(--schwer);font-weight:400;
+  font-size:clamp(3.1rem,15vw,5.6rem);
+  line-height:.86;letter-spacing:-.035em;
+  color:var(--signal);
+  font-variant-numeric:tabular-nums;
+  flex:0 0 auto;
+}
+.preis .satz{flex:1 1 15rem;min-width:0}
+
+/* ---- Haengende Randnotizen: alles, was zweitrangig ist ----------- */
+.rand{
+  font-size:.855em;line-height:1.55;color:var(--matt);
+  border-left:2px solid var(--haar-s);
+  padding-left:.95em;
+  margin-block:1.5em 1.6em;
+  max-width:30rem;
+}
+.rand .z{color:var(--signal-d)}
+.rand a{color:var(--matt)}
+
+/* ---- Einzuege statt Behaelter ------------------------------------ */
+/* Ein Kurs, ein Tag, ein Coach: Name vorn, Rest haengt darunter ein. */
+.ein{
+  padding-left:1.15em;text-indent:-1.15em;
+  margin-block:0 .85em;
+}
+.name{font-family:var(--schwer);font-weight:400;color:#fff;letter-spacing:-.008em}
+.ein .um{color:var(--matt);font-weight:500}
+.mehr{color:var(--matt)}
+
+/* ---- Der Wochenlauf ---------------------------------------------- */
+#woche{max-width:var(--mass)}
+#woche .ein{margin-bottom:1.02em;line-height:1.5}
+#woche .tag{font-family:var(--schwer);font-weight:400;color:#fff;
+  padding-right:.45em;white-space:nowrap}
+#woche .u{color:var(--signal);font-weight:700;font-variant-numeric:tabular-nums;
+  white-space:nowrap}
+#woche .pkt{color:rgba(166,184,228,.55)}
+.leer{color:var(--matt)}
+
+/* ---- Die HYROX-Strecke als eine einzige laufende Zeile ----------- */
+.strecke{
+  font-size:clamp(1.02rem,4.1vw,1.3rem);
+  line-height:1.5;font-weight:700;
+  max-width:34rem;
+  margin-block:1.2em 1.3em;
+  padding-left:.9em;
+  border-left:2px solid var(--signal);
+}
+.strecke .km{color:var(--matt);font-weight:500}
+.strecke .st{color:#fff;white-space:nowrap}
+.strecke .m{color:var(--signal)}
+.strecke .pkt{color:rgba(166,184,228,.5)}
+
+/* ---- Linien: Atem, nicht Trennung -------------------------------- */
+.linie{
+  border:0;height:0;border-top:1px solid var(--haar);
+  width:clamp(64px,26vw,180px);
+  margin:clamp(3em,9vw,4.4em) 0 clamp(2.3em,7vw,3.2em);
+  max-width:none;
+}
+
+/* ---- Gesichter: die einzigen Bilder im Text ---------------------- */
+.coach{
+  padding-left:0;text-indent:0;
+  display:flex;gap:.85em;align-items:flex-start;
+  margin-block:0 1.35em;
+}
+.coach img{
+  flex:0 0 auto;width:58px;height:74px;object-fit:cover;object-position:50% 22%;
+  border-radius:1px;filter:saturate(.72) contrast(1.06) brightness(1.04);
+}
+.coach .wer{min-width:0}
+
+/* ---- Das eine Bild: das Wandbild, ohne Rahmen in den Grund ------- */
+.band{
+  display:block;width:auto;max-width:none;clear:both;
+  margin:clamp(2.6em,8vw,4em) calc(-1*(var(--rand) + var(--aussen)))
+         clamp(2.6em,8vw,4em) calc(-1*(var(--pl) + var(--aussen)));
+}
+.band img{
+  display:block;width:100%;height:clamp(168px,44vw,340px);object-fit:cover;
+  object-position:50% 46%;
+  filter:saturate(.8) contrast(1.08) brightness(.92);
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 26%,#000 74%,transparent);
+  mask-image:linear-gradient(180deg,transparent,#000 26%,#000 74%,transparent);
+  opacity:.9;
+}
+
+/* ---- Der Satz, der ein Formular ist ------------------------------ */
+.satzform{line-height:2.5;max-width:36rem}
+.satzform label{position:absolute;width:1px;height:1px;overflow:hidden;
+  clip-path:inset(50%);white-space:nowrap}
+.satzform input,.satzform select{
+  font:700 1em/1.3 var(--grot);color:var(--signal);
+  background:transparent;border:0;border-bottom:2px solid var(--haar-s);
+  padding:9px 2px;min-height:44px;
+  appearance:none;-webkit-appearance:none;border-radius:0;
+  max-width:100%;
+}
+.satzform input{width:11.5em}
+.satzform input::placeholder{color:rgba(166,184,228,.7);font-weight:500}
+.satzform select{width:auto;padding-right:1.4em;cursor:pointer}
+.satzform .wahl{position:relative;display:inline-block}
+.satzform .wahl::after{content:'▾';position:absolute;right:.2em;top:50%;
+  transform:translateY(-52%);color:var(--matt);pointer-events:none;font-size:.85em}
+.satzform input:focus-visible,.satzform select:focus-visible{
+  border-bottom-color:var(--signal);outline:2px solid var(--signal);
+  outline-offset:4px}
+.senden{
+  font:800 1em/1 var(--grot);letter-spacing:.02em;
+  color:#0A1A40;background:var(--signal);
+  border:0;border-radius:2px;padding:15px 22px;min-height:48px;
+  cursor:pointer;margin-top:.6em;
+}
+.senden:hover{background:#fff}
+.antwort{margin-top:1.1em;color:var(--matt);font-size:.9em;line-height:1.55;
+  border-left:2px solid var(--signal);padding-left:.9em}
+.antwort:empty{display:none}
+
+/* ---- Der eine Sprung. Kein Menue: immer genau ein Ziel. ---------- */
+.sprung{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;
+  padding:clamp(24px,6vw,32px) var(--rand) max(10px,env(safe-area-inset-bottom))
+          calc(var(--pl) + var(--aussen));
+  background:linear-gradient(180deg,rgba(6,16,42,0),rgba(6,16,42,.8) 46%,rgba(6,16,42,.96));
+  pointer-events:none;
+  display:flex;justify-content:flex-start;
+}
+.sprung a{
+  pointer-events:auto;
+  display:inline-flex;align-items:center;gap:.5em;
+  min-height:46px;padding:6px 2px;
+  color:var(--signal);text-decoration:none;
+  font-weight:700;font-size:clamp(13.5px,3.4vw,15px);
+  letter-spacing:.07em;text-transform:uppercase;
+  border-bottom:1px solid var(--signal);
+  transition:opacity .26s var(--kurve),color .2s;
+}
+.sprung a:hover{color:#fff;border-bottom-color:#fff}
+.sprung[hidden]{display:none}
+.sprung.weg a{opacity:0}
+.sprung .pf{font-size:1.1em;line-height:1}
+
+/* ---- Fuss --------------------------------------------------------- */
+.fuss{
+  max-width:1180px;margin-inline:auto;
+  padding:clamp(3em,9vw,5em) var(--rand) clamp(64px,15vw,104px) var(--pl);
+  font-size:.855em;line-height:1.6;color:var(--matt);
+}
+.fuss > *{max-width:var(--mass)}
+.fuss p{margin-bottom:.9em}
+.fuss img{height:30px;width:auto;display:block;margin-bottom:1.7em;
+  filter:brightness(0) invert(1);opacity:.4}
+
+a{color:var(--signal)}
+.text a,.fuss a{
+  color:inherit;text-decoration:none;
+  border-bottom:1px solid var(--signal);
+  padding-bottom:1px;
+}
+.text a:hover,.fuss a:hover{color:var(--signal)}
+.tel,.mail{white-space:nowrap}
+.kontakt{line-height:2.4}
+.kontakt a{padding-block:12px}
+
+:focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:1px}
+
+/* ---- Bewegung: nur an den drei Landmarken und den Takten --------- */
+.js .auf{opacity:0;transform:translateY(14px);
+  transition:opacity .7s var(--kurve),transform .7s var(--kurve)}
+.js .auf.da{opacity:1;transform:none}
+.preis .zahl{transition:letter-spacing .8s var(--kurve)}
+.preis.auf .zahl{letter-spacing:.08em}
+.preis.auf.da .zahl{letter-spacing:-.035em}
+
+/* ---- Breiter Schirm: linke Achse, Randnotizen haengen rechts ----- */
+@media (min-width:1080px){
+  :root{--mass:35rem;--pl:clamp(40px,7vw,120px)}
+  /* Die Randnotizen haengen rechts neben der Textspalte, im Freiraum, den
+     die linke Achse uebrig laesst — der Text laeuft daran vorbei. */
+  .rand{
+    float:left;clear:left;
+    width:min(18rem,22vw);
+    margin:-5.2em 0 1.2em calc(var(--mass) + 2.6rem);
+    font-size:.8em;
+  }
+  /* Zwei Notizen hintereinander duerfen sich nicht uebereinanderziehen:
+     nur die erste holt sich den Hochzug. */
+  .rand + .rand{margin-top:1.4em}
+  .beat-xl{margin-bottom:.42em}
+  .coach img{width:74px;height:94px}
+  .strecke{padding-left:1.1em}
+  .preis{max-width:49rem}
+  .preis .satz{max-width:30rem}
+}
+@media (min-width:1500px){
+  :root{--pl:clamp(120px,10vw,210px)}
+}
+
+/* ---- Ruhe -------------------------------------------------------- */
+@media (prefers-reduced-motion:reduce){
+  html:focus-within{scroll-behavior:auto}
+  *,*::before,*::after{
+    animation-duration:.001ms !important;animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;scroll-behavior:auto !important}
+  .js .auf{opacity:1;transform:none}
+  .preis.auf .zahl,.preis.auf.da .zahl{letter-spacing:-.035em}
+  .sprung.weg a{opacity:1}
+}
+</style>
+
+<a class="spring" href="#text">Zum Text springen</a>
+<div class="stand" id="stand" aria-hidden="true"></div>
+
+<header class="kopf">
+  <img src="__LOGO__" alt="Trojan Performance">
+  <a class="tel" href="tel:+4367682277302">+43 676 8227 7302</a>
+</header>
+
+<nav class="sprung" id="sprung" aria-label="Abkürzung"><a href="#" id="sprung-a"><span id="sprung-t">Was es kostet</span><span class="pf" aria-hidden="true">↓</span></a></nav>
+
+<main class="text" id="text" tabindex="-1">
+
+  <h1 class="beat beat-xl auf">Acht Kurse. Immer <span class="h">75&nbsp;Minuten.</span> Immer ein Coach auf der Fläche.</h1>
+
+  <p>Trojan&nbsp;Performance ist ein Performance Center in der Sebastiangasse&nbsp;1 in
+  Klagenfurt am Wörthersee. Kurse laufen <span id="fenster">Montag bis Freitag
+  vormittags und abends, Samstag am Vormittag</span> — <span class="mehr">die ganze
+  Woche steht weiter unten, Termin für Termin</span>. Drei Einheiten pro Woche, die
+  Empfehlung zum Einstieg, kosten <span class="z">150&nbsp;€</span> im Monat, bei zwölf
+  Monaten Bindung <span class="z">130&nbsp;€</span>. Vorkenntnisse brauchst du keine, und
+  das erste Mal kostet <span class="z">15&nbsp;€</span>.</p>
+
+  <h2 class="beat beat-l luft auf">Das ist die kurze Antwort. Jetzt die lange.</h2>
+
+  <p>Mike und Dominik sind Brüder und haben das Gym <span class="z">2017</span>
+  aufgemacht. Es ist der erste offizielle <em>HYROX Training Club</em> in Kärnten — was
+  das bedeutet, kommt gleich. Der Satz, an dem hier alles hängt, ist aber ein anderer und
+  klingt kleiner, als er ist: In jedem Kurs steht ein Coach auf der Fläche und korrigiert.
+  Er sagt nicht nur an.</p>
+
+  <p>Das ist der Unterschied zwischen einem Programm, das abläuft, und einer Einheit, in
+  der jemand sieht, wie <em>du</em> die Kniebeuge machst. Und deshalb hängt die Gruppengrösse
+  daran, wie technisch es wird: <span class="z">12 bis 16</span> Leute beim Performance,
+  <span class="z">12</span> beim FBB — und <span class="z">24</span> beim Powercircle, wo
+  es technisch anspruchslos zugeht.</p>
+
+  <hr class="linie">
+
+  <h2 class="beat beat-m auf">Acht Kurse, der Reihe nach — der häufigste zuerst.</h2>
+
+  <p class="ein"><span class="name">Performance</span> <span class="um">— siebenmal die
+  Woche, 12 bis 16 Plätze.</span> Crosstraining aus Powerlifting, Weightlifting,
+  Gymnastics, Calisthenics, Strongman und Ausdauer. Die Reize sind nicht willkürlich
+  kombiniert, sondern folgen einer periodisierten Planung.</p>
+
+  <p class="ein"><span class="name">FBB/Strength&nbsp;&amp;&nbsp;Power</span> <span class="um">—
+  sechsmal die Woche, 16 Plätze.</span> Muskelaufbau nach festem Schema, kombiniert mit
+  kurzen intensiven Ausdauerblöcken. Kraft und Ausdauer in einer Einheit.</p>
+
+  <p>Diese beiden füllen den Kalender. Wenn du hier trainierst, trainierst du
+  wahrscheinlich vor allem sie. Daneben laufen sechs weitere.</p>
+
+  <p class="ein luft"><span class="name">Powercircle</span> <span class="um">— dreimal die
+  Woche, 24 Plätze.</span> Airbike, SkiErg, Schlitten, Jump-Box, Battle-Rope, Wallballs im
+  Wechsel. Kurze harte Intervalle, kurze Pausen. Technisch anspruchslos — deshalb der
+  Kurs, mit dem Einsteiger anfangen können, ohne vorher irgendetwas gelernt zu haben.</p>
+
+  <p class="ein"><span class="name">Mama reloaded</span> <span class="um">— dreimal die
+  Woche, 45 Minuten statt 75.</span> Wiedereinstieg nach der Schwangerschaft. Beckenboden,
+  Rumpf und Kraft in einem Tempo, das sich an den Tag anpasst.</p>
+
+  <p class="ein"><span class="name">Hyrox</span> <span class="um">— zweimal die Woche,
+  24 Plätze.</span> Vorbereitung auf das Rennformat, das weltweit unter denselben
+  Bedingungen läuft: Open, Pro, Doubles, Relay. Für jedes Level, vom Einstieg bis zum
+  Wettkampf.</p>
+
+  <p>Und dann gibt es drei, die je einmal pro Woche stattfinden.
+  <span class="name">Team-WOD</span> machst du zu zweit
+  mit deinem Trainingsbuddy, <span class="z">16&nbsp;Plätze</span>, jede Woche ein anderes
+  Workout, Intensität und Schwierigkeit auf euch beide angepasst.
+  <span class="name">FBB</span> beginnt mit einem
+  gemeinsamen Warm-up, danach wählst du Ober- oder Unterkörper, je vier Übungen mit
+  vorgegebenen Sätzen, Wiederholungen und Pausen, zum Abschluss eine kurze intensive
+  Belastung — <span class="z">12&nbsp;Plätze</span>. Und beim
+  <span class="name">Community TeamWOD</span> ist die
+  Runde grösser, <span class="z">24&nbsp;Plätze</span>, jede Woche ein anderes Programm,
+  angepasst wird trotzdem.</p>
+
+  <p class="rand">Die Empfehlung des Gyms für den Anfang: drei Einheiten pro Woche. Zwei
+  für die Kraft, eine für die Ausdauer.</p>
+
+  <hr class="linie">
+
+  <h2 class="beat beat-m auf">So liegt diese Woche.</h2>
+
+  <p>Was darunter steht, ist nicht die Woche „üblicherweise", sondern
+  <span id="wann">die Woche, die gerade läuft</span>. Und es steht alles drin, auch die
+  Termine, die zu keinem der acht Kurse gehören.</p>
+
+  <div id="woche" aria-live="polite">
+    <p class="leer">Der Wochenplan wird geladen …</p>
+  </div>
+
+  <p class="luft" id="ableitung">Daraus ergibt sich das Zeitfenster, in dem hier überhaupt
+  etwas los ist.</p>
+
+  <p class="rand" id="stand-hinweis">Stand wird geprüft …</p>
+
+  <hr class="linie">
+
+  <h2 class="beat beat-m auf">HYROX ist ein Rennen mit acht Kilometern und acht Stationen.</h2>
+
+  <p>Weltweit dieselben Regeln, überall dieselbe Strecke: Vor jeder Station wird
+  <span class="z">1&nbsp;km</span> gelaufen, danach kommt die Station. Achtmal
+  hintereinander, in dieser Reihenfolge:</p>
+
+  <p class="strecke"><span class="km">1&nbsp;km</span> <span class="pkt">·</span> <span class="st"><span class="m">1000&nbsp;m</span> SkiErg</span> <span class="pkt">·</span> <span class="km">1&nbsp;km</span> <span class="pkt">·</span> <span class="st"><span class="m">50&nbsp;m</span> Sled&nbsp;Push</span> <span class="pkt">·</span> <span class="km">1&nbsp;km</span> <span class="pkt">·</span> <span class="st"><span class="m">50&nbsp;m</span> Sled&nbsp;Pull</span> <span class="pkt">·</span> <span class="km">1&nbsp;km</span> <span class="pkt">·</span> <span class="st"><span class="m">80&nbsp;m</span> Burpee&nbsp;Broad&nbsp;Jumps</span> <span class="pkt">·</span> <span class="km">1&nbsp;km</span> <span class="pkt">·</span> <span class="st"><span class="m">1000&nbsp;m</span> Rudern</span> <span class="pkt">·</span> <span class="km">1&nbsp;km</span> <span class="pkt">·</span> <span class="st"><span class="m">200&nbsp;m</span> Farmers&nbsp;Carry</span> <span class="pkt">·</span> <span class="km">1&nbsp;km</span> <span class="pkt">·</span> <span class="st"><span class="m">100&nbsp;m</span> Sandbag&nbsp;Lunges</span> <span class="pkt">·</span> <span class="km">1&nbsp;km</span> <span class="pkt">·</span> <span class="st"><span class="m">100</span> Wall&nbsp;Balls</span></p>
+
+  <p>Einer der acht Kurse bereitet genau darauf vor, zweimal pro Woche. Mitmachen kannst du
+  ihn, ohne je an einem Start zu stehen — es ist ein gutes Training, auch wenn das Rennen
+  nie stattfindet.</p>
+
+  <div class="band"><img src="__PH_MURAL__" alt="Wandbild in der Halle: das Trojan-Logo, blau-weiss gemalt" loading="lazy" decoding="async"></div>
+
+  <h2 class="beat beat-m auf">Vier Coaches stehen auf der Fläche.</h2>
+
+  <p class="ein coach"><img src="__PH_COACHMIKE__" alt="Mike, Coach und Mitgründer" loading="lazy" decoding="async"><span class="wer"><span class="name">Mike</span> <span class="um">— über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien.</span> Hat das Gym 2017 mit seinem Bruder Dominik aufgemacht.</span></p>
+
+  <p class="ein coach"><img src="__PH_COACHDOMINIK__" alt="Dominik, Coach und Mitgründer" loading="lazy" decoding="async"><span class="wer"><span class="name">Dominik</span> <span class="um">— dreifacher Staatsmeister im Gewichtheben.</span> CrossFit Level 2 Trainer und Instruktor für die olympischen Züge.</span></p>
+
+  <p class="ein coach"><img src="__PH_COACHDIEGO__" alt="Diego, Coach" loading="lazy" decoding="async"><span class="wer"><span class="name">Diego</span> <span class="um">— Psychologe und CrossFit Level 1 Trainer.</span> Kam aus Chile, wo er auf regionaler Ebene Wettkämpfe bestritten hat.</span></p>
+
+  <p class="ein coach"><img src="__PH_COACHBENNI__" alt="Benni, Coach" loading="lazy" decoding="async"><span class="wer"><span class="name">Benni</span> <span class="um">— aktiver Eishockeyspieler, studiert Lehramt für Bewegung und Sport in Klagenfurt.</span> Schwerpunkt Konditionstraining.</span></p>
+
+  <hr class="linie">
+
+  <h2 class="beat beat-l auf">Der Betreiber sagt es selbst: nicht das billigste Gym der Stadt.</h2>
+
+  <p>Also der Reihe nach, und ohne Sternchen. Die Kurstarife rechnen pro Monat. Wie lange
+  du dich bindest, entscheidest du: <span class="z">1</span>, <span class="z">6</span>
+  oder <span class="z">12</span> Monate. Je länger, desto günstiger.</p>
+
+  <p class="preis auf">
+    <span class="zahl">130&nbsp;€</span>
+    <span class="satz">im Monat kosten <em>zwei Einheiten pro Woche</em>. Bei sechs Monaten
+    Bindung sind es <span class="z">120&nbsp;€</span>, bei zwölf
+    <span class="z">110&nbsp;€</span>. Gerechnet sind das neun Einheiten im Monat, frei
+    einteilbar — <span class="z">14,44&nbsp;€</span> pro Mal.</span>
+  </p>
+
+  <p class="preis auf">
+    <span class="zahl">150&nbsp;€</span>
+    <span class="satz">kosten <em>drei</em> — die Empfehlung zum Einstieg. Mit sechs
+    Monaten <span class="z">140&nbsp;€</span>, mit zwölf <span class="z">130&nbsp;€</span>.
+    Das sind 13 Einheiten im Monat und <span class="z">11,54&nbsp;€</span> pro Mal, bei der
+    langen Bindung glatte <span class="z">10,00&nbsp;€</span>.</span>
+  </p>
+
+  <p class="preis auf">
+    <span class="zahl">170&nbsp;€</span>
+    <span class="satz">kosten <em>sechs</em>, Montag bis Samstag. Sechs Monate:
+    <span class="z">160&nbsp;€</span>. Zwölf Monate: <span class="z">150&nbsp;€</span>. Bei
+    26 Einheiten im Monat ist man dann bei <span class="z">6,54&nbsp;€</span> pro
+    Mal.</span>
+  </p>
+
+  <p class="luft">Ohne jede Bindung geht es auch. Das Probetraining kostet
+  <span class="z">15&nbsp;€</span>, ein einzelner Drop-in <span class="z">25&nbsp;€</span>. Ein
+  10er-Block kostet <span class="z">200&nbsp;€</span> und ist ein Jahr lang gültig, eine
+  Einheit Personal Training <span class="z">100&nbsp;€</span>. Und wer nur die Halle will, ohne
+  Kurs: Open Gym <span class="z">60&nbsp;€</span> im Monat, monatlich kündbar.</p>
+
+  <p>In jedem Tarif enthalten, ohne dass man danach fragen muss: keine Einschreibgebühr
+  und ein eigener Kraftaufbauplan.</p>
+
+  <p class="rand">Zum Vertrag: Bei sechs Monaten kannst du einmal pausieren, bei zwölf
+  zweimal, jeweils bis zu vier Wochen. Bei triftigem Grund ist der Vertrag übertragbar.</p>
+
+  <p class="rand">Selbstständig und SVS-versichert? Dann überweist die SVS
+  <span class="z">100&nbsp;€</span> aufs Konto — für jeden Tarif ausser Open Gym, und für
+  den 10er-Block.</p>
+
+  <hr class="linie">
+
+  <h2 class="beat beat-m auf">Die Halle steht in der Sebastiangasse 1.</h2>
+
+  <p><span class="z z-w">9020 Klagenfurt am Wörthersee</span>. Parkplätze rund ums Gebäude,
+  gratis, du musst also nicht dreimal um den Block. Zwei Garderoben, je ein Duschraum mit
+  drei Duschen. Ausserhalb der Kurse steht die Fläche als Open Gym offen, täglich von
+  <span class="z">06:00</span> bis <span class="z">22:00</span>, mit eigenem Tarif und
+  Zutritt über die App.</p>
+
+  <hr class="linie">
+
+  <h2 class="beat beat-l auf">Bleibt das erste Mal.</h2>
+
+  <p>Eine Einheit, ein Coach, <span class="z">75 Minuten</span>,
+  <span class="z">15&nbsp;€</span>. Vorkenntnisse braucht es keine — der Coach weiss, dass
+  du neu bist, dafür steht er ja da. Mitbringen: Handtuch, Trinkflasche, Hallenschuhe mit
+  sauberer Sohle. Mehr nicht.</p>
+
+  <form class="satzform luft" id="form" novalidate>
+    <p>Ich heisse
+      <label for="f-name">Dein Name</label><input id="f-name" name="name" type="text" placeholder="Name" autocomplete="name">
+      und du erreichst mich unter
+      <label for="f-kontakt">E-Mail oder Telefonnummer</label><input id="f-kontakt" name="kontakt" type="text" placeholder="E-Mail oder Telefon" autocomplete="email">.
+      Mich interessiert
+      <span class="wahl"><label for="f-anliegen">Anliegen</label><select id="f-anliegen" name="anliegen">
+        <option>ein Probetraining</option>
+        <option>1:1 Coaching</option>
+        <option>Firmentraining</option>
+        <option>etwas anderes</option>
+      </select></span>.
+    </p>
+    <button class="senden" type="submit">Abschicken</button>
+    <p class="antwort" id="antwort" role="status"></p>
+  </form>
+
+  <p class="luft kontakt">Direkter geht es per Mail an
+  <a class="mail" href="mailto:office@trojanperformance.at">office@trojanperformance.at</a>
+  oder telefonisch unter
+  <a class="tel" href="tel:+4367682277302">+43&nbsp;676&nbsp;8227&nbsp;7302</a>. Wenn du
+  vorher schauen willst, wie es hier zugeht:
+  <a href="https://www.instagram.com/trojan.performance/" rel="noopener">Instagram</a>,
+  <a href="https://www.facebook.com/trojanperformanceofficial" rel="noopener">Facebook</a>,
+  <a href="https://www.youtube.com/channel/UChUZebvjDwrWEdOCa86xNiA" rel="noopener">YouTube</a>.
+  Probetraining, allgemeine Anfragen, 1:1 Coaching und Firmentraining beantwortet der
+  Betreiber selbst.</p>
+
+</main>
+
+<footer class="fuss">
+  <img src="__MONOA__" alt="">
+  <p>Trojan Performance · Sebastiangasse 1, 9020 Klagenfurt am Wörthersee ·
+  office@trojanperformance.at · +43 676 8227 7302</p>
+  <p>Dieser Entwurf ist noch nicht fertig verkabelt: Das Formular oben hat keinen
+  Empfänger, die Buchung läuft in der App und nicht hier, einen Routenplaner gibt es
+  nicht, und Impressum und Datenschutz fehlen noch. Die Kurszeiten sind echt — sie kommen
+  live aus dem Buchungssystem. Alle Preise und Angaben stammen vom Betreiber.</p>
+</footer>
+
+
+<script>
+(function(){
+'use strict';
+
+/* ------------------------------------------------------------------ *
+   1. Die Woche. Kommt aus dem Buchungssystem, faellt zurueck auf einen
+      eingefrorenen Stand. Gezeichnet wird sie als Absatz pro Tag mit
+      haengendem Einzug — kein Raster, keine Tabelle.
+ * ------------------------------------------------------------------ */
+
+var PLAN_STAND=[
+  [1,'06:00',75,'Performance'],   [3,'06:00',75,'Performance'],
+  [0,'08:15',75,'FBB/Strength & Power'], [1,'08:15',75,'Performance'],
+  [2,'08:15',75,'FBB/Strength & Power'], [4,'08:15',75,'Performance'],
+  [5,'08:15',75,'FBB/Strength & Power'], [5,'09:30',75,'Community TeamWOD'],
+  [4,'09:45',45,'Mama reloaded'],  [2,'10:00',45,'Mama reloaded'],
+  [4,'10:45',45,'Mama reloaded'],
+  [2,'16:00',75,'Powercircle'],    [4,'16:00',75,'FBB/Strength & Power'],
+  [0,'17:15',75,'Powercircle'],    [0,'17:15',75,'Performance'],
+  [1,'17:15',75,'FBB/Strength & Power'], [2,'17:15',75,'Team-WOD'],
+  [3,'17:15',75,'Performance'],    [4,'17:15',75,'Hyrox'],
+  [0,'18:30',75,'FBB/Strength & Power'], [1,'18:30',75,'Performance'],
+  [2,'18:30',75,'Hyrox'],          [3,'18:30',75,'FBB'],
+  [3,'18:30',75,'Powercircle']
+].map(function(a){return {tag:a[0],zeit:a[1],dauer:a[2],name:a[3]};});
+
+var TAGE=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
+var ZAHLWORT=['null','einem','zwei','drei','vier','fünf','sechs','sieben'];
+var MONATE=['Jänner','Februar','März','April','Mai','Juni','Juli','August',
+            'September','Oktober','November','Dezember'];
+
+function planWoche(){
+  var jetzt=new Date(), versatz=(jetzt.getDay()+6)%7;
+  var mo=new Date(jetzt.getFullYear(),jetzt.getMonth(),jetzt.getDate()-versatz);
+  var so=new Date(mo.getFullYear(),mo.getMonth(),mo.getDate()+7);
+  var f=function(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+
+    '-'+String(d.getDate()).padStart(2,'0')+'T00:00:00.000Z';};
+  return [f(mo),f(so),mo];
+}
+
+var min=function(hhmm){var t=hhmm.split(':');return (+t[0])*60+(+t[1]);};
+var hhmm=function(m){return String(Math.floor(m/60)).padStart(2,'0')+':'+
+  String(m%60).padStart(2,'0');};
+
+function el(tag,klasse,text){
+  var n=document.createElement(tag);
+  if(klasse) n.className=klasse;
+  if(text!=null) n.textContent=text;
+  return n;
+}
+
+function zeichnen(daten,live){
+  var ziel=document.getElementById('woche');
+  ziel.textContent='';
+
+  var gueltig=daten.filter(function(e){
+    return e && e.name && /^\d\d:\d\d$/.test(e.zeit) && e.tag>=0 && e.tag<=6;
+  });
+  if(!gueltig.length){ zeichnen(PLAN_STAND,false); return; }
+
+  /* pro Tag, pro Uhrzeit gruppieren: „17:15 Powercircle und Performance" */
+  var tage={};
+  gueltig.forEach(function(e){
+    (tage[e.tag]=tage[e.tag]||{});
+    (tage[e.tag][e.zeit]=tage[e.tag][e.zeit]||[]).push(e);
+  });
+
+  Object.keys(tage).map(Number).sort(function(a,b){return a-b;}).forEach(function(t){
+    var p=el('p','ein');
+    p.appendChild(el('span','tag',TAGE[t]));
+    p.appendChild(document.createTextNode(' '));
+    var zeiten=Object.keys(tage[t]).sort();
+    zeiten.forEach(function(z,i){
+      if(i){
+        p.appendChild(document.createTextNode(' '));
+        p.appendChild(el('span','pkt','·'));
+        p.appendChild(document.createTextNode(' '));
+      }
+      p.appendChild(el('span','u',z));
+      p.appendChild(document.createTextNode(' '));
+      var namen=tage[t][z].map(function(e){return e.name;});
+      /* Doppelte am selben Slot zusammenziehen */
+      namen=namen.filter(function(n,k){return namen.indexOf(n)===k;});
+      p.appendChild(document.createTextNode(
+        namen.length>1 ? namen.slice(0,-1).join(', ')+' und '+namen[namen.length-1]
+                       : namen[0]));
+    });
+    ziel.appendChild(p);
+  });
+
+  fenster(gueltig,live,Object.keys(tage).length);
+}
+
+/* Das Zeitfenster wird abgeleitet, nicht hingeschrieben. */
+function fenster(daten,live,tagAnzahl){
+  var werk=daten.filter(function(e){return e.tag<=4;});
+  var sams=daten.filter(function(e){return e.tag===5;});
+  var son =daten.filter(function(e){return e.tag===6;});
+
+  function spanne(liste){
+    if(!liste.length) return null;
+    var a=Infinity,b=-Infinity;
+    liste.forEach(function(e){
+      var s=min(e.zeit), x=s+(e.dauer||75);
+      if(s<a)a=s; if(x>b)b=x;
+    });
+    return [a,b];
+  }
+  var frueh=spanne(werk.filter(function(e){return min(e.zeit)<12*60;}));
+  var spaet=spanne(werk.filter(function(e){return min(e.zeit)>=12*60;}));
+  var sa=spanne(sams), so=spanne(son);
+
+  var z=function(m){return el('span','z',hhmm(m));};
+  var w=function(t){return document.createTextNode(t);};
+
+  /* Kurzfassung ganz oben — derselbe abgeleitete Wert, andere Worte. */
+  var kurz=document.getElementById('fenster');
+  if(kurz){
+    kurz.textContent='';
+    if(frueh&&spaet){
+      kurz.appendChild(w('Montag bis Freitag '));
+      kurz.appendChild(z(frueh[0])); kurz.appendChild(w('–'));
+      kurz.appendChild(z(frueh[1])); kurz.appendChild(w(' und '));
+      kurz.appendChild(z(spaet[0])); kurz.appendChild(w('–'));
+      kurz.appendChild(z(spaet[1]));
+    }
+    if(sa){
+      kurz.appendChild(w((frueh&&spaet?', ':'')+'Samstag '));
+      kurz.appendChild(z(sa[0])); kurz.appendChild(w('–'));
+      kurz.appendChild(z(sa[1]));
+    }
+    if(!frueh&&!spaet&&!sa) kurz.textContent='Montag bis Samstag';
+  }
+
+  /* Die lange Fassung, als Satz. */
+  var lang=document.getElementById('ableitung');
+  if(lang){
+    lang.textContent='';
+    lang.appendChild(document.createTextNode('Zusammengezählt sind das '));
+    lang.appendChild(el('span','z',daten.length+' Termine'));
+    lang.appendChild(document.createTextNode(
+      ' an '+(ZAHLWORT[tagAnzahl]||tagAnzahl)+(tagAnzahl===1?' Tag. ':' Tagen. ')));
+    if(frueh){
+      lang.appendChild(document.createTextNode('Unter der Woche geht der erste Kurs um '));
+      lang.appendChild(z(frueh[0]));
+      lang.appendChild(document.createTextNode(' los, der Vormittag ist um '));
+      lang.appendChild(z(frueh[1]));
+      lang.appendChild(document.createTextNode(' vorbei'));
+      if(spaet){
+        lang.appendChild(document.createTextNode('; abends geht es um '));
+        lang.appendChild(z(spaet[0]));
+        lang.appendChild(document.createTextNode(' weiter und um '));
+        lang.appendChild(z(spaet[1]));
+        lang.appendChild(document.createTextNode(' ist Schluss'));
+      }
+      lang.appendChild(document.createTextNode('. '));
+    }
+    if(sa){
+      lang.appendChild(document.createTextNode('Am Samstag läuft es von '));
+      lang.appendChild(z(sa[0]));
+      lang.appendChild(document.createTextNode(' bis '));
+      lang.appendChild(z(sa[1]));
+      lang.appendChild(document.createTextNode('. '));
+    }
+    if(so){
+      lang.appendChild(document.createTextNode('Am Sonntag von '));
+      lang.appendChild(z(so[0]));
+      lang.appendChild(document.createTextNode(' bis '));
+      lang.appendChild(z(so[1]));
+      lang.appendChild(document.createTextNode('. '));
+    }else{
+      lang.appendChild(document.createTextNode('Sonntag ist zu. '));
+    }
+    lang.appendChild(document.createTextNode(
+      'Damit weisst du, ob deine Woche da hineinpasst, ohne vorher jemanden zu fragen.'));
+  }
+
+  datumZeile(live);
+
+  var hin=document.getElementById('stand-hinweis');
+  if(hin){
+    hin.textContent = live
+      ? 'Dieser Plan wurde beim Laden dieser Seite aus dem Buchungssystem geholt. '
+        + 'Kurzfristige Änderungen stehen in der App, dort wird auch gebucht.'
+      : 'Das Buchungssystem hat gerade nicht geantwortet, deshalb steht hier der zuletzt '
+        + 'bekannte Plan. Er kann eine Woche alt sein — verlass dich vor der Fahrt lieber '
+        + 'auf die App.';
+  }
+}
+
+var MONTAG=null;
+
+/* Der Satz nennt nur dann ein Datum, wenn die Daten auch von heute sind. */
+function datumZeile(live){
+  var n=document.getElementById('wann');
+  if(!n||!MONTAG) return;
+  var so=new Date(MONTAG.getFullYear(),MONTAG.getMonth(),MONTAG.getDate()+6);
+  n.textContent = live
+    ? 'die Woche von Montag, dem '+MONTAG.getDate()+'. '+MONATE[MONTAG.getMonth()]+
+      ', bis Sonntag, dem '+so.getDate()+'. '+MONATE[so.getMonth()]
+    : 'der zuletzt bekannte Stand — die laufende Woche kann davon abweichen';
+}
+
+(function(){
+  var w=planWoche(), von=w[0], bis=w[1];
+  MONTAG=w[2];
+  var url='https://gymkloud.com/api/public/course-event/trojan_performance'+
+          '?from='+von+'&to='+bis+'&groupNames=Kurse';
+  fetch(url).then(function(r){
+    if(!r.ok) throw new Error(r.status);
+    return r.json();
+  }).then(function(d){
+    if(!Array.isArray(d)||!d.length) throw new Error('leer');
+    zeichnen(d.map(function(e){
+      return {
+        tag:(new Date(e.startTime).getDay()+6)%7,
+        zeit:String(e.startTime).slice(11,16),
+        dauer:Math.round((new Date(e.endTime)-new Date(e.startTime))/60000)||75,
+        name:String((e.course&&e.course.name)||'').trim()
+      };
+    }),true);
+  }).catch(function(){
+    zeichnen(PLAN_STAND,false);
+  }).then(function(){
+    sprungPruefen();
+    lesestand();
+  });
+})();
+
+/* ------------------------------------------------------------------ *
+   2. Lesestand — eine Haarlinie. Beantwortet die einzige Frage, die ein
+      langer Text aufwirft: wie viel kommt noch.
+ * ------------------------------------------------------------------ */
+var stand=document.getElementById('stand');
+var ticking=false;
+function lesestand(){
+  var h=document.documentElement.scrollHeight-window.innerHeight;
+  var p=h>0 ? Math.min(1,Math.max(0,window.scrollY/h)) : 0;
+  stand.style.transform='scaleX('+p.toFixed(4)+')';
+}
+
+/* ------------------------------------------------------------------ *
+   3. Der eine Sprung. Zu jedem Zeitpunkt genau ein Ziel — das naechste,
+      das jemand plausibel sucht. Nie eine Liste, nie ein Menue.
+ * ------------------------------------------------------------------ */
+var ZIELE=[
+  {id:'woche',  wort:'So liegt die Woche'},
+  {id:'preise', wort:'Was es kostet'},
+  {id:'form',   wort:'Probetraining, 15 €'}
+];
+var sprung=document.getElementById('sprung'),
+    sprungA=document.getElementById('sprung-a'),
+    sprungT=document.getElementById('sprung-t'),
+    aktuell=-1;
+
+/* Anker setzen, ohne dass im Markup Abschnitte entstehen. */
+(function(){
+  var preise=document.querySelector('.preis');
+  if(preise) preise.id='preise';
+})();
+
+function sprungPruefen(){
+  var y=window.scrollY+window.innerHeight*0.62;
+  var neu=0;
+  for(var i=0;i<ZIELE.length;i++){
+    var n=document.getElementById(ZIELE[i].id);
+    if(n && n.getBoundingClientRect().top+window.scrollY < y) neu=i+1;
+  }
+  var ende=window.scrollY+window.innerHeight >
+           document.documentElement.scrollHeight-260;
+  if(neu>=ZIELE.length || ende){
+    if(!sprung.hidden){ sprung.hidden=true; }
+    aktuell=-1;
+    return;
+  }
+  sprung.hidden=false;
+  if(neu===aktuell) return;
+  aktuell=neu;
+  var ziel=ZIELE[neu];
+  sprungA.setAttribute('href','#'+ziel.id);
+  sprung.classList.add('weg');
+  window.setTimeout(function(){
+    sprungT.textContent=ziel.wort;
+    sprung.classList.remove('weg');
+  },180);
+}
+
+sprungA.addEventListener('click',function(ev){
+  var id=sprungA.getAttribute('href').slice(1);
+  var n=document.getElementById(id);
+  if(!n) return;
+  ev.preventDefault();
+  n.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches
+    ? 'auto':'smooth', block:'start'});
+  n.setAttribute('tabindex','-1');
+  n.focus({preventScroll:true});
+});
+
+window.addEventListener('scroll',function(){
+  if(ticking) return;
+  ticking=true;
+  window.requestAnimationFrame(function(){
+    lesestand(); sprungPruefen(); ticking=false;
+  });
+},{passive:true});
+window.addEventListener('resize',function(){lesestand();sprungPruefen();},{passive:true});
+
+/* ------------------------------------------------------------------ *
+   4. Bewegung nur dort, wo sie etwas heisst: an den Takten und an den
+      drei Preisziffern. Unter „reduce" ist alles sofort da.
+ * ------------------------------------------------------------------ */
+function beobachten(){
+  var ruhe=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var knoten=document.querySelectorAll('.auf');
+  if(ruhe || !('IntersectionObserver' in window)){
+    for(var i=0;i<knoten.length;i++) knoten[i].classList.add('da');
+    lesestand();
+    return;
+  }
+  var b=new IntersectionObserver(function(eintraege){
+    eintraege.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('da'); b.unobserve(e.target); }
+    });
+  },{rootMargin:'0px 0px -12% 0px',threshold:.15});
+  for(var k=0;k<knoten.length;k++) b.observe(knoten[k]);
+  lesestand();
+}
+
+/* ------------------------------------------------------------------ *
+   5. Das Formular sagt die Wahrheit: es geht nirgendwohin.
+ * ------------------------------------------------------------------ */
+var form=document.getElementById('form'),
+    antwort=document.getElementById('antwort');
+form.addEventListener('submit',function(ev){
+  ev.preventDefault();
+  var name=(document.getElementById('f-name').value||'').trim();
+  antwort.textContent=(name?name+', ':'')+
+    'dieses Formular ist in diesem Entwurf an nichts angeschlossen — es verschickt nichts '+
+    'und speichert nichts. Schreib bitte direkt an office@trojanperformance.at oder ruf '+
+    'unter +43 676 8227 7302 an.';
+});
+
+/* Platzhalter-Links springen nicht an den Seitenanfang. */
+document.addEventListener('click',function(ev){
+  var a=ev.target.closest&&ev.target.closest('a[href="#"]');
+  if(a){ ev.preventDefault(); }
+});
+
+beobachten();
+sprungPruefen();
+lesestand();
+})();
+</script>
+</html>

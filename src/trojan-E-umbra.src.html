@@ -3,8 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<link rel="icon" href="../assets/monogram.png">
 <title>Trojan Performance — Performance Center Klagenfurt</title>
 <meta name="description" content="Acht Kurse, sieben Tage, in jedem Kurs ein Coach auf der Fläche. Erster offizieller HYROX Training Club in Kärnten, Sebastiangasse 1, Klagenfurt. Probetraining 15 €.">
 <!-- Schriften liegen neben der Seite. Über Google Fonts wären es zwei
@@ -33,17 +31,58 @@
   font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:'IBM Plex Mono';src:url('../assets/fonts/plexmono-500.woff2') format('woff2');
   font-weight:500;font-style:normal;font-display:swap}
+/* UMBRA — dasselbe Arena, weicher Grund.
+   Arena steht auf #06080B (L* 2,1): praktisch schwarz, einen Hauch blau. Der
+   Inhaber fragte nach einem weniger harten Schwarz. Weich heisst hier nicht
+   heller und grauer, sondern wärmer und weniger absolut: der Grund wandert von
+   Blau-Schwarz zu einem dunklen Umbra-Braun (Hue ~28°, L* 6,4) — die Farbe
+   einer Halle unter Kunstlicht statt der Farbe eines ausgeschalteten Monitors.
+   Woran sich jeder Wert hält: gleiche Hue-Familie (25–35°) für alle Flächen
+   und alle Grautöne, damit nichts kippt; Sättigung nimmt mit der Helligkeit ab
+   (dunkle Flächen satter, helle Texte fast neutral); Blau bleibt die Marke.
+
+   Rollen:
+   --grund    Seitengrund. Warmes Fast-Schwarz, L* 6,4 — dreimal so hell wie
+              Arenas Void, aber immer noch eine dunkle Halle, kein Grau.
+   --tafel    Zweite Ebene: Karten, Tafeln, Wochenplan, Eingabefelder, Dialog.
+              Ein Schritt heller (L* 11) und einen Hauch satter als der Grund,
+              damit Flächen ohne Rahmen als Flächen lesbar sind.
+   --blue     Marke, unverändert: Schaltflächen, Startlinie. Auf dem warmen
+              Grund 3,7:1 — trägt als Fläche weiterhin.
+   --blue-hi  Heller Akzent für Text, Fokusring, Diagrammfüllung. Gegenüber
+              Arena (#6FAAF0) minimal entsättigt und wärmer (#7FB0E8): auf dem
+              warmen Grund wirkte das alte Eisblau elektrisch, das neue sitzt
+              im selben Blau, beisst aber nicht. 8,1:1 auf dem Grund.
+   --blue-dp  Tiefes Blau für die hervorgehobenen Verlaufstafeln. Gegenüber
+              Arena entsättigt (#16386B→#1E3A58), sonst stünde ein kalter
+              Marineblock in einer warmen Wand.
+   --white    Fliesstext: warmes Weiss statt Blauweiss, 15,9:1 auf dem Grund.
+   --dim      Gedämpfter Text (Etiketten, Fussnoten): warmes Grau, 6,0:1 auf
+              dem Grund, 5,5:1 auf der Tafel — auch 11px-Mono bleibt AA.
+   --line     Haarlinien: warmweiss mit niedriger Deckung statt reinem Weiss,
+              Alpha leicht angehoben, weil Warmweiss weniger Leuchtkraft hat.
+   --feldrand Ränder der Formularfelder. Arena zeichnete sie mit der Haarlinie
+              (≈1,4:1) — als Bedienelement brauchen sie 3:1, deshalb ein
+              eigener, kräftigerer Wert (3,3:1 gegen die Tafel).
+   Alle Zwischentöne im Text (#D5CCC0/#C7BDB0/#B6ABA0/#A89E90/#CBC2B5) sind
+   dieselbe Grauleiter wie --white/--dim, nur in Stufen — warm, nicht blau.
+   Die Schleier über den Fotos (rgba(22,17,13,…)) liegen wie in Arena knapp
+   unter dem Grund, nicht deutlich darunter: bei einem tieferen Wert fielen
+   die grossen Bildflächen unter das Niveau der Seite, und die grundfarbene
+   Kopfleiste stand als hellerer Streifen darüber — gemessen rgb(24,18,15)
+   gegen rgb(17,12,9) unter der Leistenkante. */
 :root{
-  --void:#06080B; --deep:#0B1119;
-  --blue:#3971B7; --blue-hi:#6FAAF0; --blue-dp:#16386B;
-  --white:#EDF2F8; --dim:#7C8794; --line:rgba(255,255,255,.1);
+  --grund:#191310; --tafel:#241C16;
+  --blue:#3971B7; --blue-hi:#7FB0E8; --blue-dp:#1E3A58;
+  --white:#F4EEE5; --dim:#9C9284; --line:rgba(255,236,215,.13);
+  --feldrand:rgba(255,237,220,.42);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 /* Der Build hüllt jedes Bild in <picture>. Ohne display:contents wäre das
    ein zusätzlicher Inline-Kasten zwischen Flex-/Grid-Container und Bild. */
 picture{display:contents}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:98px}
-body{background:var(--void);color:var(--white);font-family:'Archivo',system-ui,sans-serif;font-weight:500;font-size:16px;line-height:1.55;overflow-x:hidden}
+body{background:var(--grund);color:var(--white);font-family:'Archivo',system-ui,sans-serif;font-weight:500;font-size:16px;line-height:1.55;overflow-x:hidden}
 /* Verhindert einzelne Wörter in der letzten Zeile */
 p{text-wrap:pretty}
 .wrap{max-width:1340px;margin:0 auto;padding:0 clamp(26px,3.6vw,48px)}
@@ -52,11 +91,6 @@ p{text-wrap:pretty}
    diesem Untergrund fast unter, und ohne ihn ist die Seite per Tab
    nicht bedienbar. */
 :focus-visible{outline:2px solid var(--blue-hi);outline-offset:3px}
-/* Der Eckenschnitt beschneidet alles, was das Element zeichnet — auch den
-   Fokusring. Auf den Schaltflächen und Kacheln war er dadurch unsichtbar, die
-   Seite per Tastatur also nicht bedienbar. Beim Fokus fällt die Schnittkante
-   weg: die Form ist Zierde, der Ring ist Bedienung. */
-.btn:focus-visible,.card:focus-visible,.coach:focus-visible{clip-path:none}
 /* Der Eckenschnitt beschneidet alles, was das Element zeichnet — auch den
    Fokusring. Auf den Schaltflächen und Kacheln war er dadurch unsichtbar, die
    Seite per Tastatur also nicht bedienbar. Beim Fokus fällt die Schnittkante
@@ -79,17 +113,22 @@ p{text-wrap:pretty}
 .skip:focus{width:auto;height:auto;overflow:visible;clip-path:none;left:12px;top:12px;padding:14px 20px}
 
 /* Duotone: echtes Foto, in Markenblau getaucht */
-.duo{position:relative;overflow:hidden;background:#070A0F;isolation:isolate}
+.duo{position:relative;overflow:hidden;background:#150F0B;isolation:isolate}
 .duo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%;display:block;filter:grayscale(1) contrast(1.04) brightness(1.16)}
 /* Motive gezielt anschneiden — sonst wandert das Subjekt je nach Breite aus dem Bild */
 .hero .duo img{object-position:56% 42%}
 .card .duo img{object-position:50% 38%}
 .hyrox .duo img{object-position:50% 55%}
-/* Der Blaustich löst sich beim Scrollen — am Ziel liegt das Foto frei */
-.duo .tint{position:absolute;inset:0;background:linear-gradient(158deg,#78B0F2 0%,#2A5FA0 44%,#060C16 100%);mix-blend-mode:color;opacity:var(--tintA,.82);transition:opacity .45s cubic-bezier(.2,.7,.3,1)}
+/* Der Blaustich löst sich beim Scrollen — am Ziel liegt das Foto frei.
+   Das dunkle Ende des Verlaufs ist nicht mehr Blauschwarz, sondern der warme
+   Ton des Grundes: die Schattenpartien der Fotos nehmen die Farbe der Fläche
+   an, auf der sie liegen — Bild und Wand gehören wieder zusammen. Der Umschlag
+   sitzt erst bei 72%: bei 44% und auch bei 62% blieb vom blauen Schein auf
+   hohen Mobilausschnitten zu wenig übrig, die Bühne kippte ins Sepia. */
+.duo .tint{position:absolute;inset:0;background:linear-gradient(158deg,#7CACE6 0%,#31609C 72%,#362A1E 100%);mix-blend-mode:color;opacity:var(--tintA,.82);transition:opacity .45s cubic-bezier(.2,.7,.3,1)}
 /* flache Fläche statt Verlauf: sonst entscheidet das Seitenverhältnis der Box,
    wie dunkel das Foto wird — gemessen L* 1.5 bis 38.5 über dieselbe Behandlung */
-.duo .mul{position:absolute;inset:0;background:rgba(6,10,18,var(--mulA,.4));mix-blend-mode:multiply}
+.duo .mul{position:absolute;inset:0;background:rgba(28,20,14,var(--mulA,.4));mix-blend-mode:multiply}
 .hero .duo{--tintA:.82}
 .card .duo{--tintA:.66}
 .hyrox .duo{--tintA:.58;--mulA:.5}
@@ -97,12 +136,12 @@ p{text-wrap:pretty}
 
 /* NAV */
 header{position:fixed;top:0;left:0;right:0;z-index:90;border-bottom:1px solid transparent;transition:background .3s,border-color .3s}
-header.stuck{background:rgba(6,8,11,.88);backdrop-filter:blur(16px);border-bottom-color:var(--line)}
+header.stuck{background:rgba(25,19,16,.88);backdrop-filter:blur(16px);border-bottom-color:var(--line)}
 .nav{display:flex;align-items:center;justify-content:space-between;height:78px;gap:30px}
 .logo{height:29px;width:auto;filter:brightness(0) invert(1)}
 .nav>a:first-child,.nav .brand{display:inline-flex;align-items:center;min-height:44px}
 .links{display:flex;gap:34px;list-style:none}
-.links a{color:rgba(255,255,255,.74);text-decoration:none;font-size:12.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;transition:color .2s}
+.links a{color:rgba(255,244,232,.78);text-decoration:none;font-size:12.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;transition:color .2s}
 .links a:hover{color:#fff}
 .btn{display:inline-flex;align-items:center;gap:11px;background:var(--blue);color:#fff;text-decoration:none;
   padding:16px 28px;font-weight:800;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;
@@ -113,8 +152,8 @@ header.stuck{background:rgba(6,8,11,.88);backdrop-filter:blur(16px);border-botto
 /* Bei 360px fehlten 2px und das € fiel allein in die zweite Zeile */
 @media(max-width:400px){.btn{padding-inline:20px;letter-spacing:.08em}}
 .btn.sm{padding:14px 21px;font-size:11.5px;min-height:44px;clip-path:polygon(0 0,100% 0,100% 100%,9px 100%,0 calc(100% - 9px))}
-.btn.gh{background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.26);backdrop-filter:blur(6px)}
-.btn.gh:hover{background:rgba(255,255,255,.14)}
+.btn.gh{background:rgba(255,240,224,.07);box-shadow:inset 0 0 0 1px rgba(255,240,224,.28);backdrop-filter:blur(6px)}
+.btn.gh:hover{background:rgba(255,240,224,.15)}
 /* Links umbrechen statt löschen; verhindert zugleich den Nav-Überlauf */
 @media(max-width:1000px){
   .nav{flex-wrap:wrap;height:auto;padding-block:16px 8px;gap:12px 24px}
@@ -132,12 +171,12 @@ header.stuck{background:rgba(6,8,11,.88);backdrop-filter:blur(16px);border-botto
 .hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;padding-bottom:clamp(34px,5vw,72px);overflow:hidden}
 .hero .bg{position:absolute;inset:0;z-index:0}
 .hero .bg::after{content:"";position:absolute;inset:0;z-index:6;
-  background:linear-gradient(to top,rgba(6,8,11,.96) 6%,rgba(6,8,11,.26) 48%,rgba(6,8,11,.7) 100%)}
+  background:linear-gradient(to top,rgba(25,19,16,.96) 6%,rgba(25,19,16,.26) 48%,rgba(25,19,16,.7) 100%)}
 /* Speerspitze — diagonaler Keil aus der Marke */
 .wedge{position:absolute;right:0;top:0;bottom:0;width:44%;z-index:7;pointer-events:none;
   background:linear-gradient(200deg,rgba(57,113,183,.34),transparent 60%);
   clip-path:polygon(38% 0,100% 0,100% 100%,0 100%);
-  filter:drop-shadow(-1px 0 0 rgba(111,170,240,.55))}
+  filter:drop-shadow(-1px 0 0 rgba(127,176,232,.55))}
 @media(max-width:820px){.wedge{display:none}}
 .hero-inner{position:relative;z-index:10;width:100%}
 /* Der Kicker ist ein Etikett, deshalb kurz. Die alte Fassung („Klagenfurt ·
@@ -150,15 +189,15 @@ header.stuck{background:rgba(6,8,11,.88);backdrop-filter:blur(16px);border-botto
    HYROX-Abschnitt und im Fuss. */
 .kick{display:inline-flex;align-items:flex-start;gap:12px;color:var(--blue-hi);margin-bottom:clamp(16px,2.4vw,26px);
   padding:9px 17px;background:rgba(57,113,183,.18);backdrop-filter:blur(8px);
-  box-shadow:inset 0 0 0 1px rgba(111,170,240,.34);
+  box-shadow:inset 0 0 0 1px rgba(127,176,232,.34);
   clip-path:polygon(0 0,100% 0,100% 100%,9px 100%,0 calc(100% - 9px))}
-.kick i{width:6px;height:6px;border-radius:50%;background:var(--blue-hi);display:block;flex:none;margin-top:.42em;box-shadow:0 0 0 4px rgba(111,170,240,.24)}
+.kick i{width:6px;height:6px;border-radius:50%;background:var(--blue-hi);display:block;flex:none;margin-top:.42em;box-shadow:0 0 0 4px rgba(127,176,232,.24)}
 h1{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;letter-spacing:-.042em;line-height:.95;font-size:clamp(46px,8.8vw,128px)}
 /* Muss NACH der Basisregel stehen — gleiche Spezifität, sonst gewinnt sie */
 @media(max-width:430px){h1{font-size:clamp(34px,10.6vw,46px)}}
 h1 .bl{color:var(--blue-hi)}
 .hero-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;flex-wrap:wrap;margin-top:clamp(20px,2.6vw,32px)}
-.hero-foot p{max-width:34ch;text-wrap:balance;color:#B3BCC7;font-size:clamp(15px,1.5vw,17.5px)}
+.hero-foot p{max-width:34ch;text-wrap:balance;color:#C7BDB0;font-size:clamp(15px,1.5vw,17.5px)}
 .hero-actions{display:flex;gap:11px;flex-wrap:wrap}
 .startline{position:absolute;left:0;right:0;bottom:0;height:4px;z-index:11;
   background:repeating-linear-gradient(90deg,var(--blue) 0 26px,transparent 26px 52px)}
@@ -181,7 +220,7 @@ h2 .bl{color:var(--blue-hi)}
 /* Empfehlung zum Kombinieren. Die Kursnamen standen in Klammern im Satz —
    sie stehen ohnehin daneben, mit Profil und Beschreibung. */
 .empfehlung{max-width:56ch;margin-top:clamp(24px,3vw,38px);font-size:clamp(15px,1.6vw,17px)}
-.empfehlung{color:#A8B2BF}
+.empfehlung{color:#B6ABA0}
 .sechead .mono{color:var(--dim)}
 
 /* PROGRAMM-SCHIENE */
@@ -190,19 +229,19 @@ h2 .bl{color:var(--blue-hi)}
      würde die Seite um deren Breite überlaufen lassen */
   margin-inline:calc(-1 * clamp(26px,3.6vw,48px));padding-inline:clamp(26px,3.6vw,48px);
   scroll-padding-inline-start:clamp(26px,3.6vw,48px);
-  scrollbar-width:thin;scrollbar-color:var(--blue) rgba(255,255,255,.08);
+  scrollbar-width:thin;scrollbar-color:var(--blue) rgba(255,240,224,.09);
   -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 96px),rgba(0,0,0,.25));
   mask-image:linear-gradient(to right,#000 calc(100% - 96px),rgba(0,0,0,.25))}
 /* eigene Fortschrittsanzeige unter der Schiene reicht — die native lag daneben */
 .rail{scrollbar-width:none}
 .rail::-webkit-scrollbar{display:none}
 .rail::-webkit-scrollbar-thumb{background:var(--blue)}
-.rail::-webkit-scrollbar-track{background:rgba(255,255,255,.08)}
+.rail::-webkit-scrollbar-track{background:rgba(255,240,224,.09)}
 .card{appearance:none;border:0;padding:0;font:inherit;color:inherit;text-align:left;
   position:relative;flex:0 0 clamp(238px,20vw,286px);scroll-snap-align:start;aspect-ratio:3/4;
   text-decoration:none;color:var(--white);overflow:hidden;
   clip-path:polygon(0 0,100% 0,100% calc(100% - 20px),calc(100% - 20px) 100%,0 100%);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
+  box-shadow:inset 0 0 0 1px rgba(255,240,224,.15);
   transition:transform .35s cubic-bezier(.2,.7,.3,1)}
 .card:hover{transform:translateY(-8px)}
 /* versetzte Startaufstellung statt Regalbrett */
@@ -215,30 +254,30 @@ h2 .bl{color:var(--blue-hi)}
 .card:hover .tint{opacity:.14}
 .card .veil{transition:opacity .45s}
 .card:hover .veil{opacity:.82}
-.card .veil{position:absolute;inset:0;z-index:6;background:linear-gradient(to top,rgba(4,7,11,.8) 3%,rgba(4,7,11,.04) 58%)}
+.card .veil{position:absolute;inset:0;z-index:6;background:linear-gradient(to top,rgba(22,17,13,.8) 3%,rgba(22,17,13,.04) 58%)}
 .card .body{position:absolute;left:0;right:0;bottom:0;z-index:8;padding:20px}
 .card .n{color:var(--blue-hi);display:block;margin-bottom:9px}
 .card h3{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;font-size:clamp(18px,2.1vw,24px);letter-spacing:-.03em;line-height:1}
 /* Schwerpunktprofil aus dem Kursangebot — dieselbe Datenbasis wie das Diagramm */
-.card .prof{font-size:9.5px;letter-spacing:.09em;color:#93A3B5;margin-top:9px}
+.card .prof{font-size:9.5px;letter-spacing:.09em;color:#A89E90;margin-top:9px}
 .card .tag{position:absolute;top:0;right:0;z-index:8;background:var(--blue);color:#fff;padding:8px 14px}
 /* Fortschritt in der Sprache der Startlinie */
-.track{height:4px;margin-top:20px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.14) 0 26px,transparent 26px 52px)}
+.track{height:4px;margin-top:20px;background:repeating-linear-gradient(90deg,rgba(255,240,224,.15) 0 26px,transparent 26px 52px)}
 .track i{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,var(--blue-hi) 0 26px,transparent 26px 52px);transition:width .12s linear}
 
 /* EINSTIEG */
 @media(max-width:860px){.offer{grid-template-columns:1fr}}
 .offer,.offer>*{min-width:0}
 .offer .txt{padding:clamp(28px,3.8vw,52px);display:flex;flex-direction:column;gap:15px;
-  background:linear-gradient(152deg,var(--blue-dp),var(--deep) 64%)}
-.offer .mono{color:#A5C8F5}
+  background:linear-gradient(152deg,var(--blue-dp),var(--tafel) 64%)}
+.offer .mono{color:#AECBF2}
 .offer .big{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;font-size:clamp(38px,5.4vw,70px);line-height:.9;letter-spacing:-.05em;text-transform:uppercase}
 .offer .big em{font-style:normal;font-size:.3em;color:var(--dim);letter-spacing:.03em;margin-left:12px;font-family:'Archivo';font-weight:700}
 /* Einzelwort kann nicht umbrechen — auf schmalen Viewports eigene Zeile */
 @media(max-width:520px){.offer .big em{display:block;margin-left:0;margin-top:6px}}
-.offer p{color:#B3BCC7;font-size:14.5px;max-width:40ch}
+.offer p{color:#C7BDB0;font-size:14.5px;max-width:40ch}
 .offer .btn{align-self:flex-start}
-.offer .svs{margin-top:auto;padding-top:16px;border-top:1px solid rgba(255,255,255,.16);font-size:13.5px;color:var(--dim)}
+.offer .svs{margin-top:auto;padding-top:16px;border-top:1px solid rgba(255,240,224,.17);font-size:13.5px;color:var(--dim)}
 .offer .svs a{color:var(--blue-hi);text-decoration:none;font-weight:800}
 .offer .pic{position:relative;min-height:250px;overflow:hidden}
 
@@ -254,7 +293,7 @@ h2 .bl{color:var(--blue-hi)}
 .coach:hover .tint{opacity:.06}
 .coach img{transition:transform .6s cubic-bezier(.2,.7,.3,1)}
 .coach:hover img{transform:scale(1.05)}
-.coach .veil{position:absolute;inset:0;z-index:6;background:linear-gradient(to top,rgba(4,7,11,.93) 5%,rgba(4,7,11,.04) 60%)}
+.coach .veil{position:absolute;inset:0;z-index:6;background:linear-gradient(to top,rgba(22,17,13,.93) 5%,rgba(22,17,13,.04) 60%)}
 .coach .body{position:absolute;left:0;right:0;bottom:0;z-index:8;padding:20px}
 
 /* Auf zwei schmalen Spalten deckt die Biografie die halbe Kachel zu, und ein
@@ -263,13 +302,13 @@ h2 .bl{color:var(--blue-hi)}
    Also wie in Phalanx: Bild oben im Hochformat, Text darunter auf eigener
    Fläche. Dann ist weder das Gesicht angeschnitten noch der Text im Weg. */
 @media(max-width:600px){
-  .coach{aspect-ratio:auto;display:flex;flex-direction:column;background:var(--deep)}
+  .coach{aspect-ratio:auto;display:flex;flex-direction:column;background:var(--tafel)}
   .coach .duo{position:relative;inset:auto;aspect-ratio:4/5}
   .coach .veil{display:none}
   .coach .body{position:relative;padding:14px 14px 16px}
 }
 .coach h3{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;font-size:21px;letter-spacing:-.025em}
-.coach p{color:#B3BCC7;font-size:12.5px;margin-top:6px;line-height:1.45}
+.coach p{color:#C7BDB0;font-size:12.5px;margin-top:6px;line-height:1.45}
 
 /* BÜHNE — klebendes Vollbild, die Beats scrollen darüber */
 .firsthour{display:grid;grid-template-columns:1fr;position:relative;overflow-x:clip}
@@ -277,7 +316,18 @@ h2 .bl{color:var(--blue-hi)}
 .stage{position:sticky;top:0;height:100svh;overflow:hidden}
 .frame{position:absolute;inset:0;margin:0;opacity:0;transition:opacity .8s cubic-bezier(.2,.7,.3,1)}
 .frame.is-on{opacity:1}
-.frame .duo{position:absolute;inset:0;--tintA:.6}
+.frame .duo{position:absolute;inset:0;--tintA:.66}
+/* Ausnahme Bühne: der warme Fuss im Duotone und die grundfarbenen Schleier
+   binden Fotos an die sichtbare Fläche daneben — die Bühne aber füllt den
+   ganzen Viewport, es gibt keinen sichtbaren Grund zu binden. Mit der warmen
+   Behandlung verlor sie den blauen Schein fast ganz: gemessen B−R 0,4 Pp bei
+   1440 und −1,5 bei 390, gegen 4,6/4,1 in Arena. Also behält der Raum der
+   Bühne das Blau: Tint ohne warmes Ende, Multiplikation und Abdunklung
+   kühl-neutral — aber auf derselben Luminanz wie die warmen Schleier
+   (rgb(18,19,26) ≈ rgb(22,17,13)), damit die Kopfleiste darüber nicht wieder
+   als hellerer Streifen absteht. */
+.stage .tint{background:linear-gradient(158deg,#7CACE6 0%,#31609C 70%,#1F2B40 100%)}
+.stage .mul{background:rgba(16,18,26,var(--mulA,.4))}
 /* Die Bühne füllt den ganzen Viewport. Die Fotos sind 1,5:1 bis 1,78:1 — breiter
    als der Viewport hoch ist, wird oben und unten beschnitten, schmaler links und
    rechts. Deshalb pro Bild ein eigener Ankerpunkt, und ab 3:2 ein zweiter. */
@@ -291,7 +341,7 @@ h2 .bl{color:var(--blue-hi)}
   .frame:nth-of-type(2) .duo img{object-position:50% 50%}
 }
 .stage .shade{position:absolute;inset:0;z-index:7;
-  background:linear-gradient(90deg,rgba(4,7,11,.86),rgba(4,7,11,.36) 62%,rgba(4,7,11,.7))}
+  background:linear-gradient(90deg,rgba(18,19,26,.86),rgba(18,19,26,.36) 62%,rgba(18,19,26,.7))}
 .stage .startline{top:auto;bottom:0}
 .beats{position:relative;z-index:9;list-style:none;width:100%;
   margin-inline:auto;padding-inline:clamp(26px,3.6vw,48px);padding-block:0}
@@ -301,41 +351,45 @@ h2 .bl{color:var(--blue-hi)}
 .beat .mono{color:var(--blue-hi);display:block;margin-bottom:14px}
 .beat h3{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;letter-spacing:-.038em;
   line-height:.95;font-size:clamp(26px,3.9vw,54px);text-wrap:balance}
-.beat p{margin-top:16px;color:#C2CAD4;font-size:clamp(15px,1.6vw,18px)}
+.beat p{margin-top:16px;color:#D5CCC0;font-size:clamp(15px,1.6vw,18px)}
 @media(max-width:760px){
   .beat{min-height:82svh}
   .beat:nth-child(even)>div{margin-left:0}
-  .stage .shade{background:linear-gradient(180deg,rgba(4,7,11,.52),rgba(4,7,11,.72))}
+  .stage .shade{background:linear-gradient(180deg,rgba(18,19,26,.52),rgba(18,19,26,.72))}
 }
 @media(prefers-reduced-motion:reduce){.frame{transition:none}}
 
 /* HALTUNG — der beste Satz der Marke, bisher auf einer Unterseite vergraben */
 .haltung .veil{position:absolute;inset:0;z-index:6;
-  background:linear-gradient(to top,rgba(4,7,11,.95) 8%,rgba(4,7,11,.5) 62%,rgba(4,7,11,.72))}
+  background:linear-gradient(to top,rgba(22,17,13,.95) 8%,rgba(22,17,13,.5) 62%,rgba(22,17,13,.72))}
 .haltung .inner{position:relative;z-index:8;padding:clamp(28px,4vw,56px);width:100%}
 .haltung h2{max-width:17ch}
-.haltung .sub{margin-top:16px;max-width:46ch;color:#C2CAD4;font-size:clamp(15px,1.6vw,18px)}
+.haltung .sub{margin-top:16px;max-width:46ch;color:#D5CCC0;font-size:clamp(15px,1.6vw,18px)}
 .kauft{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:clamp(26px,3.4vw,42px);
   background:var(--line);border-top:1px solid var(--line)}
 @media(max-width:820px){.kauft{grid-template-columns:1fr 1fr}}
 @media(max-width:460px){.kauft{grid-template-columns:1fr}}
-.kauft div{background:rgba(6,10,18,.62);padding:18px 16px 16px 0}
+.kauft div{background:rgba(28,20,14,.62);padding:18px 16px 16px 0}
 .kauft b{display:block;font-weight:800;font-size:14.5px;letter-spacing:-.01em}
 .kauft span{display:block;color:var(--dim);font-size:12.5px;margin-top:5px;line-height:1.4}
 
 /* TARIFE */
 .tarife{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 @media(max-width:860px){.tarife{grid-template-columns:1fr}}
-.tarif{background:var(--deep);box-shadow:inset 0 0 0 1px var(--line);
+.tarif{background:var(--tafel);box-shadow:inset 0 0 0 1px var(--line);
   padding:clamp(26px,3.4vw,42px);display:flex;flex-direction:column;gap:10px;
   clip-path:polygon(0 0,100% 0,100% calc(100% - 20px),calc(100% - 20px) 100%,0 100%)}
-.tarif.key{background:linear-gradient(155deg,var(--blue-dp),var(--deep) 62%);box-shadow:inset 0 0 0 1px rgba(111,170,240,.4)}
+.tarif.key{background:linear-gradient(155deg,var(--blue-dp),var(--tafel) 62%);box-shadow:inset 0 0 0 1px rgba(127,176,232,.4)}
 .tarif .mono{color:var(--dim)}
-.tarif.key .mono{color:#A5C8F5}
+.tarif.key .mono{color:#AECBF2}
 .tarif .preis{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;font-size:clamp(34px,4.4vw,54px);
   line-height:1;letter-spacing:-.045em;white-space:nowrap}
 .tarif .preis em{font-style:normal;font-size:.32em;color:var(--dim);font-family:'Archivo';font-weight:700;letter-spacing:0;margin-left:8px}
-.tarif p{color:#B3BCC7;font-size:14px}
+/* Auf dem Blauverlauf der Empfehlungstafel schafft --dim nur 3,8:1 — die
+   Einheit "/ Monat" ist klein und fett, braucht also 4,5. Eine Stufe heller
+   aus derselben Grauleiter: 6,3:1 gegen das tiefe Blau. */
+.tarif.key .preis em{color:#C7BDB0}
+.tarif p{color:#C7BDB0;font-size:14px}
 .tarif ul{list-style:none;margin-top:auto;padding-top:16px;border-top:1px solid var(--line);display:grid;gap:7px}
 .tarif li{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.05em;color:var(--dim)}
 /* Die Fußnoten zum Tarif waren eine einzige Reihe zusammenhangloser Häppchen —
@@ -346,10 +400,10 @@ h2 .bl{color:var(--blue-hi)}
 .tarifnote h3{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.19em;
   text-transform:uppercase;color:var(--blue-hi);font-weight:400;margin-bottom:13px}
 .tarifnote ul{list-style:none;display:grid;gap:8px}
-.tarifnote li{color:#A8B2BF;font-size:14.5px;line-height:1.45}
+.tarifnote li{color:#B6ABA0;font-size:14.5px;line-height:1.45}
 .tarifnote li b{color:var(--white);font-weight:700;font-variant-numeric:tabular-nums}
 .tarifnote .svs{grid-column:1/-1;border-top:1px solid var(--line);padding-top:20px;
-  color:#A8B2BF;font-size:14.5px}
+  color:#B6ABA0;font-size:14.5px}
 .tarifnote .svs b{color:var(--white);font-weight:700}
 
 /* ZAHLEN — Fakten in Plakatgröße statt als Fußnote */
@@ -381,11 +435,11 @@ h2 .bl{color:var(--blue-hi)}
   padding:clamp(34px,4.4vw,62px) clamp(26px,3.6vw,48px);
   clip-path:polygon(0 0,100% 0,100% calc(100% - 32px),calc(100% - 32px) 100%,0 100%)}
 .hyrox>*{position:relative;z-index:8}
-.hyrox .veil{position:absolute;inset:0;z-index:6;background:linear-gradient(180deg,rgba(4,7,11,.86),rgba(4,7,11,.94))}
+.hyrox .veil{position:absolute;inset:0;z-index:6;background:linear-gradient(180deg,rgba(22,17,13,.86),rgba(22,17,13,.94))}
 .hyrox h2{font-size:clamp(26px,3.9vw,54px);line-height:.98;max-width:18ch}
 .hyrox h2 .ol{color:transparent;-webkit-text-stroke:1.5px var(--white);letter-spacing:0}
 .hyrox .sechead{margin-bottom:clamp(16px,2.2vw,24px);gap:10px 24px}
-.hyrox .einleitung{max-width:56ch;color:#C2CAD4;font-size:clamp(14.5px,1.6vw,16.5px);
+.hyrox .einleitung{max-width:56ch;color:#D5CCC0;font-size:clamp(14.5px,1.6vw,16.5px);
   margin-bottom:clamp(24px,3.2vw,40px)}
 .stations{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);
   grid-template-rows:repeat(4,auto);grid-auto-flow:column;column-gap:clamp(24px,5vw,80px)}
@@ -397,11 +451,11 @@ h2 .bl{color:var(--blue-hi)}
 
 /* KURSDETAIL — Arena erzählt in Vollbildern, also tritt das Detail als Tafel
    davor und nicht als aufklappende Zeile. <dialog> bringt Esc und Fokusfang mit. */
-.kdlg{border:0;padding:0;margin:auto;background:var(--deep);color:var(--white);
+.kdlg{border:0;padding:0;margin:auto;background:var(--tafel);color:var(--white);
   width:min(520px,calc(100vw - 32px));max-height:calc(100vh - 64px);
-  box-shadow:inset 0 0 0 1px var(--line),0 40px 90px -30px #000;
+  box-shadow:inset 0 0 0 1px var(--line),0 40px 90px -30px #0D0805;
   clip-path:polygon(0 0,100% 0,100% calc(100% - 22px),calc(100% - 22px) 100%,0 100%)}
-.kdlg::backdrop{background:rgba(4,7,11,.74)}
+.kdlg::backdrop{background:rgba(22,17,13,.74)}
 .kdlg .kinner{padding:clamp(22px,4vw,32px)}
 .kdlg .kkopf{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
 .kdlg h3{font-family:'Archivo Black','Archivo Black Ersatz',sans-serif;text-transform:uppercase;
@@ -410,13 +464,13 @@ h2 .bl{color:var(--blue-hi)}
   min-width:44px;min-height:44px;margin:-10px -10px 0 0;cursor:pointer}
 .kdlg .zu:hover{color:var(--white)}
 .kdlg .kprof{margin-top:10px;color:var(--blue-hi)}
-.kdlg .kbesch{margin-top:clamp(14px,2vw,18px);color:#C2CAD4;font-size:clamp(14.5px,1.6vw,16px)}
+.kdlg .kbesch{margin-top:clamp(14px,2vw,18px);color:#D5CCC0;font-size:clamp(14.5px,1.6vw,16px)}
 .kdlg .kprofil{margin-top:clamp(18px,2.6vw,24px);display:grid;gap:12px}
 .kdlg .kprofil div{display:grid;gap:6px}
 .kdlg .kprofil b{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;
   font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);font-weight:400}
 .kdlg .kprofil b em{font-style:normal;color:var(--white)}
-.kdlg .kprofil i{display:block;height:3px;background:rgba(255,255,255,.1)}
+.kdlg .kprofil i{display:block;height:3px;background:rgba(255,240,224,.11)}
 .kdlg .kprofil i span{display:block;height:100%;background:var(--blue-hi)}
 .kdlg .kfuss{margin-top:clamp(18px,2.6vw,24px);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 
@@ -426,14 +480,14 @@ h2 .bl{color:var(--blue-hi)}
 .wplan{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-top:clamp(22px,2.8vw,34px)}
 @media(max-width:1000px){.wplan{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:620px){.wplan{grid-template-columns:1fr;gap:8px}}
-.wtag{background:var(--deep);box-shadow:inset 0 0 0 1px var(--line);padding:15px 14px 13px;
+.wtag{background:var(--tafel);box-shadow:inset 0 0 0 1px var(--line);padding:15px 14px 13px;
   clip-path:polygon(0 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%)}
 .wtag h3{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.19em;
   text-transform:uppercase;color:var(--blue-hi);font-weight:400;margin-bottom:10px}
 .wein{display:flex;gap:10px;align-items:baseline;padding:8px 0;border-top:1px solid var(--line)}
 .wtag .wein:first-of-type{border-top:0;padding-top:0}
 .wein b{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--white);flex:none}
-.wein span{font-size:13.5px;color:#B3BCC7;line-height:1.32}
+.wein span{font-size:13.5px;color:#C7BDB0;line-height:1.32}
 .wquelle{margin-top:clamp(16px,2vw,22px);color:var(--dim)}
 
 /* WOCHENBAND — 06 bis 22 Uhr, echte Form der Woche */
@@ -442,10 +496,10 @@ h2 .bl{color:var(--blue-hi)}
 .week{display:grid;gap:7px}
 .wrow{display:grid;grid-template-columns:34px 1fr;align-items:center;gap:12px}
 .wrow .d{color:var(--dim);font-size:10.5px;letter-spacing:.14em}
-.bar{position:relative;height:16px;background:rgba(255,255,255,.04)}
+.bar{position:relative;height:16px;background:rgba(255,240,224,.05)}
 .bar i{position:absolute;left:var(--a,0);width:var(--b,100%);display:block}
 /* dünne Spur: Zusatzoption, nicht das Angebot */
-.bar i.open{top:50%;height:2px;transform:translateY(-50%);background:rgba(255,255,255,.16)}
+.bar i.open{top:50%;height:2px;transform:translateY(-50%);background:rgba(255,240,224,.17)}
 /* volle Fläche: die betreuten Kurse */
 .bar i.kurs{top:0;bottom:0;background:var(--blue-hi)}
 .wlegend{display:flex;gap:20px;flex-wrap:wrap;margin-top:18px;color:var(--dim)}
@@ -455,7 +509,7 @@ h2 .bl{color:var(--blue-hi)}
 /* ZEITEN */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:860px){.two{grid-template-columns:1fr}}
-.panel{padding:clamp(26px,3.4vw,42px);background:var(--deep);box-shadow:inset 0 0 0 1px var(--line);
+.panel{padding:clamp(26px,3.4vw,42px);background:var(--tafel);box-shadow:inset 0 0 0 1px var(--line);
   clip-path:polygon(0 0,100% 0,100% calc(100% - 20px),calc(100% - 20px) 100%,0 100%)}
 .panel h3{font-weight:800;text-transform:uppercase;letter-spacing:.05em;font-size:13px;margin-bottom:20px;color:var(--dim)}
 /* Die Basisregel fehlte: übrig waren nur :last-child, span und .key, weil das
@@ -465,7 +519,7 @@ h2 .bl{color:var(--blue-hi)}
   padding:14px 0;border-bottom:1px solid var(--line);font-size:14.5px}
 .hrow b{font-weight:700;white-space:nowrap}
 .hrow:last-child{border-bottom:0}
-.hrow span{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#B3BCC7;text-align:right}
+.hrow span{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#C7BDB0;text-align:right}
 .hrow.key{background:linear-gradient(90deg,rgba(57,113,183,.3),transparent);
   margin-inline:calc(-1 * clamp(26px,3.4vw,42px));padding-inline:clamp(26px,3.4vw,42px);border-bottom:0}
 .hrow.key span{color:var(--blue-hi)}
@@ -475,20 +529,20 @@ h2 .bl{color:var(--blue-hi)}
 .final{position:relative;overflow:hidden;min-height:clamp(300px,36vw,440px);display:flex;align-items:center;justify-content:center;text-align:center;
   clip-path:polygon(0 0,100% 0,100% calc(100% - 32px),calc(100% - 32px) 100%,0 100%)}
 .final .veil{position:absolute;inset:0;z-index:6;
-  background:radial-gradient(120% 90% at 50% 56%,rgba(4,7,11,.72),rgba(4,7,11,.5) 56%,rgba(4,7,11,.7)),
-             linear-gradient(to top,rgba(4,7,11,.66),rgba(4,7,11,.4))}
+  background:radial-gradient(120% 90% at 50% 56%,rgba(22,17,13,.72),rgba(22,17,13,.5) 56%,rgba(22,17,13,.7)),
+             linear-gradient(to top,rgba(22,17,13,.66),rgba(22,17,13,.4))}
 .final .duo img{object-position:22% 50%}
 .final .startline{right:32px;background:var(--blue-hi)}
 .final .inner{position:relative;z-index:8;padding:clamp(32px,4.6vw,60px) clamp(22px,4vw,52px)}
 .final h2{max-width:17ch;margin:0 auto}
-.final p{color:#B3BCC7;margin:16px auto 26px;max-width:40ch}
+.final p{color:#C7BDB0;margin:16px auto 26px;max-width:40ch}
 
 /* FOOTER */
 footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 .fgrid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:32px}
 @media(max-width:700px){.fgrid{grid-template-columns:1fr}}
 .fgrid h3{color:var(--dim);margin-bottom:14px}
-.fgrid a,.fgrid p{color:#BEC6D1;font-size:14px;text-decoration:none;display:block;margin-bottom:7px;line-height:1.6;font-weight:500}
+.fgrid a,.fgrid p{color:#CBC2B5;font-size:14px;text-decoration:none;display:block;margin-bottom:7px;line-height:1.6;font-weight:500}
 .fgrid a:hover{color:var(--blue-hi)}
 .legal{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:36px;padding-top:20px;border-top:1px solid var(--line);color:var(--dim)}
 
@@ -523,13 +577,13 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
   text-transform:uppercase;color:var(--dim)}
 .kfeld input,.kfeld select,.kfeld textarea{
   font-family:inherit;font-size:15.5px;line-height:1.4;color:var(--white);
-  background:var(--deep);border:1px solid var(--line);border-radius:0;
+  background:var(--tafel);border:1px solid var(--feldrand);border-radius:0;
   padding:13px 14px;min-height:48px;width:100%;
   -webkit-appearance:none;appearance:none}
 /* appearance:none nimmt dem Auswahlfeld auch den Pfeil — hier einer zurück,
    damit man sieht, dass es aufklappt. */
 .kfeld select{padding-right:40px;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%236FAAF0' stroke-width='1.8'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%237FB0E8' stroke-width='1.8'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 15px center}
 .kfeld textarea{min-height:124px;resize:vertical}
 .kfeld input:focus-visible,.kfeld select:focus-visible,.kfeld textarea:focus-visible{
@@ -548,7 +602,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 .sozial{display:flex;gap:10px;margin-top:14px}
 .sozial a{display:inline-flex;align-items:center;justify-content:center;
   width:44px;height:44px;min-height:44px;padding:0;margin:0;
-  border:1px solid var(--line);color:#BEC6D1;transition:color .2s,border-color .2s}
+  border:1px solid var(--line);color:#CBC2B5;transition:color .2s,border-color .2s}
 .sozial a:hover{color:var(--blue-hi);border-color:var(--blue-hi)}
 .sozial svg{width:19px;height:19px;display:block}
 </style>
@@ -558,7 +612,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 
 <header id="hd">
   <div class="wrap nav">
-    <a href="#"><img class="logo" src="../assets/logo.png" alt="Trojan Performance"></a>
+    <a href="#"><img class="logo" src="__LOGO__" alt="Trojan Performance"></a>
     <ul class="links">
       <li><a href="#programme">Kurse</a></li>
       <li><a href="#plan">Wochenplan</a></li>
@@ -571,7 +625,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 
 <div class="hero" id="inhalt">
   <div class="bg duo">
-    <picture><source type="image/webp" srcset="../assets/o-hero.webp"><img src="../assets/o-hero.jpg" alt="Trainingsfläche Trojan Performance" fetchpriority="high"></picture>
+    <img src="__PH_HERO__" alt="Trainingsfläche Trojan Performance" fetchpriority="high">
     <div class="tint"></div><div class="mul"></div>
   </div>
   <div class="wedge"></div>
@@ -609,42 +663,42 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
   </div>
   <div class="rail rv">
     <button class="card" type="button" data-kurs="Performance">
-      <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-perf.webp"><img src="../assets/o-perf.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><img src="__PH_PERF__" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">01</span><h3>Performance</h3><p class="mono prof">7× pro Woche · 12–16 Plätze</p></div>
     </button>
     <button class="card" type="button" data-kurs="FBB/Strength &amp; Power">
-      <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-kraft.webp"><img src="../assets/o-kraft.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><img src="__PH_KRAFT__" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">02</span><h3>FBB/Strength &amp; Power</h3><p class="mono prof">6× pro Woche · 16 Plätze</p></div>
     </button>
     <button class="card" type="button" data-kurs="Powercircle">
-      <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-power.webp"><img src="../assets/o-power.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><img src="__PH_POWER__" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">03</span><h3>Powercircle</h3><p class="mono prof">3× pro Woche · 24 Plätze</p></div>
     </button>
     <button class="card" type="button" data-kurs="Mama reloaded">
-      <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-gym.webp"><img src="../assets/o-gym.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><img src="__PH_GYM__" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">04</span><h3>Mama reloaded</h3><p class="mono prof">3× pro Woche · 45 Minuten</p></div>
     </button>
     <button class="card" type="button" data-kurs="Hyrox">
-      <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-hyrox.webp"><img src="../assets/o-hyrox.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><img src="__PH_HYROX__" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
       <span class="tag mono">Training Club</span><span class="veil"></span>
       <div class="body"><span class="n mono">05</span><h3>Hyrox</h3><p class="mono prof">2× pro Woche · 24 Plätze</p></div>
     </button>
     <button class="card" type="button" data-kurs="Team-WOD">
-      <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-teamwod.webp"><img src="../assets/o-teamwod.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><img src="__PH_TEAMWOD__" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">06</span><h3>Team-WOD</h3><p class="mono prof">1× pro Woche · 16 Plätze</p></div>
     </button>
     <button class="card" type="button" data-kurs="FBB">
-      <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-fbb.webp"><img src="../assets/o-fbb.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><img src="__PH_FBB__" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">07</span><h3>FBB</h3><p class="mono prof">1× pro Woche · 12 Plätze</p></div>
     </button>
     <button class="card" type="button" data-kurs="Community TeamWOD">
-      <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-fans.webp"><img src="../assets/o-fans.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
+      <div class="duo" style="position:absolute;inset:0"><img src="__PH_FANS__" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
       <span class="veil"></span>
       <div class="body"><span class="n mono">08</span><h3>Community TeamWOD</h3><p class="mono prof">1× pro Woche · 24 Plätze</p></div>
     </button>
@@ -665,9 +719,9 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
 </section>
 <section id="haltung" class="firsthour">
   <div class="stage">
-    <figure class="frame is-on"><div class="duo"><picture><source type="image/webp" srcset="../assets/o-brueder.webp"><img src="../assets/o-brueder.jpg" alt="Mike und Dominik, die beiden Inhaber" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div></figure>
-    <figure class="frame"><div class="duo"><picture><source type="image/webp" srcset="../assets/o-vormachen.webp"><img src="../assets/o-vormachen.jpg" alt="Coach macht vor, die Gruppe zieht mit" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div></figure>
-    <figure class="frame"><div class="duo"><picture><source type="image/webp" srcset="../assets/o-ringe.webp"><img src="../assets/o-ringe.jpg" alt="Turnringe über der Trainingsfläche" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div></figure>
+    <figure class="frame is-on"><div class="duo"><img src="__PH_BRUEDER__" alt="Mike und Dominik, die beiden Inhaber" loading="lazy"><div class="tint"></div><div class="mul"></div></div></figure>
+    <figure class="frame"><div class="duo"><img src="__PH_VORMACHEN__" alt="Coach macht vor, die Gruppe zieht mit" loading="lazy"><div class="tint"></div><div class="mul"></div></div></figure>
+    <figure class="frame"><div class="duo"><img src="__PH_RINGE__" alt="Turnringe über der Trainingsfläche" loading="lazy"><div class="tint"></div><div class="mul"></div></div></figure>
     <span class="shade"></span>
     <span class="startline"></span>
   </div>
@@ -752,19 +806,19 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
     <h2>Vier Coaches.<br>Zwei davon <span class="bl">Brüder.</span></h2>
   </div>
   <div class="coaches">
-    <figure class="coach rv"><div class="duo"><picture><source type="image/webp" srcset="../assets/o-coachmike.webp"><img src="../assets/o-coachmike.jpg" alt="Coach Mike" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
+    <figure class="coach rv"><div class="duo"><img src="__PH_COACHMIKE__" alt="Coach Mike" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
       <div class="body"><h3>Mike</h3><p>Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien. Hat das Gym 2017 mit seinem Bruder Dominik aufgemacht.</p></div></figure>
-    <figure class="coach rv"><div class="duo"><picture><source type="image/webp" srcset="../assets/o-coachdominik.webp"><img src="../assets/o-coachdominik.jpg" alt="Coach Dominik" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
+    <figure class="coach rv"><div class="duo"><img src="__PH_COACHDOMINIK__" alt="Coach Dominik" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
       <div class="body"><h3>Dominik</h3><p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor für die olympischen Züge.</p></div></figure>
-    <figure class="coach rv"><div class="duo"><picture><source type="image/webp" srcset="../assets/o-coachdiego.webp"><img src="../assets/o-coachdiego.jpg" alt="Coach Diego" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
+    <figure class="coach rv"><div class="duo"><img src="__PH_COACHDIEGO__" alt="Coach Diego" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
       <div class="body"><h3>Diego</h3><p>Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf regionaler Ebene Wettkämpfe bestritten hat.</p></div></figure>
-    <figure class="coach rv"><div class="duo"><picture><source type="image/webp" srcset="../assets/o-coachbenni.webp"><img src="../assets/o-coachbenni.jpg" alt="Coach Benni" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
+    <figure class="coach rv"><div class="duo"><img src="__PH_COACHBENNI__" alt="Coach Benni" loading="lazy"><div class="tint"></div><div class="mul"></div></div><span class="veil"></span>
       <div class="body"><h3>Benni</h3><p>Aktiver Eishockeyspieler, studiert Lehramt für Bewegung und Sport in Klagenfurt. Schwerpunkt Konditionstraining.</p></div></figure>
   </div>
 </section>
 <section id="hyrox" class="wrap" style="padding-top:0">
   <div class="hyrox rv">
-    <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-kettle.webp"><img src="../assets/o-kettle.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
+    <div class="duo" style="position:absolute;inset:0"><img src="__PH_KETTLE__" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
     <span class="veil"></span>
     <div class="sechead">
       <h2><span class="ol">HYROX.</span><br>Einer von acht Kursen.</h2>
@@ -803,14 +857,14 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
     <div class="panel rv">
       <h3>Standort</h3>
       <p class="addr">Sebastiangasse 1<br>9020 Klagenfurt<br>am Wörthersee</p>
-      <p style="margin-top:16px;color:#B3BCC7;font-size:14px;max-width:34ch">Gratis Parkplätze rund ums Gebäude. In beiden Garderoben je ein Duschraum mit drei Duschen.</p>
+      <p style="margin-top:16px;color:#C7BDB0;font-size:14px;max-width:34ch">Gratis Parkplätze rund ums Gebäude. In beiden Garderoben je ein Duschraum mit drei Duschen.</p>
       <a class="btn" style="margin-top:26px" href="#">Route öffnen</a>
     </div>
   </div>
 </section>
 <section id="start" class="wrap" style="padding-top:0">
   <div class="final rv">
-    <div class="duo" style="position:absolute;inset:0"><picture><source type="image/webp" srcset="../assets/o-mural.webp"><img src="../assets/o-mural.jpg" alt="" loading="lazy"></picture><div class="tint"></div><div class="mul"></div></div>
+    <div class="duo" style="position:absolute;inset:0"><img src="__PH_MURAL__" alt="" loading="lazy"><div class="tint"></div><div class="mul"></div></div>
     <span class="veil"></span>
     <div class="inner">
       <h2>Einmal <span class="bl">mittrainieren.</span></h2>
@@ -885,7 +939,7 @@ footer{border-top:1px solid var(--line);padding:clamp(42px,5.4vw,70px) 0 26px}
   <div class="wrap">
     <div class="fgrid">
       <div>
-        <img class="logo" src="../assets/logo.png" alt="Trojan Performance" style="height:32px;margin-bottom:15px" loading="lazy">
+        <img class="logo" src="__LOGO__" alt="Trojan Performance" style="height:32px;margin-bottom:15px" loading="lazy">
         <p style="color:var(--dim);max-width:30ch">Performance Center in Klagenfurt. Erster offizieller HYROX Training Club in Kärnten.</p>
         <div class="sozial">
           <a href="https://www.instagram.com/trojan.performance/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5.2" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor"/></svg></a>

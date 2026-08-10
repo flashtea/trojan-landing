@@ -1,0 +1,1022 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trojan Performance — Performance Center in Klagenfurt am Wörthersee</title>
+<meta name="description" content="Acht Kurse, in jedem steht ein Coach auf der Fläche. Wochenplan, Preise und Probetraining auf einem Schirm. Erster offizieller HYROX Training Club in Kärnten.">
+<meta name="theme-color" content="#1526E0">
+<style>
+@font-face{font-family:'Archivo';src:url('../assets/fonts/archivo-var.woff2') format('woff2');
+  font-weight:500 800;font-style:normal;font-display:swap}
+@font-face{font-family:'Archivo Black';src:url('../assets/fonts/archivo-black.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+
+:root{
+  --blau:#1526E0;
+  --blau-hell:#2E3CF0;
+  --tinte:#080B1F;
+  --weiss:#fff;
+  --kreide:#B9C2FF;
+  --signal:#E3FF3D;
+  --linie:rgba(255,255,255,.22);
+  --grund:.10;                       /* Staerke der Hallentextur unter dem Blau */
+  --rand:clamp(13px,4vw,28px);
+  --bahnhoehe:clamp(74px,11.4vh,150px);
+  --schwung:cubic-bezier(.16,1,.3,1);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--blau);color:var(--weiss);
+  font-family:'Archivo',system-ui,sans-serif;font-weight:500;
+  font-variant-numeric:tabular-nums;
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior-y:none;
+}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;background:none;border:0;margin:0;padding:0;cursor:pointer}
+img{display:block;max-width:100%}
+h1,h2,h3,p,ul,ol,figure,dl,dd{margin:0}
+ul,ol{padding:0;list-style:none}
+:focus-visible{outline:3px solid var(--signal);outline-offset:3px;border-radius:2px}
+.nur-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+
+.sprung{position:fixed;top:8px;left:8px;z-index:90;padding:10px 16px;background:var(--signal);
+  color:var(--tinte);font-weight:700;text-decoration:none;transform:translateY(-160%)}
+.sprung:focus{transform:none}
+
+/* ---------------------------------------------------------------- Grund */
+.halle{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.halle img{width:100%;height:100%;object-fit:cover;
+  filter:grayscale(1) contrast(1.55) brightness(.62);
+  mix-blend-mode:screen;opacity:var(--grund)}
+.halle::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 78% at 50% 4%,rgba(21,38,224,0) 0%,rgba(21,38,224,.55) 58%,rgba(9,14,120,.9) 100%)}
+
+/* ---------------------------------------------------------------- Tafel */
+.tafel{position:relative;z-index:1;min-height:100vh;min-height:100svh;
+  display:flex;flex-direction:column;padding:0 var(--rand)}
+
+.kopf{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;
+  padding:clamp(8px,1.5vh,18px) 0 clamp(7px,1.1vh,14px);flex:0 0 auto}
+.marke{margin:0;display:flex;flex:0 0 auto}
+.wortmarke{height:clamp(15px,2.1vh,21px);width:auto;filter:brightness(0) invert(1)}
+.ort{flex:1 0 100%;order:3;min-width:0;font-size:clamp(8.5px,1.02vh,11px);line-height:1.4;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--kreide)}
+.ort b{color:var(--weiss);font-weight:700;white-space:nowrap}
+.mehr{flex:0 0 auto;margin-left:auto;min-height:40px;display:flex;align-items:center;gap:8px;
+  padding:0 2px 0 12px;font-size:clamp(10px,1.2vh,12px);font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase}
+.mehr i{display:block;width:20px;height:9px;border-top:2px solid currentColor;
+  border-bottom:2px solid currentColor;transition:width .3s var(--schwung)}
+.mehr:hover i{width:26px}
+
+/* ---------------------------------------------------------------- Felder */
+.felder{flex:1 1 auto;display:flex;flex-direction:column;min-height:0}
+.feld{position:relative;flex:1 1 auto;display:flex;flex-direction:column;
+  padding:clamp(9px,1.55vh,20px) 0;border-top:1px solid var(--linie)}
+.feld:first-child{border-top:0;padding-top:clamp(3px,.7vh,10px)}
+
+.frage{font-family:'Archivo Black',Archivo,sans-serif;font-weight:400;
+  font-size:clamp(15px,2.15vh,23px);line-height:1.02;letter-spacing:-.018em;
+  text-transform:uppercase;color:var(--weiss)}
+.frage::before{content:"";display:inline-block;vertical-align:.14em;
+  width:.44em;height:.44em;margin-right:.42em;background:var(--signal)}
+
+.antwort{margin-top:auto;padding-top:clamp(6px,1.1vh,12px);
+  font-size:clamp(11.5px,1.45vh,14.5px);line-height:1.42;color:var(--kreide);
+  text-wrap:pretty}
+.antwort b{color:var(--weiss);font-weight:700}
+
+.oeffner{display:inline;font-size:inherit;font-weight:700;color:var(--signal);
+  text-decoration:underline;text-underline-offset:3px;
+  text-decoration-thickness:1px;text-decoration-color:rgba(227,255,61,.45);
+  transition:text-decoration-color .2s}
+.oeffner:hover{text-decoration-color:var(--signal)}
+.oeffner::after{content:" \203A"}
+
+/* ------------------------------------------------------------ 1 · Woche */
+.woche{display:flex;gap:7px;align-items:stretch;
+  margin-top:clamp(7px,1.3vh,16px);flex:0 0 auto}
+.achse{flex:0 0 auto;width:17px;display:flex;flex-direction:column;gap:5px;
+  font-size:9px;letter-spacing:.03em;color:rgba(185,194,255,.6)}
+.achse__strecke{position:relative;flex:1 1 auto;height:var(--bahnhoehe)}
+.achse span{position:absolute;right:0;transform:translateY(-50%)}
+.gitter{flex:1 1 auto;min-width:0;display:grid;grid-template-columns:repeat(7,1fr);gap:clamp(3px,1vw,7px)}
+.tag{display:flex;flex-direction:column;gap:5px;min-width:0}
+.bahn{position:relative;flex:1 1 auto;height:var(--bahnhoehe);
+  background:rgba(4,7,58,.34);border-radius:2px;overflow:hidden}
+.tag.heute .bahn{background:rgba(4,7,58,.5);box-shadow:inset 0 0 0 1px rgba(227,255,61,.7)}
+.kurs{position:absolute;background:var(--weiss);border-radius:1.5px;
+  transform-origin:50% 0;animation:aufbau .5s var(--schwung) both}
+.tag.heute .kurs{background:var(--signal)}
+@keyframes aufbau{from{transform:scaleY(0);opacity:0}to{transform:scaleY(1);opacity:1}}
+.wtag{font-size:clamp(9px,1.15vh,11.5px);font-weight:700;letter-spacing:.02em;
+  text-align:center;color:var(--kreide)}
+.tag.heute .wtag{color:var(--signal)}
+
+/* ------------------------------------------------------------ 2 · Preis */
+.hebel{display:flex;align-items:center;gap:clamp(8px,2vw,14px);margin-top:clamp(7px,1.2vh,13px)}
+.hebel__titel{flex:0 0 auto;width:clamp(66px,17vw,92px);
+  font-size:clamp(9px,1.05vh,11px);line-height:1.2;letter-spacing:.055em;
+  text-transform:uppercase;color:var(--kreide)}
+.bahnen{position:relative;flex:1 1 auto;min-width:0;display:grid;
+  grid-template-columns:repeat(3,1fr);
+  background:rgba(255,255,255,.10);border-radius:3px;isolation:isolate}
+.knopf{position:absolute;z-index:0;top:0;bottom:0;width:calc(100% / 3);
+  left:calc(var(--i,0) * 100% / 3);background:var(--weiss);border-radius:3px;
+  transition:left .42s var(--schwung)}
+.stop{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;
+  min-height:clamp(38px,5.2vh,50px);cursor:pointer;
+  font-family:'Archivo Black',Archivo,sans-serif;font-weight:400;
+  font-size:clamp(14px,1.95vh,19px);color:var(--weiss);
+  transition:color .28s var(--schwung)}
+.stop input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.stop:has(input:checked){color:var(--blau)}
+.stop input:focus-visible+span{outline:3px solid var(--signal);outline-offset:6px;border-radius:2px}
+.stop .tipp{position:absolute;left:50%;bottom:4px;width:5px;height:5px;margin-left:-2.5px;
+  background:var(--signal);border-radius:50%}
+.stop:has(input:checked) .tipp{background:var(--blau)}
+
+.wort-des-hauses{display:none;margin-top:16px;font-size:15px;line-height:1.4;
+  color:var(--weiss);font-weight:600;max-width:24ch}
+.wort-des-hauses span{display:block;margin-top:3px;font-size:11px;font-weight:500;
+  letter-spacing:.05em;text-transform:uppercase;color:rgba(185,194,255,.75)}
+
+.preis{display:flex;align-items:flex-end;gap:clamp(6px,1.6vw,12px);
+  margin-top:clamp(6px,1.3vh,14px);line-height:.82}
+.zaehler{display:flex;font-family:'Archivo Black',Archivo,sans-serif;font-weight:400;
+  font-size:clamp(46px,9.6vh,104px);letter-spacing:-.045em;line-height:.82}
+.walze{display:block;height:.82em;overflow:hidden;width:.62em}
+.band{display:block;transition:transform .5s var(--schwung)}
+.band b{display:block;height:.82em;font-weight:400}
+.preis__seite{display:flex;flex-direction:column;align-items:flex-start;gap:.28em}
+.waehrung{display:block;font-family:'Archivo Black',Archivo,sans-serif;
+  font-size:clamp(22px,4.2vh,44px);letter-spacing:-.03em;line-height:.86}
+.proMonat{display:block;font-size:clamp(10px,1.2vh,12.5px);letter-spacing:.09em;
+  line-height:1;white-space:nowrap;text-transform:uppercase;color:var(--kreide)}
+
+.rechnung{margin-top:clamp(5px,1vh,11px);font-size:clamp(11.5px,1.45vh,14.5px);
+  line-height:1.42;color:var(--kreide);text-wrap:pretty}
+.rechnung .zahl{color:var(--weiss);font-weight:700}
+.fein{display:block;margin-top:2px;font-size:clamp(10px,1.2vh,12.5px);color:rgba(185,194,255,.78)}
+
+/* --------------------------------------------------------- 3 · Einstieg */
+.einstieg{display:flex;gap:clamp(11px,3vw,18px);align-items:flex-start;
+  margin-top:clamp(7px,1.3vh,14px)}
+.beleg{flex:0 0 auto;width:clamp(80px,25vw,108px);aspect-ratio:1;
+  background:var(--blau-hell);overflow:hidden;border-radius:2px}
+.beleg img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;
+  transform:scale(1.55);transform-origin:50% 38%;
+  filter:grayscale(1) contrast(1.5) brightness(1.12);mix-blend-mode:screen}
+.einstieg .antwort{margin-top:0;padding-top:0}
+
+/* ------------------------------------------------------------------ Ruf */
+.ruf{flex:0 0 auto;display:grid;grid-template-columns:1fr auto;
+  align-items:center;gap:4px clamp(12px,3vw,24px);
+  width:calc(100% + var(--rand) * 2);margin:0 calc(var(--rand) * -1);
+  padding:clamp(10px,1.7vh,20px) var(--rand);
+  min-height:clamp(56px,8.2vh,84px);text-align:left;
+  background:var(--signal);color:var(--tinte);
+  transition:background .25s}
+.ruf:hover{background:#EEFF7A}
+.ruf__haupt{grid-column:1;grid-row:1;display:flex;align-items:center;gap:10px;min-width:0}
+.ruf__wort{font-family:'Archivo Black',Archivo,sans-serif;font-weight:400;
+  font-size:clamp(17px,2.55vh,30px);letter-spacing:-.022em;text-transform:uppercase;
+  line-height:1}
+.ruf__preis{font-family:'Archivo Black',Archivo,sans-serif;font-weight:400;
+  font-size:clamp(17px,2.55vh,30px);letter-spacing:-.022em;line-height:1;
+  padding:3px 8px 4px;background:var(--tinte);color:var(--signal);white-space:nowrap}
+.ruf__zus{grid-column:1;grid-row:2;min-width:0;font-size:clamp(9.5px,1.13vh,12.5px);
+  line-height:1.32;font-weight:600;color:rgba(8,11,31,.8);text-wrap:pretty}
+.ruf i{grid-column:2;grid-row:1 / span 2;justify-self:end;
+  width:clamp(20px,2.6vh,30px);height:2px;
+  background:var(--tinte);position:relative;transition:width .3s var(--schwung)}
+.ruf i::after{content:"";position:absolute;right:0;top:-4px;width:10px;height:10px;
+  border-top:2px solid var(--tinte);border-right:2px solid var(--tinte);
+  transform:rotate(45deg);transform-origin:100% 0}
+.ruf:hover i{width:clamp(26px,3.6vh,42px)}
+
+/* --------------------------------------------------------------- Schicht */
+.schicht{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column}
+.schicht__hg{position:absolute;inset:0;background:rgba(4,6,20,.72);
+  animation:blende .3s ease both}
+@keyframes blende{from{opacity:0}to{opacity:1}}
+.blatt{position:relative;margin-top:auto;width:100%;max-height:100%;
+  display:flex;flex-direction:column;background:var(--tinte);
+  animation:hoch .42s var(--schwung) both}
+@keyframes hoch{from{transform:translateY(4%);opacity:0}to{transform:none;opacity:1}}
+.blatt__kopf{flex:0 0 auto;padding:clamp(12px,2.4vw,20px) var(--rand) 0;
+  border-bottom:1px solid rgba(255,255,255,.14)}
+.blatt__zeile{display:flex;align-items:center;gap:12px}
+.blatt__titel{flex:1 1 auto;min-width:0;font-family:'Archivo Black',Archivo,sans-serif;
+  font-weight:400;font-size:clamp(15px,2.2vh,24px);letter-spacing:-.02em;
+  text-transform:uppercase}
+.zu{flex:0 0 auto;width:44px;height:44px;display:grid;place-items:center;
+  border:1px solid rgba(255,255,255,.28);border-radius:50%;font-size:15px;
+  transition:background .2s,border-color .2s}
+.zu:hover{background:var(--signal);border-color:var(--signal);color:var(--tinte)}
+.register{display:flex;flex-wrap:wrap;gap:5px;padding:clamp(9px,1.6vh,14px) 0 clamp(9px,1.6vh,14px)}
+.reiter{padding:8px 12px;min-height:34px;border:1px solid rgba(255,255,255,.24);
+  border-radius:999px;font-size:11.5px;font-weight:700;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--kreide);transition:.2s}
+.reiter:hover{border-color:var(--weiss);color:var(--weiss)}
+.reiter[aria-current="true"]{background:var(--weiss);border-color:var(--weiss);color:var(--tinte)}
+.blatt__leib{flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;padding:clamp(14px,2.4vh,26px) var(--rand) calc(var(--rand) + 20px)}
+.blatt__leib:focus{outline:none}
+
+.h3{font-family:'Archivo Black',Archivo,sans-serif;font-weight:400;
+  font-size:14px;letter-spacing:-.01em;text-transform:uppercase;margin-bottom:8px}
+.h3:not(:first-child){margin-top:26px}
+.fliess{font-size:14.5px;line-height:1.55;color:var(--kreide);max-width:62ch;text-wrap:pretty}
+.fliess+.fliess{margin-top:10px}
+.fliess b,.fliess strong{color:var(--weiss);font-weight:700}
+
+.karte{padding:14px 0;border-top:1px solid rgba(255,255,255,.13)}
+.karte:first-of-type{border-top:0;padding-top:0}
+.karte__kopf{display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+.karte__name{font-family:'Archivo Black',Archivo,sans-serif;font-weight:400;
+  font-size:16px;letter-spacing:-.015em}
+.karte__zahl{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--signal)}
+.karte__text{margin-top:6px;font-size:14px;line-height:1.5;color:var(--kreide);max-width:60ch;text-wrap:pretty}
+
+.tabrolle{width:100%;overflow-x:auto}
+.tab{width:100%;min-width:290px;table-layout:fixed;border-collapse:collapse;font-size:13.5px}
+.tab caption{text-align:left;font-size:11px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--kreide);padding-bottom:8px}
+.tab th,.tab td{padding:9px 4px;text-align:right;border-bottom:1px solid rgba(255,255,255,.13)}
+.tab th:first-child{width:31%}
+.tab th:first-child,.tab td:first-child{text-align:left;padding-left:0}
+.tab td:last-child,.tab th:last-child{padding-right:0}
+.tab thead th{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--kreide);font-weight:700}
+.tab tbody th{font-weight:700}
+.tab td{font-weight:700;font-family:'Archivo Black',Archivo,sans-serif}
+.tab .best{color:var(--signal)}
+
+.paare{display:grid;gap:1px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.13)}
+.paar{display:flex;gap:10px;justify-content:space-between;align-items:baseline;
+  padding:11px 12px;background:var(--tinte);font-size:13.5px}
+.paar dt{color:var(--kreide)}
+.paar dd{margin:0;font-weight:700;text-align:right;font-family:'Archivo Black',Archivo,sans-serif;
+  font-size:14px;letter-spacing:-.01em}
+
+.plantag{padding:11px 0;border-top:1px solid rgba(255,255,255,.13);
+  display:flex;flex-direction:column;gap:7px}
+.plantag:first-child{border-top:0}
+.plantag__d{flex:0 0 auto;font-family:'Archivo Black',Archivo,sans-serif;font-size:12px;
+  letter-spacing:.04em;text-transform:uppercase;padding-top:2px;color:var(--signal)}
+.plantag__l{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:6px}
+.slot{display:flex;gap:10px;font-size:13.5px;align-items:baseline}
+.slot__z{flex:0 0 42px;font-weight:700;color:var(--weiss)}
+.slot__n{flex:1 1 auto;min-width:0;color:var(--weiss)}
+.slot__d{flex:0 0 auto;font-size:11.5px;color:var(--kreide)}
+.leer{font-size:13.5px;color:rgba(185,194,255,.6)}
+
+.stationen{counter-reset:st;display:grid;gap:1px;background:rgba(255,255,255,.13);
+  border:1px solid rgba(255,255,255,.13)}
+.stationen li{counter-increment:st;display:flex;gap:12px;align-items:baseline;
+  padding:10px 12px;background:var(--tinte);font-size:14px}
+.stationen li::before{content:counter(st,decimal-leading-zero);flex:0 0 auto;
+  font-size:11px;color:var(--signal);font-weight:700}
+
+.leute{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px}
+.person figure{margin:0}
+.person__bild{background:var(--blau);overflow:hidden;aspect-ratio:3/4;border-radius:2px}
+.person__bild img{width:100%;height:100%;object-fit:cover;
+  filter:grayscale(1) contrast(1.34) brightness(1.02);mix-blend-mode:screen}
+.person__name{margin-top:9px;font-family:'Archivo Black',Archivo,sans-serif;font-size:15px}
+.person__text{margin-top:4px;font-size:13px;line-height:1.5;color:var(--kreide)}
+
+.breitbild{width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--blau);border-radius:2px}
+.breitbild img{width:100%;height:100%;object-fit:cover;
+  filter:grayscale(1) contrast(1.4) brightness(1.02);mix-blend-mode:screen}
+
+.form{display:grid;gap:12px;max-width:520px;margin-top:14px}
+.form label{display:block;font-size:11px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--kreide);margin-bottom:5px}
+.form input,.form select,.form textarea{width:100%;min-height:46px;padding:11px 12px;
+  font:inherit;font-size:15px;color:var(--weiss);background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.24);border-radius:3px}
+.form textarea{min-height:96px;resize:vertical}
+.form option{background:var(--tinte);color:var(--weiss)}
+.senden{min-height:50px;padding:0 22px;background:var(--signal);color:var(--tinte);
+  font-family:'Archivo Black',Archivo,sans-serif;font-size:14px;text-transform:uppercase;
+  letter-spacing:.02em;border-radius:3px;justify-self:start}
+.notiz{padding:12px 14px;border-left:3px solid var(--signal);
+  background:rgba(227,255,61,.09);font-size:13.5px;line-height:1.5;color:var(--weiss)}
+.draht{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.draht a{min-height:44px;display:inline-flex;align-items:center;padding:0 16px;
+  border:1px solid rgba(255,255,255,.26);border-radius:999px;font-size:13.5px;
+  font-weight:700;color:var(--weiss);text-decoration:none;transition:.2s}
+.draht a:hover{background:var(--weiss);color:var(--tinte);border-color:var(--weiss)}
+
+/* ------------------------------------------------------------- Breitbild */
+@media (min-width:560px){
+  .plantag{flex-direction:row;gap:14px}
+  .plantag__d{flex:0 0 96px;color:var(--weiss);padding-top:2px}
+}
+
+@media (min-width:900px){
+  :root{--rand:clamp(28px,3.4vw,60px)}
+  .kopf{flex-wrap:nowrap;padding:18px 0 15px;gap:26px}
+  .ort{flex:1 1 auto;order:0;text-align:center;font-size:11px}
+  .mehr{margin-left:0}
+  .felder{flex-direction:row;gap:0;border-top:1px solid var(--linie)}
+  .feld{flex:1 1 0;min-width:0;border-top:0;border-left:1px solid var(--linie);
+    padding:20px clamp(20px,2.4vw,40px) 16px}
+  .feld:first-child{border-left:0;padding-left:0;padding-top:20px}
+  .feld:last-child{padding-right:0}
+  .feld--preis{flex:1.2 1 0}
+  .frage{font-size:clamp(20px,2.4vw,29px);min-height:2.1em}
+  .woche{margin-top:20px;flex:1 1 0;min-height:0;align-items:stretch}
+  .achse__strecke,.bahn{height:auto;flex:1 1 auto;min-height:120px}
+  .tag{flex:1 1 auto}
+  .achse{width:20px}
+  .achse span{font-size:10px}
+  .einstieg{flex:1 1 0;min-height:0;flex-direction:column;gap:16px;margin-top:18px}
+  .beleg{width:100%;aspect-ratio:auto;flex:1 1 0;min-height:130px}
+  .beleg img{transform:none;object-position:50% 32%;filter:grayscale(1) contrast(1.36) brightness(1.06)}
+  .einstieg .antwort{margin-top:0}
+  .antwort,.rechnung{font-size:14.5px}
+  .wort-des-hauses{display:block;margin-top:auto;padding-top:24px;max-width:26ch}
+  .zaehler{font-size:clamp(62px,min(21vh,11.8vw),208px)}
+  .waehrung{font-size:clamp(26px,min(6vh,3.4vw),62px)}
+  .proMonat{font-size:12.5px}
+  .preis{margin:0;padding:16px 0 0}
+  .ruf{grid-template-columns:auto 1fr auto;gap:26px;padding:15px var(--rand)}
+  .ruf__haupt{grid-column:1;grid-row:1}
+  .ruf__zus{grid-column:2;grid-row:1;text-align:right}
+  .ruf i{grid-column:3;grid-row:1}
+  .blatt{max-height:88vh;margin:auto;max-width:1180px;border-radius:4px}
+  .blatt__leib{padding-bottom:34px}
+  .schicht{padding:3vh 3vw}
+  .fliess,.karte__text{font-size:15px}
+}
+@media (min-width:1200px){
+  .leute{grid-template-columns:repeat(4,1fr)}
+  .blatt__leib{columns:auto}
+}
+
+/* -------------------------------------------------------- Bewegung aus */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{
+    animation-duration:.001ms!important;animation-delay:0ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.001ms!important;transition-delay:0ms!important}
+  .mehr:hover i,.ruf:hover i{width:auto}
+  .mehr i{width:20px}
+  .kurs{animation:none;transform:none;opacity:1}
+}
+</style>
+</head>
+<body>
+<a class="sprung" href="#inhalt">Zum Inhalt springen</a>
+
+<div class="halle" aria-hidden="true"><img src="__PH_HERO__" alt="" fetchpriority="high" decoding="async"></div>
+
+<div class="tafel">
+
+  <header class="kopf">
+    <h1 class="marke"><img class="wortmarke" src="__LOGO__" alt="Trojan Performance"></h1>
+    <p class="ort">Klagenfurt am Wörthersee · Erster offizieller <b>HYROX Training Club</b> in Kärnten</p>
+    <button class="mehr" type="button" data-oeffne="kurse" aria-haspopup="dialog">Mehr <i></i></button>
+  </header>
+
+  <main class="felder" id="inhalt" tabindex="-1">
+
+    <section class="feld feld--woche" aria-labelledby="f1">
+      <h2 class="frage" id="f1">Passt das in meine Woche?</h2>
+      <div class="woche">
+        <div class="achse" aria-hidden="true">
+          <div class="achse__strecke" id="achse"></div>
+          <span class="wtag">&nbsp;</span>
+        </div>
+        <div class="gitter" id="gitter" role="img" aria-label="Wochenplan wird geladen"></div>
+      </div>
+      <p class="antwort" id="wtext">Wochenplan wird geladen.</p>
+    </section>
+
+    <section class="feld feld--preis" aria-labelledby="f2">
+      <h2 class="frage" id="f2">Was kostet mich das?</h2>
+
+      <div class="hebel">
+        <span class="hebel__titel" id="t-umfang">Einheiten<br>pro Woche</span>
+        <div class="bahnen" role="radiogroup" aria-labelledby="t-umfang" data-gruppe="umfang">
+          <span class="knopf" style="--i:1" aria-hidden="true"></span>
+          <label class="stop"><input type="radio" name="umfang" value="2"><span>2</span></label>
+          <label class="stop"><input type="radio" name="umfang" value="3" checked><span>3<span class="nur-sr"> — Empfehlung zum Einstieg</span></span><span class="tipp" aria-hidden="true"></span></label>
+          <label class="stop"><input type="radio" name="umfang" value="6"><span>6</span></label>
+        </div>
+      </div>
+
+      <div class="hebel">
+        <span class="hebel__titel" id="t-bindung">Monate<br>Bindung</span>
+        <div class="bahnen" role="radiogroup" aria-labelledby="t-bindung" data-gruppe="bindung">
+          <span class="knopf" style="--i:2" aria-hidden="true"></span>
+          <label class="stop"><input type="radio" name="bindung" value="1"><span>1</span></label>
+          <label class="stop"><input type="radio" name="bindung" value="6"><span>6</span></label>
+          <label class="stop"><input type="radio" name="bindung" value="12" checked><span>12</span></label>
+        </div>
+      </div>
+
+      <p class="wort-des-hauses">„Nicht das billigste Gym der Stadt.“ <span>— der Betreiber</span></p>
+
+      <p class="preis">
+        <span class="zaehler" id="zaehler" aria-hidden="true"></span>
+        <span class="preis__seite" aria-hidden="true">
+          <span class="waehrung">€</span>
+          <span class="proMonat">pro Monat</span>
+        </span>
+        <span class="nur-sr" id="preisSr" aria-live="polite"></span>
+      </p>
+
+      <p class="rechnung" id="rechnung"></p>
+    </section>
+
+    <section class="feld feld--einstieg" aria-labelledby="f3">
+      <h2 class="frage" id="f3">Bin ich fit genug?</h2>
+      <div class="einstieg">
+        <div class="beleg">
+          <img src="__PH_KRAFT__" alt="Trainierende in der Kniebeuge mit der Langhantel, Trojan Performance" decoding="async" width="467" height="700">
+        </div>
+        <p class="antwort">Vorkenntnisse braucht es keine. In jedem Kurs steht ein Coach auf der
+          Fläche und korrigiert — er sagt nicht nur an.
+          <button class="oeffner" type="button" data-oeffne="kurse" aria-haspopup="dialog">Acht Kurse</button>
+          <button class="oeffner" type="button" data-oeffne="coaches" aria-haspopup="dialog">Coaches</button>
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <button class="ruf" type="button" data-oeffne="kontakt" aria-haspopup="dialog">
+    <span class="ruf__haupt">
+      <span class="ruf__wort">Probetraining</span>
+      <span class="ruf__preis">15 €</span>
+    </span>
+    <i aria-hidden="true"></i>
+    <span class="ruf__zus">Eine Einheit, 75 Minuten, ein Coach. Handtuch, Trinkflasche, Hallenschuhe.</span>
+  </button>
+
+</div>
+
+<div class="schicht" id="schicht" hidden>
+  <div class="schicht__hg" data-zu></div>
+  <div class="blatt" role="dialog" aria-modal="true" aria-labelledby="blattTitel">
+    <div class="blatt__kopf">
+      <div class="blatt__zeile">
+        <h2 class="blatt__titel" id="blattTitel">Kurse</h2>
+        <button class="zu" type="button" data-zu aria-label="Schicht schliessen">✕</button>
+      </div>
+      <nav class="register" id="register" aria-label="Bereiche"></nav>
+    </div>
+    <div class="blatt__leib" id="leib" tabindex="-1"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ------------------------------------------------------------- Bestand */
+
+var TAGE = ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
+var KURZ = ['Mo','Di','Mi','Do','Fr','Sa','So'];
+
+var PLAN_STAND = [
+  [1,'06:00',75,'Performance'],   [3,'06:00',75,'Performance'],
+  [0,'08:15',75,'FBB/Strength & Power'], [1,'08:15',75,'Performance'],
+  [2,'08:15',75,'FBB/Strength & Power'], [4,'08:15',75,'Performance'],
+  [5,'08:15',75,'FBB/Strength & Power'], [5,'09:30',75,'Community TeamWOD'],
+  [4,'09:45',45,'Mama reloaded'],  [2,'10:00',45,'Mama reloaded'],
+  [4,'10:45',45,'Mama reloaded'],
+  [2,'16:00',75,'Powercircle'],    [4,'16:00',75,'FBB/Strength & Power'],
+  [0,'17:15',75,'Powercircle'],    [0,'17:15',75,'Performance'],
+  [1,'17:15',75,'FBB/Strength & Power'], [2,'17:15',75,'Team-WOD'],
+  [3,'17:15',75,'Performance'],    [4,'17:15',75,'Hyrox'],
+  [0,'18:30',75,'FBB/Strength & Power'], [1,'18:30',75,'Performance'],
+  [2,'18:30',75,'Hyrox'],          [3,'18:30',75,'FBB'],
+  [3,'18:30',75,'Powercircle']
+].map(function(r){ return {tag:r[0], zeit:r[1], dauer:r[2], name:r[3]}; });
+
+var KURSE = [
+  {n:'Performance', h:'7× pro Woche', p:'12–16 Plätze', d:75,
+   t:'Crosstraining aus Powerlifting, Weightlifting, Gymnastics, Calisthenics, Strongman und Ausdauer. Die Reize sind nicht willkürlich kombiniert, sondern folgen einer periodisierten Planung.'},
+  {n:'FBB/Strength & Power', h:'6× pro Woche', p:'16 Plätze', d:75,
+   t:'Muskelaufbau nach festem Schema, kombiniert mit kurzen intensiven Ausdauerblöcken. Kraft und Ausdauer in einer Einheit.'},
+  {n:'Powercircle', h:'3× pro Woche', p:'24 Plätze', d:75,
+   t:'Airbike, SkiErg, Schlitten, Jump-Box, Battle-Rope, Wallballs im Wechsel. Kurze harte Intervalle, kurze Pausen. Technisch anspruchslos, deshalb auch für Einsteiger geeignet.'},
+  {n:'Mama reloaded', h:'3× pro Woche', p:'', d:45,
+   t:'Wiedereinstieg nach der Schwangerschaft. Beckenboden, Rumpf und Kraft in einem Tempo, das sich an den Tag anpasst.'},
+  {n:'Hyrox', h:'2× pro Woche', p:'24 Plätze', d:75,
+   t:'Vorbereitung auf das Rennformat, das weltweit unter denselben Bedingungen läuft — für Open, Pro, Doubles und Relay. Für jedes Level, vom Einstieg bis zum Wettkampf.'},
+  {n:'Team-WOD', h:'1× pro Woche', p:'16 Plätze', d:75,
+   t:'Zu zweit mit deinem Trainingsbuddy. Jede Woche ein anderes Workout, Intensität und Schwierigkeitsgrad werden auf euch beide angepasst.'},
+  {n:'FBB', h:'1× pro Woche', p:'12 Plätze', d:75,
+   t:'Nach dem gemeinsamen Warm-up wählst du Ober- oder Unterkörper, je vier Übungen mit vorgegebenen Sätzen, Wiederholungen und Pausen. Zum Abschluss eine kurze, intensive Belastung.'},
+  {n:'Community TeamWOD', h:'1× pro Woche', p:'24 Plätze', d:75,
+   t:'Team-Workout in grosser Runde. Jede Woche ein anderes Programm, Intensität und Schwierigkeitsgrad individuell angepasst.'}
+];
+
+var TARIF = {
+  2:{preise:{1:130,6:120,12:110}, einheiten:9,
+     note:'9 Einheiten im Monat, frei einteilbar',
+     wink:'Wer seltener kommt: Drop-in 25 €, 10er-Block 200 €.'},
+  3:{preise:{1:150,6:140,12:130}, einheiten:13,
+     note:'13 Einheiten im Monat',
+     wink:'Empfehlung zum Einstieg: zwei für die Kraft, eine für die Ausdauer.'},
+  6:{preise:{1:170,6:160,12:150}, einheiten:26,
+     note:'26 Einheiten im Monat, Montag bis Samstag',
+     wink:'In jedem Tarif: keine Einschreibgebühr, eigener Kraftaufbauplan.'}
+};
+
+var COACHES = [
+  {n:'Mike', b:'__PH_COACHMIKE__',
+   t:'Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien. Hat das Gym 2017 mit seinem Bruder Dominik aufgemacht.'},
+  {n:'Dominik', b:'__PH_COACHDOMINIK__',
+   t:'Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor für die olympischen Züge.'},
+  {n:'Diego', b:'__PH_COACHDIEGO__',
+   t:'Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf regionaler Ebene Wettkämpfe bestritten hat.'},
+  {n:'Benni', b:'__PH_COACHBENNI__',
+   t:'Aktiver Eishockeyspieler, studiert Lehramt für Bewegung und Sport in Klagenfurt. Schwerpunkt Konditionstraining.'}
+];
+
+var STATIONEN = ['1000 m SkiErg','50 m Sled Push','50 m Sled Pull','80 m Burpee Broad Jumps',
+                 '1000 m Rudern','200 m Farmers Carry','100 m Sandbag Lunges','100 Wall Balls'];
+
+var BEREICHE = [
+  {id:'kurse',   name:'Acht Kurse'},
+  {id:'plan',    name:'Wochenplan'},
+  {id:'preise',  name:'Preise'},
+  {id:'hyrox',   name:'HYROX'},
+  {id:'coaches', name:'Coaches'},
+  {id:'haus',    name:'Das Haus'},
+  {id:'kontakt', name:'Kontakt'}
+];
+
+/* ------------------------------------------------------------ Werkzeug */
+
+function $(s,w){ return (w||document).querySelector(s); }
+function el(tag,klasse,text){
+  var n=document.createElement(tag);
+  if(klasse) n.className=klasse;
+  if(text!=null) n.textContent=text;
+  return n;
+}
+function euro(n){ return n.toLocaleString('de-AT',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function minuten(s){ var p=String(s).split(':'); return (+p[0])*60+(+p[1]); }
+function uhr(m){
+  var h=Math.floor(m/60), r=m%60;
+  return (h<10?'0':'')+h+':'+(r<10?'0':'')+r;
+}
+
+/* Zusammenhaengende Bloecke aus Terminen ableiten (Luecken bis 60 min gelten
+   als derselbe Block — daraus ergibt sich Vormittag / Abend von selbst). */
+function bloecke(liste){
+  if(!liste.length) return [];
+  var s=liste.map(function(e){ return [minuten(e.zeit), minuten(e.zeit)+e.dauer]; })
+             .sort(function(a,b){ return a[0]-b[0]; });
+  var raus=[s[0].slice()];
+  for(var i=1;i<s.length;i++){
+    var letzt=raus[raus.length-1];
+    if(s[i][0]-letzt[1]<=60){ letzt[1]=Math.max(letzt[1],s[i][1]); }
+    else raus.push(s[i].slice());
+  }
+  return raus.map(function(b){ return uhr(b[0])+'–'+uhr(b[1]); });
+}
+
+/* --------------------------------------------------------- Die Woche */
+
+var T0=6*60, T1=20*60, SPANNE=T1-T0;   /* wird aus den Terminen nachgezogen */
+var heute=(new Date().getDay()+6)%7;
+var planDaten=[], planLive=false;
+
+function zeichnen(daten, live){
+  planDaten=daten.slice(); planLive=!!live;
+
+  /* Achse so eng wie die Termine es zulassen — volle Stunden aussen herum */
+  var anfaenge=planDaten.map(function(e){ return minuten(e.zeit); });
+  var enden=planDaten.map(function(e){ return minuten(e.zeit)+e.dauer; });
+  T0=Math.floor(Math.min.apply(null,anfaenge)/60)*60;
+  T1=Math.ceil(Math.max.apply(null,enden)/60)*60;
+  SPANNE=Math.max(60,T1-T0);
+
+  var achse=$('#achse');
+  achse.textContent='';
+  [[T0,'.35em'],[Math.round((T0+T1)/120)*60,'50%'],[T1,'calc(100% - .35em)']].forEach(function(m){
+    var s=el('span',null,uhr(m[0]).slice(0,2));
+    s.style.top=m[1];
+    achse.appendChild(s);
+  });
+
+  var gitter=$('#gitter');
+  gitter.textContent='';
+
+  for(var t=0;t<7;t++){
+    var tagsListe=planDaten.filter(function(e){ return e.tag===t; })
+      .sort(function(a,b){ return minuten(a.zeit)-minuten(b.zeit); });
+
+    /* Bahnen vergeben, damit gleichzeitige Kurse nebeneinander stehen */
+    var enden=[];
+    tagsListe.forEach(function(e){
+      var a=minuten(e.zeit), l=0;
+      while(enden[l]!=null && enden[l]>a) l++;
+      e._bahn=l; enden[l]=a+e.dauer;
+    });
+    var spuren=Math.max(1,enden.length);
+
+    var sp=el('div','tag'+(t===heute?' heute':''));
+    var bahn=el('div','bahn');
+    tagsListe.forEach(function(e,i){
+      var a=minuten(e.zeit);
+      var m=el('span','kurs');
+      m.style.top='calc('+Math.max(0,(a-T0)/SPANNE*100)+'% + 1px)';
+      m.style.height='calc('+Math.max(3.2,e.dauer/SPANNE*100)+'% - 1px)';
+      m.style.left='calc('+(e._bahn*100/spuren)+'% + '+(e._bahn?1:0)+'px)';
+      m.style.width='calc('+(100/spuren)+'% - '+(spuren>1?1.5:0)+'px)';
+      m.style.animationDelay=(t*55+i*22)+'ms';
+      m.title=KURZ[t]+' '+e.zeit+' · '+e.name;
+      bahn.appendChild(m);
+    });
+    sp.appendChild(bahn);
+    sp.appendChild(el('span','wtag',KURZ[t]));
+    gitter.appendChild(sp);
+  }
+
+  /* Satz aus den Daten ableiten, nichts hart hinschreiben */
+  var werk=bloecke(planDaten.filter(function(e){ return e.tag<5; }));
+  var sam =bloecke(planDaten.filter(function(e){ return e.tag===5; }));
+  var son =bloecke(planDaten.filter(function(e){ return e.tag===6; }));
+  var satz=[];
+  if(werk.length) satz.push('Mo–Fr '+werk.join(' und '));
+  if(sam.length)  satz.push('Sa '+sam.join(' und '));
+  if(son.length)  satz.push('So '+son.join(' und '));
+
+  gitter.setAttribute('aria-label','Kurszeiten der Woche als Balken je Wochentag. '+
+    satz.join(', ')+'. '+planDaten.length+' Kurse.');
+
+  var p=$('#wtext');
+  p.textContent='';
+  var stark=el('b',null,satz.join(', ')+'.');
+  p.appendChild(stark);
+  p.appendChild(document.createTextNode(' '+planDaten.length+' Kurse in dieser Woche'+
+    (son.length?'':', sonntags nur Open Gym')+'. Open Gym täglich 06:00–22:00. '));
+  var b=el('button','oeffner','Ganzer Plan');
+  b.type='button'; b.setAttribute('data-oeffne','plan'); b.setAttribute('aria-haspopup','dialog');
+  p.appendChild(b);
+}
+
+function planWoche(){
+  var jetzt=new Date(), versatz=(jetzt.getDay()+6)%7;
+  var mo=new Date(jetzt.getFullYear(),jetzt.getMonth(),jetzt.getDate()-versatz);
+  var so=new Date(mo.getFullYear(),mo.getMonth(),mo.getDate()+7);
+  var f=function(d){
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+
+           String(d.getDate()).padStart(2,'0')+'T00:00:00.000Z';
+  };
+  return [f(mo),f(so)];
+}
+
+(function holen(){
+  var g=planWoche();
+  fetch('https://gymkloud.com/api/public/course-event/trojan_performance'+
+        '?from='+g[0]+'&to='+g[1]+'&groupNames=Kurse')
+    .then(function(r){ if(!r.ok) throw new Error(String(r.status)); return r.json(); })
+    .then(function(d){
+      if(!Array.isArray(d)||!d.length) throw new Error('leer');
+      zeichnen(d.map(function(e){
+        return {
+          tag:(new Date(e.startTime).getDay()+6)%7,
+          zeit:e.startTime.slice(11,16),
+          dauer:Math.round((new Date(e.endTime)-new Date(e.startTime))/60000)||75,
+          name:((e.course&&e.course.name)||'').trim()
+        };
+      }),true);
+    })
+    .catch(function(){ zeichnen(PLAN_STAND,false); });
+})();
+
+/* --------------------------------------------------------- Der Preis */
+
+var wahl={umfang:3, bindung:12};
+
+(function walzen(){
+  var z=$('#zaehler');
+  for(var i=0;i<3;i++){
+    var w=el('span','walze'), band=el('span','band');
+    for(var d=0;d<10;d++) band.appendChild(el('b',null,String(d)));
+    band.style.transitionDelay=(i*55)+'ms';
+    w.appendChild(band); z.appendChild(w);
+  }
+})();
+
+function preisZeigen(){
+  var t=TARIF[wahl.umfang], p=t.preise[wahl.bindung];
+  var ziffern=String(p).padStart(3,'0').split('');
+  var baender=document.querySelectorAll('#zaehler .band');
+  for(var i=0;i<baender.length;i++){
+    baender[i].style.transform='translateY(-'+(+ziffern[i]*0.82)+'em)';
+  }
+  $('#preisSr').textContent=p+' Euro pro Monat bei '+wahl.umfang+
+    ' Einheiten pro Woche und '+wahl.bindung+' Monaten Bindung.';
+
+  var r=$('#rechnung');
+  r.textContent='';
+  var eins=el('span','zahl',euro(p/t.einheiten)+' €');
+  r.appendChild(document.createTextNode(t.note+' · '));
+  r.appendChild(eins);
+  r.appendChild(document.createTextNode(' je Einheit. '));
+  var fein=el('span','fein',t.wink+' ');
+  var b=el('button','oeffner','Ohne Bindung, SVS, Vertrag');
+  b.type='button'; b.setAttribute('data-oeffne','preise'); b.setAttribute('aria-haspopup','dialog');
+  fein.appendChild(b);
+  r.appendChild(fein);
+}
+
+document.querySelectorAll('.bahnen').forEach(function(bahnen){
+  var gruppe=bahnen.getAttribute('data-gruppe');
+  bahnen.addEventListener('change',function(ev){
+    var stops=Array.prototype.slice.call(bahnen.querySelectorAll('input'));
+    var i=stops.indexOf(ev.target);
+    if(i<0) return;
+    wahl[gruppe]=+ev.target.value;
+    $('.knopf',bahnen).style.setProperty('--i',i);
+    preisZeigen();
+  });
+});
+preisZeigen();
+
+/* ------------------------------------------------------------ Schicht */
+
+var schicht=$('#schicht'), leib=$('#leib'), titel=$('#blattTitel'), register=$('#register');
+var zuletzt=null, offen=null;
+
+BEREICHE.forEach(function(b){
+  var k=el('button','reiter',b.name);
+  k.type='button'; k.setAttribute('data-reiter',b.id);
+  k.addEventListener('click',function(){ zeigen(b.id); });
+  register.appendChild(k);
+});
+
+function bild(quelle, text, klasse){
+  var box=el('div',klasse||'breitbild');
+  var i=el('img'); i.src=quelle; i.alt=text; i.loading='lazy'; i.decoding='async';
+  box.appendChild(i);
+  return box;
+}
+function absatz(html){
+  var p=el('p','fliess'); p.innerHTML=html; return p;
+}
+
+var BAU={};
+
+BAU.kurse=function(){
+  var f=document.createDocumentFragment();
+  f.appendChild(absatz('Jede Einheit dauert <b>75 Minuten</b>, Mama reloaded 45. In jedem Kurs steht ein Coach auf der Fläche und korrigiert — er sagt nicht nur an. Empfehlung des Gyms für den Einstieg: drei Einheiten pro Woche, zwei für die Kraft, eine für die Ausdauer.'));
+  var liste=el('div'); liste.style.marginTop='20px';
+  KURSE.forEach(function(k){
+    var karte=el('div','karte');
+    var kopf=el('div','karte__kopf');
+    kopf.appendChild(el('h3','karte__name',k.n));
+    var meta=[k.h, k.d+' Minuten']; if(k.p) meta.push(k.p);
+    kopf.appendChild(el('span','karte__zahl',meta.join(' · ')));
+    karte.appendChild(kopf);
+    karte.appendChild(el('p','karte__text',k.t));
+    liste.appendChild(karte);
+  });
+  f.appendChild(liste);
+  return f;
+};
+
+BAU.plan=function(){
+  var f=document.createDocumentFragment();
+  f.appendChild(absatz(planLive
+    ? 'Direkt aus dem Buchungssystem, dieselbe Quelle wie die App.'
+    : 'Das Buchungssystem antwortet gerade nicht — hier steht der zuletzt bekannte Stand.'));
+  var liste=el('div'); liste.style.marginTop='18px';
+  for(var t=0;t<7;t++){
+    (function(t){
+      var tagListe=planDaten.filter(function(e){ return e.tag===t; })
+        .sort(function(a,b){ return minuten(a.zeit)-minuten(b.zeit); });
+      var zeile=el('div','plantag');
+      zeile.appendChild(el('span','plantag__d',TAGE[t]));
+      var l=el('div','plantag__l');
+      if(!tagListe.length){
+        l.appendChild(el('p','leer','Keine Kurse — Open Gym 06:00–22:00'));
+      } else {
+        tagListe.forEach(function(e){
+          var s=el('div','slot');
+          s.appendChild(el('span','slot__z',e.zeit));
+          s.appendChild(el('span','slot__n',e.name));
+          s.appendChild(el('span','slot__d',e.dauer+' min'));
+          l.appendChild(s);
+        });
+      }
+      zeile.appendChild(l);
+      liste.appendChild(zeile);
+    })(t);
+  }
+  f.appendChild(liste);
+  return f;
+};
+
+BAU.preise=function(){
+  var f=document.createDocumentFragment();
+
+  var tab=el('table','tab');
+  tab.innerHTML=
+    '<caption>Kurstarife · Preis pro Monat</caption>'+
+    '<thead><tr><th scope="col">Einheiten<br>pro Woche</th><th scope="col">1 Monat</th>'+
+    '<th scope="col">6 Monate</th><th scope="col">12 Monate</th></tr></thead><tbody>'+
+    [2,3,6].map(function(u){
+      var t=TARIF[u];
+      return '<tr><th scope="row">'+u+' × Woche</th>'+
+        '<td>'+t.preise[1]+' €</td><td>'+t.preise[6]+' €</td>'+
+        '<td class="best">'+t.preise[12]+' €</td></tr>';
+    }).join('')+'</tbody>';
+  var rolle=el('div','tabrolle'); rolle.appendChild(tab);
+  f.appendChild(rolle);
+
+  f.appendChild(absatz('<b>2 Einheiten / Woche</b> — 9 Einheiten im Monat, frei einteilbar, 14,44 € pro Einheit.<br><b>3 Einheiten / Woche</b> — 13 Einheiten im Monat, 11,54 € pro Einheit, mit 12 Monaten 10,00 €. Empfehlung zum Einstieg.<br><b>6 Einheiten / Woche</b> — 26 Einheiten, Montag bis Samstag, 6,54 € pro Einheit.'));
+
+  f.appendChild(el('h3','h3','Ohne Bindung'));
+  var dl=el('dl','paare');
+  [['Probetraining','15 €'],['Drop-in','25 €'],['10er-Block, ein Jahr gültig','200 €'],
+   ['Personal Training','100 €'],['Open Gym, monatlich kündbar','60 €']].forEach(function(r){
+    var d=el('div','paar');
+    d.appendChild(el('dt',null,r[0]));
+    d.appendChild(el('dd',null,r[1]));
+    dl.appendChild(d);
+  });
+  f.appendChild(dl);
+
+  f.appendChild(el('h3','h3','In jedem Tarif enthalten'));
+  f.appendChild(absatz('Keine Einschreibgebühr. Eigener Kraftaufbauplan.'));
+
+  f.appendChild(el('h3','h3','Vertrag'));
+  f.appendChild(absatz('Bindung wahlweise 1, 6 oder 12 Monate. Pause bei 6 Monaten einmal, bei 12 Monaten zweimal — je bis zu 4 Wochen. Bei triftigem Grund übertragbar.'));
+
+  f.appendChild(el('h3','h3','SVS'));
+  f.appendChild(absatz('Selbstständig und SVS-versichert? Dann überweist die SVS <b>100 €</b> aufs Konto — für jeden Tarif ausser Open Gym, und für den 10er-Block.'));
+
+  f.appendChild(absatz('„Nicht das billigste Gym der Stadt." — der Betreiber über sich selbst.'));
+  return f;
+};
+
+BAU.hyrox=function(){
+  var f=document.createDocumentFragment();
+  f.appendChild(bild('__PH_HYROX__','Training am Ruderergometer vor der beschriebenen Tafel'));
+  var p=absatz('Ein Rennformat, das weltweit nach denselben Regeln läuft: acht Kilometer Laufen im Wechsel mit acht Kraftstationen. Vor jeder Station wird 1 km gelaufen. Trojan Performance ist der <b>erste offizielle HYROX Training Club in Kärnten</b>.');
+  p.style.marginTop='18px';
+  f.appendChild(p);
+  f.appendChild(absatz('Einer der acht Kurse bereitet darauf vor, zweimal pro Woche — für Open, Pro, Doubles und Relay. Mitmachen kann man ihn, ohne je an den Start zu gehen.'));
+  f.appendChild(el('h3','h3','Die acht Stationen in dieser Reihenfolge'));
+  var ol=el('ol','stationen');
+  STATIONEN.forEach(function(s){ ol.appendChild(el('li',null,s)); });
+  f.appendChild(ol);
+  return f;
+};
+
+BAU.coaches=function(){
+  var f=document.createDocumentFragment();
+  f.appendChild(absatz('2017 von den Brüdern Mike und Dominik gegründet.'));
+  var g=el('div','leute'); g.style.marginTop='18px';
+  COACHES.forEach(function(c){
+    var s=el('div','person');
+    var fig=el('figure');
+    fig.appendChild(bild(c.b,'Porträt von '+c.n,'person__bild'));
+    var cap=el('figcaption');
+    cap.appendChild(el('h3','person__name',c.n));
+    cap.appendChild(el('p','person__text',c.t));
+    fig.appendChild(cap);
+    s.appendChild(fig);
+    g.appendChild(s);
+  });
+  f.appendChild(g);
+  return f;
+};
+
+BAU.haus=function(){
+  var f=document.createDocumentFragment();
+  f.appendChild(bild('__PH_GYM__','Halle mit Turnringen und Klimmzugbalken'));
+  var dl=el('dl','paare'); dl.style.marginTop='18px';
+  [['Adresse','Sebastiangasse 1, 9020 Klagenfurt'],
+   ['Parken','Gratis rund ums Gebäude'],
+   ['Garderoben','Zwei, je ein Duschraum mit drei Duschen'],
+   ['Open Gym','Täglich 06:00–22:00, Zutritt per App'],
+   ['Open Gym Tarif','60 € im Monat, monatlich kündbar'],
+   ['Seit','2017']].forEach(function(r){
+    var d=el('div','paar');
+    d.appendChild(el('dt',null,r[0]));
+    d.appendChild(el('dd',null,r[1]));
+    dl.appendChild(d);
+  });
+  f.appendChild(dl);
+  return f;
+};
+
+BAU.kontakt=function(){
+  var f=document.createDocumentFragment();
+  f.appendChild(absatz('<b>Probetraining: eine Einheit, ein Coach, 75 Minuten, 15 €.</b> Vorkenntnisse braucht es keine. Handtuch, Trinkflasche, Hallenschuhe mit sauberer Sohle — mehr nicht.'));
+  f.appendChild(absatz('Probetraining, allgemeine Anfrage, 1:1 Coaching oder Firmentraining — schreib oder ruf an, der Betreiber antwortet selbst.'));
+
+  var draht=el('div','draht');
+  [['office@trojanperformance.at','mailto:office@trojanperformance.at'],
+   ['+43 676 8227 7302','tel:+436768227302'],
+   ['Instagram','https://www.instagram.com/trojan.performance/'],
+   ['Facebook','https://www.facebook.com/trojanperformanceofficial'],
+   ['YouTube','https://www.youtube.com/channel/UChUZebvjDwrWEdOCa86xNiA']].forEach(function(r){
+    var a=el('a',null,r[0]); a.href=r[1];
+    if(r[1].indexOf('http')===0){ a.target='_blank'; a.rel='noopener'; }
+    draht.appendChild(a);
+  });
+  f.appendChild(draht);
+
+  var form=el('form','form');
+  form.setAttribute('novalidate','');
+  form.innerHTML=
+    '<div><label for="k-a">Anliegen</label><select id="k-a" name="anliegen">'+
+    '<option>Probetraining</option><option>Allgemeine Anfrage</option>'+
+    '<option>1:1 Coaching</option><option>Firmentraining</option></select></div>'+
+    '<div><label for="k-n">Name</label><input id="k-n" name="name" type="text" autocomplete="name"></div>'+
+    '<div><label for="k-m">E-Mail</label><input id="k-m" name="mail" type="email" autocomplete="email"></div>'+
+    '<div><label for="k-t">Nachricht</label><textarea id="k-t" name="text"></textarea></div>';
+  var knopf=el('button','senden','Absenden'); knopf.type='submit';
+  form.appendChild(knopf);
+  var sagen=el('p','notiz');
+  sagen.hidden=true;
+  sagen.setAttribute('role','status');
+  sagen.textContent='Dieser Entwurf hat keinen Empfänger — das Formular verschickt nichts. '+
+    'Schreib an office@trojanperformance.at oder ruf +43 676 8227 7302 an.';
+  form.addEventListener('submit',function(ev){
+    ev.preventDefault();
+    sagen.hidden=false;
+    sagen.focus&&sagen.focus();
+  });
+  f.appendChild(form);
+  f.appendChild(sagen);
+  return f;
+};
+
+function zeigen(id){
+  var b=null,i;
+  for(i=0;i<BEREICHE.length;i++) if(BEREICHE[i].id===id) b=BEREICHE[i];
+  if(!b) b=BEREICHE[0];
+  offen=b.id;
+  titel.textContent=b.name;
+  leib.textContent='';
+  leib.appendChild(BAU[b.id]());
+  leib.scrollTop=0;
+  register.querySelectorAll('.reiter').forEach(function(k){
+    var an=k.getAttribute('data-reiter')===b.id;
+    if(an) k.setAttribute('aria-current','true'); else k.removeAttribute('aria-current');
+  });
+}
+
+function oeffnen(id){
+  zuletzt=document.activeElement;
+  schicht.hidden=false;
+  document.body.style.overflow='hidden';
+  var tafel=$('.tafel');
+  if('inert' in tafel) tafel.inert=true;
+  zeigen(id);
+  $('.zu',schicht).focus();
+}
+function schliessen(){
+  if(schicht.hidden) return;
+  schicht.hidden=true;
+  document.body.style.overflow='';
+  var tafel=$('.tafel');
+  if('inert' in tafel) tafel.inert=false;
+  if(zuletzt&&zuletzt.focus) zuletzt.focus();
+}
+
+document.addEventListener('click',function(ev){
+  var o=ev.target.closest('[data-oeffne]');
+  if(o){ ev.preventDefault(); oeffnen(o.getAttribute('data-oeffne')); return; }
+  if(ev.target.closest('[data-zu]')){ ev.preventDefault(); schliessen(); return; }
+  var a=ev.target.closest('a[href="#"]');
+  if(a) ev.preventDefault();
+});
+
+document.addEventListener('keydown',function(ev){
+  if(ev.key==='Escape'&&!schicht.hidden){ schliessen(); return; }
+  if(ev.key!=='Tab'||schicht.hidden) return;
+  var greifbar=schicht.querySelectorAll(
+    'a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])');
+  if(!greifbar.length) return;
+  var erst=greifbar[0], letzt=greifbar[greifbar.length-1];
+  if(ev.shiftKey&&document.activeElement===erst){ ev.preventDefault(); letzt.focus(); }
+  else if(!ev.shiftKey&&document.activeElement===letzt){ ev.preventDefault(); erst.focus(); }
+});
+
+})();
+</script>
+</body>
+</html>
