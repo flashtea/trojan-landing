@@ -54,6 +54,9 @@ SEITEN = {
     'trojan-P-spektrum.src.html':  'spektrum',  # die echten Kursfarben als System
     'trojan-Q-grau.src.html':      'grau',      # kein einziger Farbwert
     'trojan-R-wende.src.html':     'wende',     # zwei Fassungen in einer Seite
+    # sechste Runde: nicht weniger Gestaltung, weniger Inhalt. Arena, auf das
+    # gekuerzt, was vor der Entscheidung fuer ein Probetraining gebraucht wird.
+    'trojan-S-kern.src.html':      'kern',
 }
 
 FEST = {

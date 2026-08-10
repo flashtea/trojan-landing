@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Trojan Performance — Performance Center Klagenfurt am Wörthersee</title>
-<meta name="description" content="Kurse mit Coach auf der Fläche, Open Gym täglich 06:00–22:00, erster offizieller HYROX Training Club Kärntens. Probetraining 15 €. Sebastiangasse 1, Klagenfurt.">
+<meta name="description" content="Sieben Tage die Woche Kurse, in jeder Einheit ein Coach auf der Fläche. Wochenplan live aus dem Buchungssystem. Probetraining 15 €. Sebastiangasse 1, Klagenfurt.">
 <style>
 @font-face{font-family:'Archivo';src:url('../assets/fonts/archivo-var.woff2') format('woff2');
   font-weight:500 800;font-style:normal;font-display:swap}
@@ -79,7 +79,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   color:var(--grau);
   border-bottom:1px solid var(--tinte);padding-bottom:.7rem;margin-bottom:1.4rem;
 }
-.hero-kicker .rotx{color:var(--rot)}
+.hero-kicker .rotx{color:var(--rot);text-align:right}
 .fit{display:block;width:100%;overflow:hidden}
 .fit>span{
   display:inline-block;white-space:nowrap;
@@ -144,43 +144,17 @@ figure.rahmen figcaption{
 .satz+.satz{margin-top:.9rem}
 .klein{font-family:var(--mono);font-size:.72rem;line-height:1.65;color:var(--grau)}
 
-/* ---------- 01 Prinzip ---------- */
-.leitsatz{
-  font-family:var(--schwer);font-weight:400;text-transform:uppercase;
-  font-size:clamp(1.45rem,4.9vw,3.3rem);line-height:1.04;letter-spacing:-.005em;
-  max-width:19em;margin-bottom:1.6rem;
+/* Rot umrandetes Etikett. Trug vorher den HYROX-Abschnitt, steht jetzt beim
+   Probetraining — der Abschnitt ist weg, die Farbe bleibt auf der Seite. */
+.badge{
+  display:inline-block;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--rot);border:1px solid var(--rot);
+  padding:.45rem .7rem;margin-bottom:1.2rem;
 }
-.leitsatz em{font-style:normal;color:var(--rot)}
-.prinzip-gitter{display:grid;gap:2rem}
-@media(min-width:900px){.prinzip-gitter{grid-template-columns:6fr 6fr;gap:3rem;align-items:start}}
 
-/* ---------- 02 Kurse ---------- */
-.kursliste{border-top:1px solid var(--tinte)}
-.kurs{
-  display:grid;grid-template-columns:2.6rem 1fr;gap:.2rem 0;
-  padding:1.05rem 0 1.15rem;border-bottom:1px solid var(--tinte);
-}
-.kurs .nr{font-family:var(--mono);font-size:.72rem;color:var(--rot);padding-top:.34rem}
-.kurs h3{
-  font-family:var(--grot);font-weight:780;text-transform:uppercase;
-  font-size:1.14rem;letter-spacing:.005em;line-height:1.2;
-}
-.kurs .meta{
-  grid-column:2;font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;
-  text-transform:uppercase;color:var(--grau);margin-top:.25rem;
-}
-.kurs p.text{grid-column:2;margin-top:.55rem;font-size:.93rem;max-width:56ch;color:#3c392f}
-@media(min-width:900px){
-  .kurs{grid-template-columns:3.4rem 5fr 6fr;column-gap:2rem}
-  .kurs .meta{grid-column:2}
-  .kurs p.text{grid-column:3;grid-row:1/span 2;margin-top:.3rem}
-}
-.kursfuss{margin-top:1rem}
-
-/* ---------- 03 Plan ---------- */
+/* ---------- 01 Plan ---------- */
 .plan-status{font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;text-transform:uppercase}
 .plan-status b{font-weight:500;color:var(--rot)}
-.plan-zusammen{font-family:var(--mono);font-size:.78rem;margin-top:.4rem}
 .plan-tabs{display:grid;grid-template-columns:repeat(var(--spalten,6),1fr);gap:2px;margin:1.4rem 0 0}
 .plan-tabs button{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -202,59 +176,87 @@ figure.rahmen figcaption{
   background:var(--tinte);color:var(--papier);
 }
 .tag-panel ul{list-style:none}
-.tag-panel li{
-  display:flex;gap:.8rem;align-items:baseline;
-  padding:.6rem .8rem;border-bottom:1px solid rgba(24,22,17,.25);
-  font-size:.9rem;
-}
+.tag-panel li{border-bottom:1px solid rgba(24,22,17,.25);min-width:0}
 .tag-panel li:last-child{border-bottom:0}
-.tag-panel li .z{font-family:var(--mono);font-size:.78rem;white-space:nowrap}
-.tag-panel li .n{font-weight:700;line-height:1.3}
-.tag-panel li .d{margin-left:auto;font-family:var(--mono);font-size:.66rem;color:var(--grau);white-space:nowrap}
-.tag-panel li.leer{color:var(--grau);font-family:var(--mono);font-size:.78rem}
+/* Jeder Eintrag öffnet seinen Kurs — also ein Knopf und kein Div mit
+   Klick-Behandler: Rolle, Tastatur und Fokus bringt der Browser mit. */
+.eintrag{
+  display:flex;gap:.8rem;align-items:baseline;width:100%;min-width:0;
+  text-align:left;padding:.6rem .8rem;min-height:44px;font-size:.9rem;
+}
+.eintrag .z{font-family:var(--mono);font-size:.78rem;white-space:nowrap}
+.eintrag .n{font-weight:700;line-height:1.3}
+.eintrag .d{margin-left:auto;font-family:var(--mono);font-size:.66rem;color:var(--grau);white-space:nowrap}
+.eintrag:hover .n,.eintrag:focus-visible .n{color:var(--rot)}
+.tag-panel li.leer{color:var(--grau);font-family:var(--mono);font-size:.78rem;padding:.6rem .8rem}
 @media(min-width:960px){
   .plan-tabs{display:none}
   .plan-woche{display:grid;grid-template-columns:repeat(var(--spalten,6),minmax(0,1fr));gap:1px;background:var(--tinte)}
   .tag-panel{display:block;background:var(--papier);min-width:0}
-  .tag-panel li{display:grid;grid-template-columns:1fr auto;gap:.1rem .5rem;padding:.55rem .7rem}
-  .tag-panel li .n{grid-column:1/-1;font-size:.84rem}
-  .tag-panel li .d{margin-left:0}
+  .eintrag{display:grid;grid-template-columns:1fr auto;gap:.1rem .5rem;padding:.55rem .7rem}
+  .eintrag .n{grid-column:1/-1;font-size:.84rem}
+  .eintrag .d{margin-left:0}
 }
 .plan-fuss{margin-top:1rem}
 
-/* ---------- 04 Hyrox ---------- */
-.hyrox-gitter{display:grid;gap:2.4rem}
-@media(min-width:900px){.hyrox-gitter{grid-template-columns:5fr 6fr;gap:4rem}}
-.stationen{list-style:none;border-top:1px solid var(--tinte)}
-.stationen li{border-bottom:1px solid var(--tinte)}
-.stationen .lauf{
-  display:flex;align-items:center;gap:.7rem;
-  font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--grau);padding:.32rem 0;
+/* Kursdetail. Es gibt keine Kursliste mehr — die Woche ist die Kursliste. Wer
+   wissen will, was ein Kurs ist, tippt ihn dort an, wo er ohnehin steht.
+   <dialog> bringt Esc, Fokusfang und Rolle mit. */
+.kdlg{
+  border:1px solid var(--tinte);background:var(--papier);color:var(--tinte);
+  margin:auto;width:min(480px,calc(100vw - 2rem));max-height:calc(100dvh - 3rem);overflow:auto;
 }
-.stationen .lauf::after{content:"";flex:1;border-top:1px dashed rgba(24,22,17,.4)}
-.stationen .st{display:flex;align-items:baseline;gap:1rem;padding:.42rem 0 .6rem}
-.stationen .st .nr{font-family:var(--mono);font-size:.72rem;color:var(--rot)}
-.stationen .st .mass{font-family:var(--mono);font-size:.85rem;white-space:nowrap;min-width:4.6em}
-.stationen .st .name{font-weight:760;text-transform:uppercase;font-size:1.02rem;letter-spacing:.01em}
-.hyrox-summe{
-  display:flex;justify-content:space-between;gap:1rem;
-  font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
-  padding-top:.7rem;
-}
-.hyrox-badge{
-  display:inline-block;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--rot);border:1px solid var(--rot);
-  padding:.45rem .7rem;margin-bottom:1.2rem;
-}
+.kdlg::backdrop{background:rgba(24,22,17,.6)}
+.kdlg-innen{padding:1.2rem}
+@media(min-width:900px){.kdlg-innen{padding:1.6rem}}
+.kdlg-kopf{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
+.kdlg h3{font-family:var(--grot);font-weight:780;text-transform:uppercase;font-size:1.25rem;line-height:1.15}
+.kdlg .kmeta{font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--rot);margin-top:.4rem}
+.kdlg .ktext{margin-top:.9rem;font-size:.93rem}
+.kdlg .zu{min-width:44px;min-height:44px;margin:-.5rem -.5rem 0 0;font-family:var(--mono);
+  font-size:1.3rem;line-height:1;flex:none}
+.kdlg .zu:hover{color:var(--rot)}
+.kdlg .kfuss{margin-top:1.4rem}
 
-/* ---------- 05 Preise ---------- */
+/* ---------- 02 Prinzip ---------- */
+.leitsatz{
+  font-family:var(--schwer);font-weight:400;text-transform:uppercase;
+  font-size:clamp(1.45rem,4.9vw,3.3rem);line-height:1.04;letter-spacing:-.005em;
+  max-width:19em;margin-bottom:1.6rem;
+}
+.leitsatz em{font-style:normal;color:var(--rot)}
+.prinzip-gitter{display:grid;gap:2rem}
+@media(min-width:900px){.prinzip-gitter{grid-template-columns:6fr 6fr;gap:3rem;align-items:start}}
+
+/* ---------- 03 Preise ---------- */
 .zitat{
   font-family:var(--schwer);font-weight:400;text-transform:uppercase;
   font-size:clamp(1.5rem,5.4vw,3.4rem);line-height:1.02;max-width:14em;
   margin-bottom:.9rem;
 }
-.zitat-quelle{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--grau);margin-bottom:2.2rem}
+.zitat-quelle{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--grau);margin-bottom:1.6rem}
+.markiert{position:relative;display:inline-block;padding:0 .1em}
+.markiert svg{position:absolute;inset:-46% -18%;width:136%;height:192%;overflow:visible;pointer-events:none}
+.markiert svg path{stroke:var(--rot);stroke-width:2.4;fill:none;stroke-linecap:round}
+@media(prefers-reduced-motion:no-preference){
+  .js .markiert svg path{stroke-dasharray:420;stroke-dashoffset:420;transition:stroke-dashoffset 1.2s ease .35s}
+  .js .sichtbar .markiert svg path{stroke-dashoffset:0}
+}
+
+/* Der Rest der Preisliste. Nichts ist weg, es steht nur nichts im Weg: neun
+   Monatspreise, Laufzeiten und Einzelangebote nehmen ausgeklappt mehr Platz
+   ein als der Abschnitt darüber — und keine dieser Zahlen entscheidet, ob
+   jemand ein Probetraining bucht. */
+.mehr{border-top:1px solid var(--tinte)}
+.mehr summary{
+  list-style:none;cursor:pointer;display:flex;align-items:center;gap:.8rem;min-height:56px;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--rot);
+}
+.mehr summary::-webkit-details-marker{display:none}
+.mehr summary::after{content:"+";margin-left:auto;font-size:1.1rem;line-height:1}
+.mehr[open] summary::after{content:"\2212"}
+.mehr-innen{padding-bottom:2rem}
 .tarife{display:grid;gap:1.2rem}
 @media(min-width:900px){.tarife{grid-template-columns:repeat(3,1fr);gap:1.4rem;align-items:stretch}}
 .tarif{border:1px solid var(--tinte);padding:1.1rem 1.1rem 1.2rem;display:flex;flex-direction:column;position:relative}
@@ -273,13 +275,6 @@ figure.rahmen figcaption{
 .tarif dt{font-family:var(--mono);font-size:.6rem;letter-spacing:.07em;text-transform:uppercase;color:var(--grau)}
 .tarif dd{font-family:var(--mono);font-weight:500;font-size:1.06rem;margin-top:.3rem;white-space:nowrap}
 .tarif .rechnung{font-family:var(--mono);font-size:.68rem;line-height:1.6;color:var(--grau);margin-top:auto}
-.markiert{position:relative;display:inline-block;padding:0 .1em}
-.markiert svg{position:absolute;inset:-46% -18%;width:136%;height:192%;overflow:visible;pointer-events:none}
-.markiert svg path{stroke:var(--rot);stroke-width:2.4;fill:none;stroke-linecap:round}
-@media(prefers-reduced-motion:no-preference){
-  .js .markiert svg path{stroke-dasharray:420;stroke-dashoffset:420;transition:stroke-dashoffset 1.2s ease .35s}
-  .js .sichtbar .markiert svg path{stroke-dashoffset:0}
-}
 .preis-zeile{margin-top:2.6rem}
 .preis-zeile h3,.neben h3{
   font-family:var(--mono);font-weight:500;font-size:.72rem;letter-spacing:.1em;
@@ -298,7 +293,10 @@ figure.rahmen figcaption{
   .ohne li{display:block;border-bottom:1px solid var(--tinte);padding:.9rem}
   .ohne li+li{border-left:1px solid var(--tinte)}
   .ohne .p{font-size:1.35rem}
-  .ohne .w{margin-top:.35rem}
+  /* Beide sind inline-Spans; im gestapelten Kasten klebte die Bezeichnung
+     ohne Umbruch am Preis („15 €Probetraining"). Der margin-top stand da,
+     konnte an einem inline-Element aber nicht wirken. */
+  .ohne .w{display:block;margin-top:.35rem}
 }
 .neben{display:grid;gap:2rem;margin-top:2.6rem}
 @media(min-width:900px){.neben{grid-template-columns:1fr 1fr 1fr;gap:2.5rem}}
@@ -307,72 +305,11 @@ figure.rahmen figcaption{
 .svs p{color:var(--tinte)}
 .svs .p100{font-family:var(--mono);font-weight:500;color:var(--rot)}
 
-/* ---------- 06 Coaches ---------- */
-.coach-intro{display:grid;gap:2rem;margin-bottom:2.4rem}
-@media(min-width:900px){.coach-intro{grid-template-columns:6fr 6fr;gap:3rem;align-items:center}.coach-intro .satz{font-size:1.15rem;max-width:30em}}
+/* ---------- 04 Coaches ---------- */
 .coaches{display:grid;gap:1.4rem;grid-template-columns:repeat(2,1fr)}
 @media(min-width:900px){.coaches{grid-template-columns:repeat(4,1fr)}}
 .coach img{width:100%;aspect-ratio:3/4;object-fit:cover;filter:grayscale(1) contrast(1.12) brightness(1.05);border:1px solid var(--tinte)}
 .coach h3{font-family:var(--grot);font-weight:780;text-transform:uppercase;font-size:1.02rem;margin-top:.6rem}
-.coach p{font-size:.8rem;line-height:1.5;color:#3c392f;margin-top:.3rem}
-
-/* ---------- 07 Ort ---------- */
-.ort-gitter{display:grid;gap:2.4rem}
-@media(min-width:900px){.ort-gitter{grid-template-columns:6fr 6fr;gap:3rem}}
-.adresse{font-style:normal}
-.adresse .strasse{
-  font-family:var(--schwer);font-weight:400;text-transform:uppercase;
-  font-size:clamp(1.4rem,4.6vw,2.4rem);line-height:1.05;
-}
-.adresse .stadt{font-family:var(--mono);font-size:.8rem;margin-top:.5rem}
-.ort-fakten{list-style:none;border-top:1px solid var(--tinte);margin-top:1.4rem}
-.ort-fakten li{
-  display:grid;grid-template-columns:7.2rem 1fr;gap:1rem;
-  padding:.62rem 0;border-bottom:1px solid var(--tinte);font-size:.92rem;
-}
-.ort-fakten .k{font-family:var(--mono);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--grau);padding-top:.18rem}
-.route{margin-top:1.2rem}
-
-/* ---------- 08 Kontakt ---------- */
-.kontakt-gitter{display:grid;gap:2.6rem}
-@media(min-width:900px){.kontakt-gitter{grid-template-columns:5fr 7fr;gap:4rem}}
-.direkt{list-style:none;border-top:1px solid var(--tinte)}
-.direkt li{display:grid;grid-template-columns:7.2rem 1fr;gap:1rem;align-items:center;border-bottom:1px solid var(--tinte)}
-.direkt .k{font-family:var(--mono);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--grau)}
-.direkt a{display:inline-flex;align-items:center;min-height:44px;font-family:var(--mono);font-size:.82rem;
-  text-decoration:none;word-break:break-all}
-.direkt a:hover{color:var(--rot)}
-.probe-box{border:1px solid var(--tinte);padding:1.1rem;margin-top:1.6rem}
-.probe-box h3{font-family:var(--grot);font-weight:780;text-transform:uppercase;font-size:1rem}
-.probe-box p{font-size:.9rem;margin-top:.5rem}
-
-form{border:1px solid var(--tinte);padding:1.2rem}
-@media(min-width:900px){form{padding:1.6rem}}
-.form-kopf{font-family:var(--mono);font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--grau);margin-bottom:1rem}
-fieldset{border:0;margin-bottom:1.2rem}
-legend{font-family:var(--mono);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--grau);margin-bottom:.6rem}
-.anliegen{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
-@media(max-width:479px){.anliegen{grid-template-columns:1fr}}
-.anliegen label{
-  display:flex;align-items:center;gap:.55rem;border:1px solid var(--tinte);
-  padding:.7rem .8rem;min-height:48px;font-size:.85rem;cursor:pointer;
-}
-.anliegen input{accent-color:var(--rot);width:1rem;height:1rem;flex:none}
-.anliegen label:has(input:checked){background:var(--tinte);color:var(--papier)}
-.feld{margin-bottom:1rem}
-.feld label{display:block;font-family:var(--mono);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--grau);margin-bottom:.35rem}
-.feld input,.feld textarea{
-  width:100%;background:transparent;border:1px solid var(--tinte);
-  font-family:var(--grot);font-weight:500;font-size:1rem;color:var(--tinte);
-  padding:.7rem .8rem;border-radius:0;
-}
-.feld textarea{min-height:7.5rem;resize:vertical}
-.form-hinweis{
-  border:1px solid var(--rot);color:var(--tinte);padding:.9rem 1rem;margin-top:1rem;
-  font-size:.9rem;
-}
-.form-hinweis b{color:var(--rot)}
-.form-hinweis a{color:var(--rot)}
 
 /* ---------- Fuss ---------- */
 .mural{border-top:1px solid var(--tinte)}
@@ -409,20 +346,23 @@ legend{font-family:var(--mono);font-size:.68rem;letter-spacing:.09em;text-transf
   <div class="huelle kopf-innen">
     <a href="#inhalt" class="marke"><img src="__LOGO__" alt="Trojan Performance — zum Seitenanfang"></a>
     <nav aria-label="Bereiche">
-      <a class="nur-breit" href="#kurse">Kurse</a>
       <a href="#plan">Plan</a>
       <a href="#preise">Preise</a>
       <a class="nur-breit" href="#coaches">Coaches</a>
-      <a href="#kontakt">Kontakt</a>
+      <a href="#probe">Probetraining</a>
     </nav>
   </div>
 </header>
 
 <main id="inhalt">
 
-  <!-- ======== HERO ======== -->
+  <!-- ======== HERO ========
+       Das Datenblatt beantwortet die drei Fragen, die niemand suchen soll:
+       wann, was kostet es, was ist das. Sieben Zeilen waren es vorher; die
+       gestrichenen — Gründungsjahr, Open Gym, Tarifspanne — entscheiden nicht
+       über ein Probetraining. -->
   <section class="hero huelle" aria-label="Überblick">
-    <p class="hero-kicker"><span>Performance Center · Klagenfurt am Wörthersee</span><span class="rotx">Seit 2017</span></p>
+    <p class="hero-kicker"><span>Performance Center · Klagenfurt am Wörthersee</span><span class="rotx">Offizieller HYROX Training Club</span></p>
     <h1>
       <span class="sr">Trojan Performance</span>
       <span class="fit fit-a" aria-hidden="true"><span>Trojan</span></span>
@@ -432,15 +372,12 @@ legend{font-family:var(--mono);font-size:.68rem;letter-spacing:.09em;text-transf
       <div>
         <dl class="datenblatt">
           <div><dt>Standort</dt><dd>Sebastiangasse 1, 9020 Klagenfurt</dd></div>
-          <div><dt>Seit</dt><dd>2017, gegründet von den Brüdern Mike und Dominik</dd></div>
-          <div><dt>Status</dt><dd>Erster offizieller <strong>HYROX Training Club</strong> in Kärnten</dd></div>
           <div><dt>Kurse</dt><dd class="js-kurszeiten">siehe Wochenplan</dd></div>
-          <div><dt>Open Gym</dt><dd>täglich 06:00–22:00</dd></div>
+          <div><dt>Preis</dt><dd><strong>150 €</strong> im Monat, drei Einheiten pro Woche</dd></div>
           <div><dt>Einstieg</dt><dd>Probetraining <strong>15&nbsp;€</strong>, keine Vorkenntnisse</dd></div>
-          <div><dt>Tarife</dt><dd>Kurse ab 110&nbsp;€, Open Gym 60&nbsp;€ pro Monat</dd></div>
         </dl>
         <div class="hero-cta">
-          <a class="knopf knopf-voll" href="#kontakt">Probetraining anfragen</a>
+          <a class="knopf knopf-voll" href="#probe">Probetraining</a>
           <a class="knopf knopf-leer" href="#plan">Wochenplan</a>
         </div>
       </div>
@@ -451,19 +388,44 @@ legend{font-family:var(--mono);font-size:.68rem;letter-spacing:.09em;text-transf
     </div>
   </section>
 
-  <!-- ======== 01 PRINZIP ======== -->
-  <section class="block" id="prinzip">
+  <!-- ======== 01 PLAN ========
+       Der Wochenplan ist das stärkste Material des Kunden: er ist wahr und er
+       aktualisiert sich selbst. Deshalb steht er jetzt vorn und ersetzt den
+       Kurskatalog — mit echten Zeiten statt „3× pro Woche". -->
+  <section class="block" id="plan">
     <div class="huelle">
       <div class="blockkopf auf">
         <span class="idx">01</span>
+        <h2>Diese Woche</h2>
+        <span class="recht">Aus dem Buchungssystem</span>
+      </div>
+      <p class="plan-status auf" id="plan-status">Plan wird geladen …</p>
+      <div class="auf">
+        <div class="plan-tabs" id="plan-tabs" aria-label="Wochentag wählen"></div>
+        <div class="plan-woche" id="plan-woche"></div>
+      </div>
+      <noscript><p class="klein plan-fuss">Ohne JavaScript bleibt dieser Plan leer.</p></noscript>
+      <p class="klein plan-fuss">Tipp einen Kurs an, dann steht dort, was dich erwartet.</p>
+    </div>
+  </section>
+
+  <!-- ======== 02 PRINZIP ======== -->
+  <section class="block" id="prinzip">
+    <div class="huelle">
+      <div class="blockkopf auf">
+        <span class="idx">02</span>
         <h2>Prinzip</h2>
         <span class="recht">Für wen das ist</span>
       </div>
       <p class="leitsatz auf">In jedem Kurs steht ein Coach auf der Fläche und <em>korrigiert</em> — er sagt nicht nur an.</p>
       <div class="prinzip-gitter">
         <div class="auf">
-          <p class="satz">Trainiert wird im Kurs, in kleinen Gruppen, nach Plan. Jede Einheit dauert 75&nbsp;Minuten, Mama&nbsp;reloaded 45. Vorkenntnisse braucht es keine — ob das etwas für dich ist, klärt am schnellsten ein Probetraining.</p>
-          <p class="satz">Die Empfehlung für den Einstieg: <strong>drei Einheiten pro Woche</strong> — zwei für die Kraft, eine für die Ausdauer.</p>
+          <!-- Keine Anzahl und keine pauschale Dauer. Die Schnittstelle fuehrt
+               regelmaessige Kurse, die nicht in der abgestimmten Liste stehen
+               (einer davon sonntags, 60 Minuten), dazu einzelne Sondertermine.
+               Jede Zahl in diesem Satz wuerde vom Wochenplan darueber
+               widerlegt, der die Dauer an jedem Termin ohnehin ausweist. -->
+          <p class="satz">Trainiert wird im Kurs, nach Plan, in kleinen Gruppen. Wie lange eine Einheit dauert, steht bei jedem Termin im Wochenplan. Vorkenntnisse braucht es keine.</p>
         </div>
         <figure class="rahmen auf">
           <img src="__PH_KURSGRUPPE__" width="1365" height="910" loading="lazy" alt="Kursgruppe hält den Liegestütz, Langhantelstangen liegen am Boden">
@@ -473,310 +435,130 @@ legend{font-family:var(--mono);font-size:.68rem;letter-spacing:.09em;text-transf
     </div>
   </section>
 
-  <!-- ======== 02 KURSE ======== -->
-  <section class="block" id="kurse">
-    <div class="huelle">
-      <div class="blockkopf auf">
-        <span class="idx">02</span>
-        <h2>Die acht Kurse</h2>
-        <span class="recht">75 min · Coach auf der Fläche</span>
-      </div>
-      <div class="kursliste">
-        <article class="kurs auf">
-          <span class="nr" aria-hidden="true">01</span>
-          <h3>Performance</h3>
-          <p class="meta">7× pro Woche · 12–16 Plätze</p>
-          <p class="text">Crosstraining aus Powerlifting, Weightlifting, Gymnastics, Calisthenics, Strongman und Ausdauer. Die Reize sind nicht willkürlich kombiniert, sondern folgen einer periodisierten Planung.</p>
-        </article>
-        <article class="kurs auf">
-          <span class="nr" aria-hidden="true">02</span>
-          <h3>FBB/Strength &amp; Power</h3>
-          <p class="meta">6× pro Woche · 16 Plätze</p>
-          <p class="text">Muskelaufbau nach festem Schema, kombiniert mit kurzen intensiven Ausdauerblöcken. Kraft und Ausdauer in einer Einheit.</p>
-        </article>
-        <article class="kurs auf">
-          <span class="nr" aria-hidden="true">03</span>
-          <h3>Powercircle</h3>
-          <p class="meta">3× pro Woche · 24 Plätze</p>
-          <p class="text">Airbike, SkiErg, Schlitten, Jump-Box, Battle-Rope, Wallballs im Wechsel. Kurze harte Intervalle, kurze Pausen. Technisch anspruchslos, deshalb auch für Einsteiger geeignet.</p>
-        </article>
-        <article class="kurs auf">
-          <span class="nr" aria-hidden="true">04</span>
-          <h3>Mama reloaded</h3>
-          <p class="meta">3× pro Woche · 45 min</p>
-          <p class="text">Wiedereinstieg nach der Schwangerschaft. Beckenboden, Rumpf und Kraft in einem Tempo, das sich an den Tag anpasst.*</p>
-        </article>
-        <article class="kurs auf">
-          <span class="nr" aria-hidden="true">05</span>
-          <h3>Hyrox</h3>
-          <p class="meta">2× pro Woche · 24 Plätze</p>
-          <p class="text">Vorbereitung auf das Rennformat, das weltweit unter denselben Bedingungen läuft — für Open, Pro, Doubles und Relay. Für jedes Level, vom Einstieg bis zum Wettkampf.</p>
-        </article>
-        <article class="kurs auf">
-          <span class="nr" aria-hidden="true">06</span>
-          <h3>Team-WOD</h3>
-          <p class="meta">1× pro Woche · 16 Plätze</p>
-          <p class="text">Zu zweit mit deinem Trainingsbuddy. Jede Woche ein anderes Workout, Intensität und Schwierigkeitsgrad werden auf euch beide angepasst.</p>
-        </article>
-        <article class="kurs auf">
-          <span class="nr" aria-hidden="true">07</span>
-          <h3>FBB</h3>
-          <p class="meta">1× pro Woche · 12 Plätze</p>
-          <p class="text">Nach dem gemeinsamen Warm-up wählst du Ober- oder Unterkörper, je vier Übungen mit vorgegebenen Sätzen, Wiederholungen und Pausen. Zum Abschluss eine kurze, intensive Belastung.</p>
-        </article>
-        <article class="kurs auf">
-          <span class="nr" aria-hidden="true">08</span>
-          <h3>Community TeamWOD</h3>
-          <p class="meta">1× pro Woche · 24 Plätze</p>
-          <p class="text">Team-Workout in großer Runde. Jede Woche ein anderes Programm, Intensität und Schwierigkeitsgrad individuell angepasst.</p>
-        </article>
-      </div>
-      <p class="klein kursfuss">Alle Einheiten 75 Minuten, Mama reloaded 45. &nbsp;·&nbsp; * Beschreibung vorläufig, der endgültige Text vom Betreiber folgt.</p>
-    </div>
-  </section>
-
-  <!-- ======== 03 PLAN ======== -->
-  <section class="block" id="plan">
-    <div class="huelle">
-      <div class="blockkopf auf">
-        <span class="idx">03</span>
-        <h2>Wochenplan</h2>
-        <span class="recht">Aus dem Buchungssystem</span>
-      </div>
-      <p class="plan-status auf" id="plan-status">Plan wird geladen …</p>
-      <p class="plan-zusammen auf">Kurszeiten: <span class="js-kurszeiten">—</span></p>
-      <div class="auf">
-        <div class="plan-tabs" id="plan-tabs" aria-label="Wochentag wählen"></div>
-        <div class="plan-woche" id="plan-woche"></div>
-      </div>
-      <noscript><p class="klein plan-fuss">Ohne JavaScript zeigt dieser Entwurf den Wochenplan nicht — die Termine kommen live aus dem Buchungssystem.</p></noscript>
-      <p class="klein plan-fuss">Dazu Open Gym, täglich 06:00–22:00 — eigener Tarif, Zutritt per App.</p>
-    </div>
-  </section>
-
-  <!-- ======== 04 HYROX ======== -->
-  <section class="block" id="hyrox">
-    <div class="huelle">
-      <div class="blockkopf auf">
-        <span class="idx">04</span>
-        <h2>Hyrox</h2>
-        <span class="recht">Das Rennformat</span>
-      </div>
-      <div class="hyrox-gitter">
-        <div class="auf">
-          <p class="hyrox-badge">Erster offizieller Hyrox Training Club in Kärnten</p>
-          <p class="satz">Ein Rennformat, das weltweit nach denselben Regeln läuft: acht Kilometer Laufen im Wechsel mit acht Kraftstationen. Vor jeder Station wird ein Kilometer gelaufen.</p>
-          <p class="satz">Der Hyrox-Kurs bereitet zweimal pro Woche darauf vor — für Open, Pro, Doubles und Relay. Du kannst ihn mitmachen, ohne je an den Start zu gehen.</p>
-          <figure class="rahmen auf" style="margin-top:2rem">
-            <img src="__PH_FANS__" width="700" height="467" loading="lazy" alt="Zuschauer an der Galerie-Brüstung, darunter die Trainingshalle">
-            <figcaption><span>Abb. 03</span><span>Zuschauer auf der Galerie</span></figcaption>
-          </figure>
-        </div>
-        <div class="auf">
-          <ol class="stationen" aria-label="Die acht Stationen in Reihenfolge">
-            <li><span class="lauf">1 km Lauf</span><span class="st"><span class="nr" aria-hidden="true">01</span><span class="mass">1000 m</span><span class="name">SkiErg</span></span></li>
-            <li><span class="lauf">1 km Lauf</span><span class="st"><span class="nr" aria-hidden="true">02</span><span class="mass">50 m</span><span class="name">Sled Push</span></span></li>
-            <li><span class="lauf">1 km Lauf</span><span class="st"><span class="nr" aria-hidden="true">03</span><span class="mass">50 m</span><span class="name">Sled Pull</span></span></li>
-            <li><span class="lauf">1 km Lauf</span><span class="st"><span class="nr" aria-hidden="true">04</span><span class="mass">80 m</span><span class="name">Burpee Broad Jumps</span></span></li>
-            <li><span class="lauf">1 km Lauf</span><span class="st"><span class="nr" aria-hidden="true">05</span><span class="mass">1000 m</span><span class="name">Rudern</span></span></li>
-            <li><span class="lauf">1 km Lauf</span><span class="st"><span class="nr" aria-hidden="true">06</span><span class="mass">200 m</span><span class="name">Farmers Carry</span></span></li>
-            <li><span class="lauf">1 km Lauf</span><span class="st"><span class="nr" aria-hidden="true">07</span><span class="mass">100 m</span><span class="name">Sandbag Lunges</span></span></li>
-            <li><span class="lauf">1 km Lauf</span><span class="st"><span class="nr" aria-hidden="true">08</span><span class="mass">100 ×</span><span class="name">Wall Balls</span></span></li>
-          </ol>
-          <p class="hyrox-summe"><span>Summe</span><span>8 km Laufen · 8 Stationen</span></p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======== 05 PREISE ======== -->
+  <!-- ======== 03 PREISE ======== -->
   <section class="block" id="preise">
     <div class="huelle">
       <div class="blockkopf auf">
-        <span class="idx">05</span>
+        <span class="idx">03</span>
         <h2>Preise</h2>
-        <span class="recht">Pro Monat · Bindung 1 / 6 / 12 Monate</span>
+        <span class="recht">Keine Einschreibgebühr</span>
       </div>
-      <blockquote class="auf">
-        <p class="zitat">„Nicht das billigste Gym der Stadt.“</p>
-        <p class="zitat-quelle">Sagt der Betreiber selbst. Dafür steht in jedem Kurs ein Coach auf der Fläche.</p>
-      </blockquote>
-      <div class="tarife">
-        <article class="tarif auf">
-          <h3>2 Einheiten<span>pro Woche</span></h3>
-          <dl>
-            <div><dt>1 Monat</dt><dd>130 €</dd></div>
-            <div><dt>6 Monate</dt><dd>120 €</dd></div>
-            <div><dt>12 Monate</dt><dd>110 €</dd></div>
-          </dl>
-          <p class="rechnung">9 Einheiten im Monat, frei einteilbar. 14,44 € pro Einheit.</p>
-        </article>
-        <article class="tarif empf auf">
-          <p class="tarif-tag">Empfehlung zum Einstieg</p>
-          <h3>3 Einheiten<span>pro Woche</span></h3>
-          <dl>
-            <div><dt>1 Monat</dt><dd>150 €</dd></div>
-            <div><dt>6 Monate</dt><dd>140 €</dd></div>
-            <div><dt>12 Monate</dt><dd><span class="markiert">130 €<svg viewBox="0 0 100 48" aria-hidden="true" focusable="false"><path d="M10,25 C11,11 35,4 54,5 C76,6 93,12 92,25 C91,38 66,44 46,43 C26,42 8,36 9,26 C10,18 22,12 34,10"/></svg></span></dd></div>
-          </dl>
-          <p class="rechnung">13 Einheiten im Monat. 11,54 € pro Einheit — mit 12 Monaten Bindung 10,00 €.</p>
-        </article>
-        <article class="tarif auf">
-          <h3>6 Einheiten<span>pro Woche</span></h3>
-          <dl>
-            <div><dt>1 Monat</dt><dd>170 €</dd></div>
-            <div><dt>6 Monate</dt><dd>160 €</dd></div>
-            <div><dt>12 Monate</dt><dd>150 €</dd></div>
-          </dl>
-          <p class="rechnung">26 Einheiten, Montag bis Samstag. 6,54 € pro Einheit.</p>
-        </article>
+      <div class="auf">
+        <p class="zitat"><span class="markiert">150&nbsp;€<svg viewBox="0 0 100 48" aria-hidden="true" focusable="false"><path d="M10,25 C11,11 35,4 54,5 C76,6 93,12 92,25 C91,38 66,44 46,43 C26,42 8,36 9,26 C10,18 22,12 34,10"/></svg></span> im Monat.<br>Drei Mal die Woche.</p>
+        <p class="zitat-quelle">Keine Einschreibgebühr · Kraftaufbauplan inklusive</p>
+        <p class="satz">Empfohlen für den Einstieg: drei Einheiten pro Woche — zwei für die Kraft, eine für die Ausdauer. „Nicht das billigste Gym der Stadt“, sagt der Betreiber selbst.</p>
       </div>
 
-      <div class="preis-zeile auf">
-        <h3>Ohne Bindung</h3>
-        <ul class="ohne">
-          <li><span class="p">15 €</span><span class="w">Probetraining<small>eine Einheit, ein Coach</small></span></li>
-          <li><span class="p">25 €</span><span class="w">Drop-in<small>einzelne Einheit</small></span></li>
-          <li><span class="p">200 €</span><span class="w">10er-Block<small>ein Jahr gültig</small></span></li>
-          <li><span class="p">100 €</span><span class="w">Personal Training<small>Einzeltermin</small></span></li>
-          <li><span class="p">60 €</span><span class="w">Open Gym<small>monatlich kündbar</small></span></li>
-        </ul>
-      </div>
+      <details class="mehr auf" style="margin-top:2.6rem">
+        <summary>Andere Rhythmen, Laufzeiten und Einzelpreise</summary>
+        <div class="mehr-innen">
+          <div class="tarife">
+            <article class="tarif">
+              <h3>2 Einheiten<span>pro Woche</span></h3>
+              <dl>
+                <div><dt>1 Monat</dt><dd>130 €</dd></div>
+                <div><dt>6 Monate</dt><dd>120 €</dd></div>
+                <div><dt>12 Monate</dt><dd>110 €</dd></div>
+              </dl>
+            </article>
+            <article class="tarif empf">
+              <p class="tarif-tag">Empfehlung</p>
+              <h3>3 Einheiten<span>pro Woche</span></h3>
+              <dl>
+                <div><dt>1 Monat</dt><dd>150 €</dd></div>
+                <div><dt>6 Monate</dt><dd>140 €</dd></div>
+                <div><dt>12 Monate</dt><dd>130 €</dd></div>
+              </dl>
+              <p class="rechnung">13 Einheiten im Monat, 11,54 € pro Einheit — mit 12 Monaten Bindung 10,00 €.</p>
+            </article>
+            <article class="tarif">
+              <h3>6 Einheiten<span>pro Woche</span></h3>
+              <dl>
+                <div><dt>1 Monat</dt><dd>170 €</dd></div>
+                <div><dt>6 Monate</dt><dd>160 €</dd></div>
+                <div><dt>12 Monate</dt><dd>150 €</dd></div>
+              </dl>
+            </article>
+          </div>
 
-      <div class="neben">
-        <div class="auf">
-          <h3>In jedem Tarif</h3>
-          <p>Keine Einschreibgebühr. Ein eigener Kraftaufbauplan ist enthalten.</p>
+          <div class="preis-zeile">
+            <h3>Ohne Bindung</h3>
+            <ul class="ohne">
+              <li><span class="p">15 €</span><span class="w">Probetraining<small>eine Einheit</small></span></li>
+              <li><span class="p">25 €</span><span class="w">Drop-in<small>einzelne Einheit</small></span></li>
+              <li><span class="p">200 €</span><span class="w">10er-Block<small>ein Jahr gültig</small></span></li>
+              <li><span class="p">100 €</span><span class="w">Personal Training<small>Einzeltermin</small></span></li>
+              <li><span class="p">60 €</span><span class="w">Open Gym<small>täglich 06:00–22:00</small></span></li>
+            </ul>
+          </div>
+
+          <div class="neben">
+            <div>
+              <h3>Vertrag</h3>
+              <p>Bindung 1, 6 oder 12 Monate. Pause: bei 6 Monaten einmal, bei 12 zweimal — je bis 4 Wochen.</p>
+            </div>
+            <div>
+              <h3>Übertragung</h3>
+              <p>Bei triftigem Grund ist der Vertrag übertragbar.</p>
+            </div>
+            <div class="svs">
+              <h3>SVS</h3>
+              <p>Selbstständig und SVS-versichert? Dann überweist dir die SVS <span class="p100">100 €</span> aufs Konto — für jeden Tarif außer Open Gym.</p>
+            </div>
+          </div>
         </div>
-        <div class="auf">
-          <h3>Vertrag &amp; Pause</h3>
-          <p>Bindung wahlweise 1, 6 oder 12 Monate. Pausieren: bei 6 Monaten einmal, bei 12 Monaten zweimal — je bis zu 4 Wochen. Bei triftigem Grund ist der Vertrag übertragbar.</p>
-        </div>
-        <div class="svs auf">
-          <h3>SVS-Bonus</h3>
-          <p>Selbstständig und SVS-versichert? Dann überweist dir die SVS <span class="p100">100 €</span> aufs Konto — für jeden Tarif außer Open Gym, auch für den 10er-Block.</p>
-        </div>
-      </div>
+      </details>
     </div>
   </section>
 
-  <!-- ======== 06 COACHES ======== -->
+  <!-- ======== 04 COACHES ========
+       Gesichter schaffen Vertrauen, Lebensläufe nicht: die Biografien sind
+       gestrichen, die Porträts bleiben. -->
   <section class="block" id="coaches">
     <div class="huelle">
       <div class="blockkopf auf">
-        <span class="idx">06</span>
+        <span class="idx">04</span>
         <h2>Coaches</h2>
-        <span class="recht">Vier auf der Fläche</span>
-      </div>
-      <div class="coach-intro">
-        <figure class="rahmen auf">
-          <img src="__PH_BRUEDER__" width="1365" height="910" loading="lazy" alt="Mike und Dominik sitzen mit verschränkten Armen nebeneinander vor einer dunklen Wand">
-          <figcaption><span>Abb. 04</span><span>Mike &amp; Dominik, Gründer</span></figcaption>
-        </figure>
-        <p class="satz auf">2017 haben die Brüder Mike und Dominik das Gym aufgemacht. Heute stehen vier Coaches auf der Fläche — jeder mit eigenem Hintergrund, alle mit demselben Auftrag: hinschauen und korrigieren.</p>
+        <span class="recht">Zwei davon Brüder</span>
       </div>
       <div class="coaches">
         <article class="coach auf">
           <img src="__PH_COACHMIKE__" width="536" height="720" loading="lazy" alt="Porträt von Coach Mike">
           <h3>Mike</h3>
-          <p>Über 20 Jahre Badminton — Olympiastützpunkt Linz, Nationalkaderzentrum Wien. Hat das Gym 2017 mitgegründet.</p>
         </article>
         <article class="coach auf">
           <img src="__PH_COACHDOMINIK__" width="443" height="720" loading="lazy" alt="Porträt von Coach Dominik">
           <h3>Dominik</h3>
-          <p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor für die olympischen Züge.</p>
         </article>
         <article class="coach auf">
           <img src="__PH_COACHDIEGO__" width="537" height="720" loading="lazy" alt="Porträt von Coach Diego">
           <h3>Diego</h3>
-          <p>Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf regionaler Ebene Wettkämpfe bestritten hat.</p>
         </article>
         <article class="coach auf">
           <img src="__PH_COACHBENNI__" width="480" height="720" loading="lazy" alt="Porträt von Coach Benni">
           <h3>Benni</h3>
-          <p>Aktiver Eishockeyspieler, studiert Lehramt für Bewegung und Sport in Klagenfurt. Schwerpunkt Konditionstraining.</p>
         </article>
       </div>
     </div>
   </section>
 
-  <!-- ======== 07 ORT & ZEITEN ======== -->
-  <section class="block" id="ort">
+  <!-- ======== 05 PROBETRAINING ========
+       Statt des Kontaktformulars, das ohnehin keinen Empfänger hat: die zwei
+       Wege, die der Betreiber selbst führt. -->
+  <section class="block" id="probe">
     <div class="huelle">
       <div class="blockkopf auf">
-        <span class="idx">07</span>
-        <h2>Ort &amp; Zeiten</h2>
-        <span class="recht">Klagenfurt am Wörthersee</span>
+        <span class="idx">05</span>
+        <h2>Probetraining</h2>
+        <span class="recht">Ohne Vorkenntnisse</span>
       </div>
-      <div class="ort-gitter">
-        <address class="adresse auf">
-          <p class="strasse">Sebastiangasse&nbsp;1</p>
-          <p class="stadt">9020 Klagenfurt am Wörthersee, Österreich</p>
-          <ul class="ort-fakten">
-            <li><span class="k">Parken</span><span>Gratis Parkplätze rund ums Gebäude</span></li>
-            <li><span class="k">Umkleiden</span><span>Zwei Garderoben, je ein Duschraum mit drei Duschen</span></li>
-          </ul>
-          <p class="route"><a class="knopf knopf-leer" href="https://www.google.com/maps/search/?api=1&amp;query=Sebastiangasse+1%2C+9020+Klagenfurt" target="_blank" rel="noopener">Routenplaner öffnen</a></p>
-        </address>
-        <div class="auf">
-          <ul class="ort-fakten" style="margin-top:0;border-top:1px solid var(--tinte)">
-            <li><span class="k">Open Gym</span><span>Täglich 06:00–22:00, eigener Tarif, Zutritt per App</span></li>
-            <li><span class="k">Kurse</span><span class="js-kurszeiten">siehe Wochenplan</span></li>
-            <li><span class="k">Einheit</span><span>75 Minuten, Mama reloaded 45</span></li>
-          </ul>
+      <div class="auf">
+        <p class="badge">15 € · 75 Minuten · ein Coach</p>
+        <p class="satz">Eine Einheit mittrainieren. Mitbringen: Handtuch, Trinkflasche, Hallenschuhe mit sauberer Sohle — mehr nicht.</p>
+        <div class="hero-cta">
+          <a class="knopf knopf-voll" href="mailto:office@trojanperformance.at?subject=Probetraining">Termin anfragen</a>
+          <a class="knopf knopf-leer" href="tel:+4367682277302">+43 676 8227 7302</a>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======== 08 KONTAKT ======== -->
-  <section class="block" id="kontakt">
-    <div class="huelle">
-      <div class="blockkopf auf">
-        <span class="idx">08</span>
-        <h2>Kontakt</h2>
-        <span class="recht">Der Betreiber antwortet selbst</span>
-      </div>
-      <div class="kontakt-gitter">
-        <div class="auf">
-          <ul class="direkt">
-            <li><span class="k">Mail</span><a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a></li>
-            <li><span class="k">Telefon</span><a href="tel:+4367682277302">+43 676 8227 7302</a></li>
-            <li><span class="k">Instagram</span><a href="https://www.instagram.com/trojan.performance/" target="_blank" rel="noopener">trojan.performance</a></li>
-            <li><span class="k">Facebook</span><a href="https://www.facebook.com/trojanperformanceofficial" target="_blank" rel="noopener">trojanperformanceofficial</a></li>
-            <li><span class="k">YouTube</span><a href="https://www.youtube.com/channel/UChUZebvjDwrWEdOCa86xNiA" target="_blank" rel="noopener">Trojan Performance</a></li>
-          </ul>
-          <div class="probe-box">
-            <h3>Probetraining</h3>
-            <p>Eine Einheit, ein Coach, 75 Minuten, 15&nbsp;€. Vorkenntnisse braucht es keine. Mitbringen: Handtuch, Trinkflasche, Hallenschuhe mit sauberer Sohle — mehr nicht.</p>
-          </div>
-        </div>
-        <form class="auf" id="kontakt-form" novalidate>
-          <p class="form-kopf">Anfrage — führt der Betreiber selbst</p>
-          <fieldset>
-            <legend>Anliegen</legend>
-            <div class="anliegen">
-              <label><input type="radio" name="anliegen" value="Probetraining" checked> Probetraining</label>
-              <label><input type="radio" name="anliegen" value="Allgemeine Anfrage"> Allgemeine Anfrage</label>
-              <label><input type="radio" name="anliegen" value="1:1 Coaching"> 1:1 Coaching</label>
-              <label><input type="radio" name="anliegen" value="Firmentraining"> Firmentraining</label>
-            </div>
-          </fieldset>
-          <div class="feld">
-            <label for="f-name">Name</label>
-            <input id="f-name" name="name" type="text" autocomplete="name">
-          </div>
-          <div class="feld">
-            <label for="f-mail">E-Mail</label>
-            <input id="f-mail" name="email" type="email" autocomplete="email">
-          </div>
-          <div class="feld">
-            <label for="f-text">Nachricht</label>
-            <textarea id="f-text" name="nachricht"></textarea>
-          </div>
-          <button class="knopf knopf-voll" type="submit">Nachricht senden</button>
-          <p class="form-hinweis" id="form-hinweis" tabindex="-1" hidden><b>Dieser Entwurf verschickt noch nichts.</b> Das Formular hat noch keinen Empfänger — schreib direkt an <a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a> oder ruf <a href="tel:+4367682277302">+43&nbsp;676&nbsp;8227&nbsp;7302</a> an.</p>
-        </form>
       </div>
     </div>
   </section>
@@ -790,16 +572,33 @@ legend{font-family:var(--mono);font-size:.68rem;letter-spacing:.09em;text-transf
   <div class="fuss-innen">
     <div>
       <img class="wort" src="__LOGO__" alt="Trojan Performance">
-      <p class="klein" style="margin-top:1rem">Performance Center · Sebastiangasse 1, 9020 Klagenfurt am Wörthersee<br>
+      <p class="klein" style="margin-top:1rem">Erster offizieller HYROX Training Club in Kärnten · Sebastiangasse 1, 9020 Klagenfurt am Wörthersee<br>
       <a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a> · <a href="tel:+4367682277302">+43 676 8227 7302</a></p>
     </div>
-    <nav aria-label="Rechtliches">
+    <nav aria-label="Kanäle und Rechtliches">
+      <a href="https://www.instagram.com/trojan.performance/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/trojanperformanceofficial" target="_blank" rel="noopener">Facebook</a>
       <a href="#" data-leer>Impressum</a>
       <a href="#" data-leer>Datenschutz</a>
     </nav>
-    <p class="klein stand">Entwurf zur Abstimmung — Formularversand, Impressum und Datenschutz sind noch nicht angebunden.</p>
+    <p class="klein stand">Entwurf zur Abstimmung — Impressum und Datenschutz sind noch nicht angebunden.</p>
   </div>
 </footer>
+
+<dialog class="kdlg" id="kursdlg" aria-labelledby="kd-name">
+  <div class="kdlg-innen">
+    <div class="kdlg-kopf">
+      <h3 id="kd-name"></h3>
+      <button class="zu" type="button" aria-label="Schliessen">&times;</button>
+    </div>
+    <p class="kmeta" id="kd-meta"></p>
+    <p class="ktext" id="kd-text"></p>
+    <p class="klein" id="kd-hinweis" hidden>* Beschreibung vorläufig, der endgültige Text vom Betreiber folgt.</p>
+    <div class="kfuss">
+      <a class="knopf knopf-voll" href="mailto:office@trojanperformance.at?subject=Probetraining">Probetraining</a>
+    </div>
+  </div>
+</dialog>
 
 <script>
 document.documentElement.classList.add('js');
@@ -840,17 +639,41 @@ addEventListener('resize',function(){cancelAnimationFrame(passtT);passtT=request
   alle.forEach(function(el){io.observe(el);});
 })();
 
-/* ---------- Formular: ehrlich bleiben ---------- */
-(function(){
-  var form=document.getElementById('kontakt-form');
-  var hinweis=document.getElementById('form-hinweis');
-  if(!form)return;
-  form.addEventListener('submit',function(e){
-    e.preventDefault();
-    hinweis.hidden=false;
-    hinweis.focus();
-  });
-})();
+/* ---------- Kursdetail ----------
+   Die Kursbeschreibungen standen als eigener Abschnitt auf der Seite —
+   Absätze, die vor der Entscheidung niemand liest. Jetzt hängen sie am
+   Wochenplan: gestrichen ist nichts, es steht nur nichts mehr im Weg.
+   Die Plätze stammen vom Betreiber, Häufigkeit und Dauer fallen aus der
+   geladenen Woche ab und können deshalb nicht veralten.
+   Diese Liste ist bewusst nicht die Kursliste der Seite: die Schnittstelle
+   führt Kurse, für die der Betreiber noch keinen Text abgestimmt hat, und
+   einzelne Sondertermine. Für die greift der Hinweis unten. */
+var KURSINFO={
+ 'Performance':{plaetze:'12–16',text:'Crosstraining aus Powerlifting, Weightlifting, Gymnastics, Calisthenics, Strongman und Ausdauer. Die Reize sind nicht willkürlich kombiniert, sondern folgen einer periodisierten Planung.'},
+ 'FBB/Strength & Power':{plaetze:'16',text:'Muskelaufbau nach festem Schema, kombiniert mit kurzen intensiven Ausdauerblöcken. Kraft und Ausdauer in einer Einheit.'},
+ 'Powercircle':{plaetze:'24',text:'Airbike, SkiErg, Schlitten, Jump-Box, Battle-Rope, Wallballs im Wechsel. Kurze harte Intervalle, kurze Pausen. Technisch anspruchslos, deshalb auch für Einsteiger geeignet.'},
+ 'Mama reloaded':{text:'Wiedereinstieg nach der Schwangerschaft. Beckenboden, Rumpf und Kraft in einem Tempo, das sich an den Tag anpasst.*',vorlaeufig:true},
+ 'Hyrox':{plaetze:'24',text:'Vorbereitung auf das Rennformat, das weltweit unter denselben Bedingungen läuft — für Open, Pro, Doubles und Relay. Für jedes Level, vom Einstieg bis zum Wettkampf.'},
+ 'Team-WOD':{plaetze:'16',text:'Zu zweit mit deinem Trainingsbuddy. Jede Woche ein anderes Workout, Intensität und Schwierigkeitsgrad werden auf euch beide angepasst.'},
+ 'FBB':{plaetze:'12',text:'Nach dem gemeinsamen Warm-up wählst du Ober- oder Unterkörper, je vier Übungen mit vorgegebenen Sätzen, Wiederholungen und Pausen. Zum Abschluss eine kurze, intensive Belastung.'},
+ 'Community TeamWOD':{plaetze:'24',text:'Team-Workout in großer Runde. Jede Woche ein anderes Programm, Intensität und Schwierigkeitsgrad individuell angepasst.'}
+};
+
+var dlg=document.getElementById('kursdlg');
+function kursOeffnen(name,prof){
+  var i=KURSINFO[name]||{};
+  document.getElementById('kd-name').textContent=name;
+  document.getElementById('kd-meta').textContent=prof+(i.plaetze?(' · '+i.plaetze+' Plätze'):'');
+  document.getElementById('kd-text').textContent=i.text||'Für diesen Termin liegt noch keine abgestimmte Beschreibung vor.';
+  document.getElementById('kd-hinweis').hidden=!i.vorlaeufig;
+  if(dlg.showModal)dlg.showModal();
+}
+dlg.querySelector('.zu').addEventListener('click',function(){dlg.close();});
+dlg.addEventListener('click',function(e){if(e.target===dlg)dlg.close();});
+document.getElementById('plan-woche').addEventListener('click',function(e){
+  var b=e.target.closest('.eintrag[data-kurs]');
+  if(b)kursOeffnen(b.dataset.kurs,b.dataset.prof);
+});
 
 /* ---------- Wochenplan aus dem Buchungssystem ---------- */
 const PLAN_STAND=[
@@ -910,6 +733,9 @@ function zeichnen(evts,live){
     return (a.tag-b.tag)||(a.zeit<b.zeit?-1:(a.zeit>b.zeit?1:0));
   });
 
+  var proWoche={};
+  evts.forEach(function(e){proWoche[e.name]=(proWoche[e.name]||0)+1;});
+
   var tage=[0,1,2,3,4,5];
   if(evts.some(function(e){return e.tag===6;}))tage.push(6);
 
@@ -946,35 +772,42 @@ function zeichnen(evts,live){
     }
     amTag.forEach(function(e){
       var li=document.createElement('li');
+      var b=document.createElement('button');
+      b.type='button';b.className='eintrag';
+      b.setAttribute('data-kurs',e.name);
+      b.setAttribute('data-prof',proWoche[e.name]+'× pro Woche · '+e.dauer+' Minuten');
+      b.setAttribute('aria-haspopup','dialog');
+      b.setAttribute('aria-label',e.name+', '+lang[t]+' '+e.zeit+' Uhr — Beschreibung öffnen');
       var z=document.createElement('span');z.className='z';z.textContent=e.zeit;
       var n=document.createElement('span');n.className='n';n.textContent=e.name;
       var d=document.createElement('span');d.className='d';d.textContent=e.dauer+' min';
-      li.appendChild(z);li.appendChild(n);li.appendChild(d);
+      b.appendChild(z);b.appendChild(n);b.appendChild(d);
+      li.appendChild(b);
       ul.appendChild(li);
     });
     panel.appendChild(ul);
     if(t===start)panel.classList.add('aktiv');
     wrap.appendChild(panel);
 
-    var b=document.createElement('button');
-    b.type='button';
+    var tb=document.createElement('button');
+    tb.type='button';
     var bt=document.createElement('span');bt.textContent=kurz[t];
-    b.appendChild(bt);
+    tb.appendChild(bt);
     if(live){
       var bd=document.createElement('span');bd.className='dt';bd.textContent=datum(t);
-      b.appendChild(bd);
+      tb.appendChild(bd);
     }
-    b.setAttribute('aria-label',lang[t]+(live?(', '+datum(t)):''));
-    b.setAttribute('aria-pressed',t===start?'true':'false');
-    b.setAttribute('aria-controls','tag-'+t);
-    b.addEventListener('click',function(){
+    tb.setAttribute('aria-label',lang[t]+(live?(', '+datum(t)):''));
+    tb.setAttribute('aria-pressed',t===start?'true':'false');
+    tb.setAttribute('aria-controls','tag-'+t);
+    tb.addEventListener('click',function(){
       knoepfe.forEach(function(k){k.setAttribute('aria-pressed','false');});
-      b.setAttribute('aria-pressed','true');
+      tb.setAttribute('aria-pressed','true');
       wrap.querySelectorAll('.tag-panel').forEach(function(p){p.classList.remove('aktiv');});
       panel.classList.add('aktiv');
     });
-    knoepfe.push(b);
-    tabs.appendChild(b);
+    knoepfe.push(tb);
+    tabs.appendChild(tb);
   });
 
   status.textContent='';

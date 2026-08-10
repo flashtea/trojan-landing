@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#000000">
 <title>Trojan Performance — Performance Center in Klagenfurt am Wörthersee</title>
-<meta name="description" content="Performance Center in Klagenfurt am Wörthersee. Acht Kurse, 75 Minuten, immer ein Coach auf der Fläche. Erster offizieller HYROX Training Club in Kärnten. Probetraining 15 €.">
+<meta name="description" content="Performance Center in Klagenfurt am Wörthersee. Sieben Tage die Woche, in jeder Einheit ein Coach mit dir auf der Fläche. Erster offizieller HYROX Training Club in Kärnten. Probetraining 15 €.">
 
 <style>
 /* ═══════════════════════════════════════════════════════════════════════
@@ -74,7 +74,7 @@ a{color:var(--n100)}
 h1,h2,h3,h4{margin:0; font-weight:400; letter-spacing:-.02em; text-wrap:balance}
 p{margin:0}
 ul{margin:0; padding:0; list-style:none}
-button,input,select,textarea{font:inherit; color:inherit}
+button{font:inherit; color:inherit}
 
 /* ── Fokus: doppelt geführt, damit er auf beiden Gründen sichtbar bleibt ── */
 :focus{outline:none}
@@ -267,10 +267,14 @@ button,input,select,textarea{font:inherit; color:inherit}
   letter-spacing:.12em; text-transform:uppercase; padding:.18rem .42rem}
 .tagliste.heute{box-shadow:inset 0 3px 0 var(--n100)}
 .tagliste ul{display:grid; gap:2px}
+/* Jede Zeile ist ein Knopf: der Wochenplan trägt die Kursbeschreibungen. */
 .zeile{
   display:grid; grid-template-columns:4.6rem 1fr auto; gap:.6rem; align-items:baseline;
   background:var(--n08); padding:.7rem .8rem;
+  width:100%; min-height:2.75rem; border:0; text-align:left; cursor:pointer;
+  transition:background .16s;
 }
+.zeile:hover{background:var(--n22)}
 .zeile .zt{font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:1rem; color:var(--n100)}
 .zeile .zn{font-weight:700; color:var(--n85); letter-spacing:-.01em; line-height:1.25}
 .zeile .zd{font-family:'IBM Plex Mono',monospace; font-size:.75rem; color:var(--n50)}
@@ -282,19 +286,7 @@ button,input,select,textarea{font:inherit; color:inherit}
   font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase; padding-top:.18rem}
 .spanne dd{margin:0; font-family:'IBM Plex Mono',monospace; font-size:.9375rem; color:var(--n85)}
 
-/* ── Kurse ─────────────────────────────────────────────────────────────── */
-.kursnetz{display:grid; gap:2px; background:var(--n22)}
-.kurs{background:var(--n00); padding:clamp(1.1rem,4vw,1.6rem) 0}
-.kurs-kopf{display:grid; grid-template-columns:auto 1fr; gap:.9rem; align-items:start}
-.kurs .nr{font-family:'Archivo Black',sans-serif; font-size:1.5rem; line-height:1;
-  color:var(--n50); font-variant-numeric:tabular-nums}
-.kurs h3{font-family:'Archivo Black',sans-serif; font-size:clamp(1.35rem,5vw,1.9rem);
-  line-height:1.02; letter-spacing:-.03em; color:var(--n100)}
-.kurs .txt{margin-top:.7rem; color:var(--n68); max-width:52ch}
-.marker{display:inline-block; margin-top:.7rem; border:2px solid var(--n100); color:var(--n100);
-  padding:.28rem .55rem; font-family:'IBM Plex Mono',monospace; font-weight:500;
-  font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase}
-/* Zwei Messwerte je Kurs, als Länge statt als Farbe. */
+/* ── Zwei Messwerte je Kurs, als Länge statt als Farbe ─────────────────── */
 .werte{display:grid; gap:.7rem; margin-top:1rem; max-width:26rem}
 .wert{display:grid; grid-template-columns:5.4rem 1fr auto; gap:.7rem; align-items:center}
 .wert .wl{color:var(--n50); font-family:'IBM Plex Mono',monospace; font-size:.6875rem;
@@ -306,27 +298,34 @@ button,input,select,textarea{font:inherit; color:inherit}
   transform-origin:left center; transform:scaleX(var(--f,0))}
 .balken.leer{box-shadow:inset 0 0 0 2px var(--n22)}
 
-.kurs-fuss{margin-top:clamp(1.6rem,5vw,2.4rem); border-top:3px solid var(--n100); padding-top:1.1rem;
-  display:grid; gap:.6rem}
-.kurs-fuss .mittel{max-width:30ch}
-
-/* ── HYROX-Leiter ──────────────────────────────────────────────────────── */
-.hyrox{background:var(--n08)}
-.leiter{margin-top:1.6rem; border-left:3px solid var(--n100); padding-left:0}
-.rung{display:grid; grid-template-columns:2.6rem 1fr; align-items:center; gap:.9rem;
-  padding:.55rem 0 .55rem .9rem; position:relative}
-.rung.lauf-r{color:var(--n50)}
-.rung.lauf-r .mono{color:var(--n50)}
-.rung.st{background:var(--n00)}
-.rung .kn{display:flex; align-items:center; justify-content:center;
-  width:2.6rem; height:2.6rem; background:var(--n100); color:var(--n00);
-  font-family:'Archivo Black',sans-serif; font-size:1rem; font-variant-numeric:tabular-nums}
-.rung .sn{font-family:'Archivo Black',sans-serif; font-size:clamp(1rem,4vw,1.25rem);
-  letter-spacing:-.02em; color:var(--n100); line-height:1.1}
-.rung.lauf-r .kn{background:transparent; color:var(--n50); box-shadow:inset 0 0 0 2px var(--n22);
-  font-family:'IBM Plex Mono',monospace; font-size:.75rem; font-weight:500}
-.hyrox-bild img{width:100%; height:clamp(11rem,34vw,17rem); object-fit:cover;
-  filter:grayscale(1) contrast(1.55) brightness(.8)}
+/* ── Das Kursblatt ──────────────────────────────────────────────────────
+   Einen Kurskatalog gibt es nicht mehr: der Wochenplan ist die Kursliste.
+   Wer wissen will, was ein Kurs ist, tippt ihn dort an, wo er ohnehin
+   steht. Das Blatt ist die dritte grosse Umkehrfläche der Seite. */
+dialog.kblatt{
+  border:0; padding:0; margin:auto; width:min(31rem,calc(100vw - 1.6rem));
+  max-height:calc(100dvh - 2rem); background:#fff; color:var(--u-text); overflow:auto;
+}
+dialog.kblatt::backdrop{background:rgba(0,0,0,.82)}
+.kb-in{padding:clamp(1.1rem,4.6vw,1.6rem)}
+.kb-kopf{display:flex; align-items:flex-start; gap:.8rem}
+.kb-kopf h3{font-family:'Archivo Black',sans-serif; font-size:clamp(1.35rem,5.5vw,1.9rem);
+  line-height:1.02; letter-spacing:-.03em; color:#000; flex:1 1 auto}
+.kb-zu{flex:none; width:2.75rem; height:2.75rem; border:2px solid #000; background:#fff;
+  color:#000; cursor:pointer; font-family:'Archivo Black',sans-serif; font-size:1.1rem; line-height:1}
+.kb-zu:hover{background:#000; color:#fff}
+.kb-prof{margin-top:.55rem; color:var(--u-dim)}
+.kb-txt{margin-top:.9rem; border-top:3px solid #000; padding-top:.9rem}
+.kb-mass{margin-top:.9rem; color:var(--u-dim)}
+.kb-fuss{margin-top:1.3rem}
+/* Auf der Umkehrfläche kippt jedes Bedienelement mit. */
+.um .balken{box-shadow:inset 0 0 0 2px var(--u-dim)}
+.um .balken i{background:#000}
+.um .wert .wl{color:var(--u-dim)}
+.um .wert .wz{color:#000}
+.um .knopf{border-color:#000; background:#fff; color:#000}
+.um .knopf:hover,.um .knopf.voll{background:#000; color:#fff}
+.um .knopf.voll:hover{background:var(--u-dim)}
 
 /* ── Preise ────────────────────────────────────────────────────────────── */
 .bindung{--n:3; max-width:26rem; margin-bottom:1.6rem}
@@ -353,6 +352,8 @@ button,input,select,textarea{font:inherit; color:inherit}
 .tarif.um .fahne{display:inline-block; background:#000; color:#fff; padding:.3rem .6rem;
   font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:.6875rem;
   letter-spacing:.12em; text-transform:uppercase; margin-bottom:.8rem}
+/* Die eine Zahl, die ohne Klick dastehen muss. */
+.tarif.allein{max-width:34rem; padding:clamp(1.4rem,5vw,2rem)}
 
 .ohne{border-top:3px solid var(--n100); margin-top:clamp(2rem,6vw,3rem); padding-top:1.2rem}
 .ohne ul{display:grid; gap:2px; background:var(--n22); margin-top:1rem}
@@ -381,6 +382,8 @@ details.falte summary .pm2::before{width:1.4rem; height:2px}
 details.falte summary .pm2::after{width:2px; height:1.4rem; transition:scale .2s}
 details.falte[open] summary .pm2::after{scale:1 0}
 details.falte .innen{padding:0 .1rem 1.2rem; color:var(--n68); max-width:60ch}
+/* Ausgeklappt darf alles dastehen — dann aber über die volle Bahn. */
+details.falte .innen.weit{max-width:none; color:var(--n85)}
 
 /* Der Satz des Betreibers. Grösse statt Farbe. */
 .zitat{border-top:3px solid var(--n100); border-bottom:3px solid var(--n100);
@@ -394,64 +397,21 @@ details.falte .innen{padding:0 .1rem 1.2rem; color:var(--n68); max-width:60ch}
 .coach{background:var(--n00); padding-bottom:.9rem}
 .coach img{width:100%; aspect-ratio:3/4; object-fit:cover; object-position:50% 22%;
   filter:grayscale(1) contrast(1.35) brightness(.95)}
+/* Gesichter schaffen Vertrauen, Lebensläufe nicht — der Name genügt. */
 .coach h3{font-family:'Archivo Black',sans-serif; font-size:clamp(1.15rem,4.6vw,1.5rem);
-  color:var(--n100); margin:.8rem 0 .35rem; letter-spacing:-.02em}
-.coach p{color:var(--n68); font-size:.9375rem; line-height:1.45}
+  color:var(--n100); margin:.8rem 0 0; letter-spacing:-.02em}
 
-/* ── Haus ──────────────────────────────────────────────────────────────── */
-.haus{display:grid; gap:clamp(1.4rem,5vw,2.4rem)}
-.haus-bild img{width:100%; height:clamp(12rem,42vw,20rem); object-fit:cover;
-  filter:grayscale(1) contrast(1.4) brightness(.86)}
+/* ── Faktenleiste ──────────────────────────────────────────────────────── */
 .fakten{display:grid; gap:2px; background:var(--n22)}
 .fakten div{background:var(--n00); padding:.95rem .1rem}
 .fakten dt{color:var(--n50); font-family:'IBM Plex Mono',monospace; font-size:.6875rem;
   letter-spacing:.12em; text-transform:uppercase; margin-bottom:.3rem}
 .fakten dd{margin:0; color:var(--n85); font-weight:700; letter-spacing:-.01em}
 .fakten dd small{display:block; font-weight:500; color:var(--n68); font-size:.9375rem; letter-spacing:0}
-.opengym{border:2px solid var(--n100); padding:clamp(1rem,4vw,1.4rem); display:grid; gap:.4rem}
-.opengym .zeit{font-family:'Archivo Black',sans-serif; font-size:clamp(1.9rem,8vw,2.8rem);
-  color:var(--n100); letter-spacing:-.03em; line-height:1; font-variant-numeric:tabular-nums}
 
-/* ── Kontakt ───────────────────────────────────────────────────────────── */
-.form{display:grid; gap:1.2rem; max-width:40rem}
-fieldset{border:0; margin:0; padding:0}
-legend{padding:0; margin-bottom:.7rem; color:var(--n50);
-  font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:.6875rem;
-  letter-spacing:.12em; text-transform:uppercase}
-/* Wahl ohne Farbe: nicht gewählt = Umriss, gewählt = gefüllte Umkehrfläche. */
-.chips{display:flex; flex-wrap:wrap; gap:.5rem}
-.chip{position:relative}
-.chip input{position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer}
-.chip span{display:flex; align-items:center; justify-content:center; min-height:2.75rem;
-  padding:.6rem 1rem; border:2px solid var(--n38); color:var(--n85);
-  font-family:'Archivo Black',sans-serif; font-size:.8125rem; letter-spacing:.03em;
-  text-transform:uppercase; transition:background .16s,color .16s,border-color .16s}
-.chip input:checked + span{background:var(--n100); color:var(--n00); border-color:var(--n100)}
-.chip input:focus-visible + span{outline:3px solid var(--ring); outline-offset:3px; box-shadow:0 0 0 3px var(--n00)}
-.feld{display:grid; gap:.45rem}
-.feld label{color:var(--n50); font-family:'IBM Plex Mono',monospace; font-weight:500;
-  font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase}
-.feld input,.feld textarea{
-  width:100%; background:var(--n08); border:2px solid var(--n38); color:var(--n100);
-  padding:.8rem .85rem; min-height:2.75rem; font-size:1rem; caret-color:var(--n100);
-}
-.feld textarea{min-height:8rem; resize:vertical}
-.feld input::placeholder,.feld textarea::placeholder{color:var(--n38)}
-.feld input:focus-visible,.feld textarea:focus-visible{border-color:var(--n100)}
-.feld input:-webkit-autofill{-webkit-text-fill-color:#fff; -webkit-box-shadow:0 0 0 1000px #141414 inset}
-.hinweis{border:2px solid var(--n100); padding:1rem; display:none}
-.hinweis[data-an="1"]{display:block}
-.hinweis .mittel{margin-bottom:.5rem}
-.hinweis a{color:var(--n100)}
-.kontaktnetz{display:grid; gap:clamp(2rem,6vw,3.5rem)}
-.kontaktdaten{display:grid; gap:1.6rem; align-content:start}
-.kontaktdaten .direkt{border-top:3px solid var(--n100); padding-top:1.1rem}
-.kontaktdaten a{color:var(--n100); font-family:'Archivo Black',sans-serif;
-  font-size:clamp(1.05rem,4.2vw,1.4rem); letter-spacing:-.02em; text-decoration:none;
-  border-bottom:2px solid var(--n38); display:inline-flex; align-items:center;
-  min-height:2.75rem; padding-bottom:.15rem}
-.kontaktdaten a:hover{border-bottom-color:var(--n100)}
-.sozial{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.4rem}
+/* ── Anfangen ──────────────────────────────────────────────────────────── */
+.wege{display:flex; flex-wrap:wrap; gap:.75rem; margin-top:1.1rem}
+.sozial{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.7rem}
 
 /* ── Fuss ──────────────────────────────────────────────────────────────── */
 .fuss{border-top:3px solid var(--n100); padding-block:clamp(2rem,6vw,3rem) 2.5rem}
@@ -473,6 +433,8 @@ html.js .auf.da{opacity:1; transform:none;
 html.js .balken i,html.js .mb i{transition:transform .8s cubic-bezier(.2,.85,.25,1)}
 html.js .balken i{transform:scaleX(0)}
 html.js .da .balken i,html.js .mb i{transform:scaleX(var(--f,0))}
+/* Im Kursblatt gibt es kein .da — dort steht der Balken sofort richtig. */
+html.js .kblatt .balken i{transform:scaleX(var(--f,0))}
 .preis .zahl{transition:transform .2s ease, opacity .2s ease}
 .preis .zahl.wechsel{transform:translateY(-.14em); opacity:0}
 
@@ -495,7 +457,6 @@ html.js .da .balken i,html.js .mb i{transform:scaleX(var(--f,0))}
   .coaches{grid-template-columns:repeat(4,minmax(0,1fr))}
   .fakten{grid-template-columns:repeat(2,minmax(0,1fr))}
   .ohne ul{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .haus{grid-template-columns:1fr 1fr; align-items:start}
   .zeile{grid-template-columns:4.6rem 1fr auto}
 }
 @media (min-width:900px){
@@ -512,22 +473,12 @@ html.js .da .balken i,html.js .mb i{transform:scaleX(var(--f,0))}
   .zeile{grid-template-columns:1fr; gap:.15rem; padding:.6rem .55rem; background:var(--n14)}
   .zeile .zd{grid-column:1}
   .spanne{grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem 2rem}
-  .kursnetz{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .kurs{padding:clamp(1.4rem,2.6vw,2rem)}
   .tarife{grid-template-columns:repeat(3,minmax(0,1fr))}
   .ohne ul{grid-template-columns:repeat(5,minmax(0,1fr))}
   .ohne li{flex-direction:column; gap:.3rem; padding:1rem .9rem}
-  /* Spaltenweise füllen, damit die Abfolge Laufen–Station erhalten bleibt. */
-  .leiter{display:grid; grid-auto-flow:column; grid-template-rows:repeat(8,auto);
-    grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:3rem;
-    border-left:0; border-top:3px solid var(--n100); padding-top:.4rem}
-  .rung{padding-left:0}
-  .rung::after{content:''; position:absolute; left:calc(1.3rem - 1.5px); width:3px;
-    top:calc(50% + 1.3rem); bottom:-.55rem; background:var(--n22)}
-  .rung:nth-child(8)::after,.rung:nth-child(16)::after{display:none}
   .fuss-netz{grid-template-columns:1.2fr 1fr 1fr}
-  .kontaktnetz{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); align-items:start}
-  .form{max-width:none}
+  .anfangen{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
+    column-gap:clamp(2rem,5vw,4rem); align-items:start}
   .buehne{padding-top:clamp(3rem,6vw,5.5rem)}
   .anriss{font-size:1.75rem; max-width:26ch}
   .tuen .knopf{flex:0 0 auto}
@@ -538,9 +489,6 @@ html.js .da .balken i,html.js .mb i{transform:scaleX(var(--f,0))}
   .kopfzeile > h2{grid-column:1; grid-row:2}
   .kopfzeile > p{grid-column:2; grid-row:1 / span 2; margin-top:0; align-self:end;
     padding-bottom:.4rem; max-width:52ch}
-}
-@media (min-width:1180px){
-  .kursnetz{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 
 /* ── Ruhe ─────────────────────────────────────────────────────────────── */
@@ -565,13 +513,10 @@ html.js .da .balken i,html.js .mb i{transform:scaleX(var(--f,0))}
     </a>
     <nav class="kopf-nav" aria-label="Hauptbereiche">
       <a href="#woche">Woche</a>
-      <a href="#kurse">Kurse</a>
-      <a href="#hyrox">Hyrox</a>
       <a href="#preise">Preise</a>
       <a href="#coaches">Coaches</a>
-      <a href="#kontakt">Kontakt</a>
     </nav>
-    <a class="knopf voll" href="#kontakt">Probetraining</a>
+    <a class="knopf voll" href="#anfangen">Probetraining</a>
     <button class="menue-auf" type="button" id="menueAuf" aria-expanded="false"
             aria-controls="menue" aria-label="Menü öffnen">
       <i aria-hidden="true"></i>
@@ -587,12 +532,9 @@ html.js .da .balken i,html.js .mb i{transform:scaleX(var(--f,0))}
   <nav aria-label="Alle Bereiche">
     <ol>
       <li><a href="#woche">Woche</a></li>
-      <li><a href="#kurse">Kurse</a></li>
-      <li><a href="#hyrox">Hyrox</a></li>
       <li><a href="#preise">Preise</a></li>
       <li><a href="#coaches">Coaches</a></li>
-      <li><a href="#haus">Haus</a></li>
-      <li><a href="#kontakt">Kontakt</a></li>
+      <li><a href="#anfangen">Probetraining</a></li>
     </ol>
   </nav>
   <div class="menue-fuss">
@@ -609,16 +551,16 @@ html.js .da .balken i,html.js .mb i{transform:scaleX(var(--f,0))}
     <p class="mono ort">Klagenfurt am Wörthersee · seit 2017</p>
     <h1 class="wort"><span>Trojan</span><span>Performance</span></h1>
     <div class="regel"></div>
-    <p class="anriss">In jedem Kurs steht ein Coach auf der Fläche und korrigiert. Er sagt nicht nur an.</p>
+    <p class="anriss">Sieben Tage die Woche. In jeder Einheit steht ein Coach mit dir auf der Fläche und korrigiert — er sagt nicht nur an.</p>
     <div class="tuen">
-      <a class="knopf voll gr" href="#kontakt">Probetraining 15 €</a>
+      <a class="knopf voll gr" href="#anfangen">Probetraining 15 €</a>
       <a class="knopf gr" href="#woche">Die Woche ansehen</a>
     </div>
     <p class="tatsache"><b>Hyrox</b> <span class="mono">Erster offizieller Training Club in Kärnten</span></p>
   </div>
   <div class="band">
     <img src="__PH_HERO__" alt="Blick von der Galerie auf die Trainingsfläche: Hantelracks, dahinter eine Gruppe beim Training." width="1365" height="768" fetchpriority="high" decoding="async">
-    <p class="band-schild mono">Die Halle in der Sebastiangasse — acht Kurse, je 75 Minuten</p>
+    <p class="band-schild mono">Die Halle in der Sebastiangasse</p>
   </div>
 </section>
 
@@ -628,7 +570,7 @@ html.js .da .balken i,html.js .mb i{transform:scaleX(var(--f,0))}
     <div class="kopfzeile auf">
       <span class="mono num">01 — Passt das in deine Woche</span>
       <h2 class="gross" id="h-woche">Die Woche</h2>
-      <p class="lauf leise">Die Termine kommen aus dem Buchungssystem, aus dem auch die App bucht. Antwortet es nicht, steht hier der zuletzt bekannte Stand.</p>
+      <p class="lauf leise">Direkt aus dem Buchungssystem. Tipp einen Kurs an, dann steht dort, was er ist.</p>
     </div>
 
     <div class="woche-kopf">
@@ -649,193 +591,73 @@ html.js .da .balken i,html.js .mb i{transform:scaleX(var(--f,0))}
   </div>
 </section>
 
-<!-- ═══ KURSE ═══════════════════════════════════════════════════════════ -->
-<section class="abschnitt" id="kurse" aria-labelledby="h-kurse">
-  <div class="bahn">
-    <div class="kopfzeile auf">
-      <span class="mono num">02 — Ist das etwas für dich</span>
-      <h2 class="gross" id="h-kurse">Acht Kurse</h2>
-      <p class="lauf leise">Jede Einheit dauert 75 Minuten, Mama reloaded 45. Die beiden Balken je Kurs zeigen, wie oft er läuft und wie gross die Gruppe wird — als Länge, nicht als Ziffer.</p>
-    </div>
-
-    <div class="kursnetz">
-
-      <article class="kurs auf">
-        <div class="kurs-kopf"><span class="nr">01</span><h3>Performance</h3></div>
-        <p class="txt">Crosstraining aus Powerlifting, Weightlifting, Gymnastics, Calisthenics, Strongman und Ausdauer. Die Reize sind nicht willkürlich kombiniert, sondern folgen einer periodisierten Planung.</p>
-        <div class="werte">
-          <div class="wert"><span class="wl">Läuft</span><span class="balken"><i style="--f:1"></i></span><span class="wz">7× / Woche</span></div>
-          <div class="wert"><span class="wl">Gruppe</span><span class="balken"><i style="--f:.667"></i></span><span class="wz">12–16 Plätze</span></div>
-        </div>
-      </article>
-
-      <article class="kurs auf">
-        <div class="kurs-kopf"><span class="nr">02</span><h3>FBB / Strength &amp; Power</h3></div>
-        <p class="txt">Muskelaufbau nach festem Schema, kombiniert mit kurzen intensiven Ausdauerblöcken. Kraft und Ausdauer in einer Einheit.</p>
-        <div class="werte">
-          <div class="wert"><span class="wl">Läuft</span><span class="balken"><i style="--f:.857"></i></span><span class="wz">6× / Woche</span></div>
-          <div class="wert"><span class="wl">Gruppe</span><span class="balken"><i style="--f:.667"></i></span><span class="wz">16 Plätze</span></div>
-        </div>
-      </article>
-
-      <article class="kurs auf">
-        <div class="kurs-kopf"><span class="nr">03</span><h3>Powercircle</h3></div>
-        <p class="txt">Airbike, SkiErg, Schlitten, Jump-Box, Battle-Rope, Wallballs im Wechsel. Kurze harte Intervalle, kurze Pausen.</p>
-        <p class="marker">Technisch anspruchslos — auch für Einsteiger</p>
-        <div class="werte">
-          <div class="wert"><span class="wl">Läuft</span><span class="balken"><i style="--f:.429"></i></span><span class="wz">3× / Woche</span></div>
-          <div class="wert"><span class="wl">Gruppe</span><span class="balken"><i style="--f:1"></i></span><span class="wz">24 Plätze</span></div>
-        </div>
-      </article>
-
-      <article class="kurs auf">
-        <div class="kurs-kopf"><span class="nr">04</span><h3>Mama reloaded</h3></div>
-        <p class="txt">Wiedereinstieg nach der Schwangerschaft. Beckenboden, Rumpf und Kraft in einem Tempo, das sich an den Tag anpasst.</p>
-        <div class="werte">
-          <div class="wert"><span class="wl">Läuft</span><span class="balken"><i style="--f:.429"></i></span><span class="wz">3× / Woche</span></div>
-          <div class="wert"><span class="wl">Dauer</span><span class="balken leer"><i style="--f:.6"></i></span><span class="wz">45 Minuten</span></div>
-        </div>
-        <p class="txt" style="font-size:.875rem">Gruppengrösse ist für diesen Kurs nicht angegeben.</p>
-      </article>
-
-      <article class="kurs auf">
-        <div class="kurs-kopf"><span class="nr">05</span><h3>Hyrox</h3></div>
-        <p class="txt">Vorbereitung auf das Rennformat, das weltweit unter denselben Bedingungen läuft — für Open, Pro, Doubles und Relay.</p>
-        <p class="marker">Für jedes Level, vom Einstieg bis zum Wettkampf</p>
-        <div class="werte">
-          <div class="wert"><span class="wl">Läuft</span><span class="balken"><i style="--f:.286"></i></span><span class="wz">2× / Woche</span></div>
-          <div class="wert"><span class="wl">Gruppe</span><span class="balken"><i style="--f:1"></i></span><span class="wz">24 Plätze</span></div>
-        </div>
-      </article>
-
-      <article class="kurs auf">
-        <div class="kurs-kopf"><span class="nr">06</span><h3>Team-WOD</h3></div>
-        <p class="txt">Zu zweit mit deinem Trainingsbuddy. Jede Woche ein anderes Workout, Intensität und Schwierigkeitsgrad werden auf euch beide angepasst.</p>
-        <div class="werte">
-          <div class="wert"><span class="wl">Läuft</span><span class="balken"><i style="--f:.143"></i></span><span class="wz">1× / Woche</span></div>
-          <div class="wert"><span class="wl">Gruppe</span><span class="balken"><i style="--f:.667"></i></span><span class="wz">16 Plätze</span></div>
-        </div>
-      </article>
-
-      <article class="kurs auf">
-        <div class="kurs-kopf"><span class="nr">07</span><h3>FBB</h3></div>
-        <p class="txt">Nach dem gemeinsamen Warm-up wählst du Ober- oder Unterkörper, je vier Übungen mit vorgegebenen Sätzen, Wiederholungen und Pausen. Zum Abschluss eine kurze, intensive Belastung.</p>
-        <div class="werte">
-          <div class="wert"><span class="wl">Läuft</span><span class="balken"><i style="--f:.143"></i></span><span class="wz">1× / Woche</span></div>
-          <div class="wert"><span class="wl">Gruppe</span><span class="balken"><i style="--f:.5"></i></span><span class="wz">12 Plätze</span></div>
-        </div>
-      </article>
-
-      <article class="kurs auf">
-        <div class="kurs-kopf"><span class="nr">08</span><h3>Community TeamWOD</h3></div>
-        <p class="txt">Team-Workout in grosser Runde. Jede Woche ein anderes Programm, Intensität und Schwierigkeitsgrad individuell angepasst.</p>
-        <div class="werte">
-          <div class="wert"><span class="wl">Läuft</span><span class="balken"><i style="--f:.143"></i></span><span class="wz">1× / Woche</span></div>
-          <div class="wert"><span class="wl">Gruppe</span><span class="balken"><i style="--f:1"></i></span><span class="wz">24 Plätze</span></div>
-        </div>
-      </article>
-
-    </div>
-
-    <div class="kurs-fuss auf">
-      <p class="mittel">Für den Einstieg empfehlen wir drei Einheiten pro Woche — zwei für die Kraft, eine für die Ausdauer.</p>
-      <p class="lauf leise">Balkenmassstab: «Läuft» gegen sieben Einheiten pro Woche, «Gruppe» gegen 24 Plätze.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ HYROX ═══════════════════════════════════════════════════════════ -->
-<section class="abschnitt hyrox" id="hyrox" aria-labelledby="h-hyrox">
-  <div class="bahn">
-    <div class="kopfzeile auf">
-      <span class="mono num">03 — Das Rennformat</span>
-      <h2 class="gross" id="h-hyrox">Hyrox</h2>
-      <p class="lauf leise">Acht Kilometer Laufen im Wechsel mit acht Kraftstationen, weltweit nach denselben Regeln. Vor jeder Station wird ein Kilometer gelaufen. Ein Kurs bereitet darauf vor, zweimal pro Woche — mitmachen kannst du, ohne je an den Start zu gehen.</p>
-    </div>
-    <div class="leiter auf" role="list" aria-label="Ablauf eines Hyrox-Rennens">
-      <div class="rung lauf-r" role="listitem"><span class="kn">1 km</span><span class="mono">Laufen</span></div>
-      <div class="rung st" role="listitem"><span class="kn">1</span><span class="sn">1000 m SkiErg</span></div>
-      <div class="rung lauf-r" role="listitem"><span class="kn">1 km</span><span class="mono">Laufen</span></div>
-      <div class="rung st" role="listitem"><span class="kn">2</span><span class="sn">50 m Sled Push</span></div>
-      <div class="rung lauf-r" role="listitem"><span class="kn">1 km</span><span class="mono">Laufen</span></div>
-      <div class="rung st" role="listitem"><span class="kn">3</span><span class="sn">50 m Sled Pull</span></div>
-      <div class="rung lauf-r" role="listitem"><span class="kn">1 km</span><span class="mono">Laufen</span></div>
-      <div class="rung st" role="listitem"><span class="kn">4</span><span class="sn">80 m Burpee Broad Jumps</span></div>
-      <div class="rung lauf-r" role="listitem"><span class="kn">1 km</span><span class="mono">Laufen</span></div>
-      <div class="rung st" role="listitem"><span class="kn">5</span><span class="sn">1000 m Rudern</span></div>
-      <div class="rung lauf-r" role="listitem"><span class="kn">1 km</span><span class="mono">Laufen</span></div>
-      <div class="rung st" role="listitem"><span class="kn">6</span><span class="sn">200 m Farmers Carry</span></div>
-      <div class="rung lauf-r" role="listitem"><span class="kn">1 km</span><span class="mono">Laufen</span></div>
-      <div class="rung st" role="listitem"><span class="kn">7</span><span class="sn">100 m Sandbag Lunges</span></div>
-      <div class="rung lauf-r" role="listitem"><span class="kn">1 km</span><span class="mono">Laufen</span></div>
-      <div class="rung st" role="listitem"><span class="kn">8</span><span class="sn">100 Wall Balls</span></div>
-    </div>
-  </div>
-  <div class="hyrox-bild auf" style="margin-top:clamp(2rem,6vw,3rem)">
-    <img src="__PH_HYROX__" alt="Ein Mann am Ruderergometer, dahinter eine beschriebene Tafel mit dem Workout." width="700" height="557" loading="lazy" decoding="async">
-  </div>
-</section>
-
 <!-- ═══ PREISE ══════════════════════════════════════════════════════════ -->
 <section class="abschnitt" id="preise" aria-labelledby="h-preise">
   <div class="bahn">
     <div class="kopfzeile auf">
-      <span class="mono num">04 — Was es kostet</span>
+      <span class="mono num">02 — Was es kostet</span>
       <h2 class="gross" id="h-preise">Preise</h2>
-      <p class="lauf leise">Kurstarife, Preis pro Monat. Wähle die Bindung — die Preise unten rechnen mit.</p>
+      <p class="lauf leise">Zum Einstieg empfehlen wir drei Einheiten pro Woche: zwei für die Kraft, eine für die Ausdauer.</p>
     </div>
 
-    <div class="schalter bindung" role="group" aria-label="Bindung wählen" id="bindung" style="--n:3; --i:0">
-      <span class="schieber" aria-hidden="true"></span>
-      <button type="button" data-b="1" aria-pressed="true">1 Monat</button>
-      <button type="button" data-b="6" aria-pressed="false">6 Monate</button>
-      <button type="button" data-b="12" aria-pressed="false">12 Monate</button>
-    </div>
-
-    <div class="tarife" id="tarife">
-      <article class="tarif auf" data-p1="130" data-p6="120" data-p12="110" data-e="9">
-        <p class="tn">2 Einheiten / Woche</p>
-        <p class="preis"><span class="zahl">130</span><span class="eur">€</span><span class="pm">pro Monat</span></p>
-        <p class="rech">9 Einheiten im Monat, frei einteilbar</p>
-        <p class="je"><span class="jz">14,44 €</span> pro Einheit</p>
-      </article>
-      <article class="tarif um auf" data-p1="150" data-p6="140" data-p12="130" data-e="13">
-        <p class="fahne">Empfehlung zum Einstieg</p>
-        <p class="tn">3 Einheiten / Woche</p>
-        <p class="preis"><span class="zahl">150</span><span class="eur">€</span><span class="pm">pro Monat</span></p>
-        <p class="rech">13 Einheiten im Monat</p>
-        <p class="je"><span class="jz">11,54 €</span> pro Einheit</p>
-      </article>
-      <article class="tarif auf" data-p1="170" data-p6="160" data-p12="150" data-e="26">
-        <p class="tn">6 Einheiten / Woche</p>
-        <p class="preis"><span class="zahl">170</span><span class="eur">€</span><span class="pm">pro Monat</span></p>
-        <p class="rech">26 Einheiten, Montag bis Samstag</p>
-        <p class="je"><span class="jz">6,54 €</span> pro Einheit</p>
-      </article>
-    </div>
-
-    <p class="mono" style="color:var(--n50); margin-top:1rem">In jedem Tarif enthalten: keine Einschreibgebühr · eigener Kraftaufbauplan</p>
-
-    <div class="ohne auf">
-      <h3 class="mittel">Ohne Bindung</h3>
-      <ul>
-        <li><span class="op">15 €</span><span class="ot">Probetraining<small class="oz">75 Minuten, ein Coach</small></span></li>
-        <li><span class="op">25 €</span><span class="ot">Drop-in<small class="oz">eine Einheit</small></span></li>
-        <li><span class="op">200 €</span><span class="ot">10er-Block<small class="oz">ein Jahr gültig</small></span></li>
-        <li><span class="op">100 €</span><span class="ot">Personal Training<small class="oz">eins zu eins</small></span></li>
-        <li><span class="op">60 €</span><span class="ot">Open Gym<small class="oz">monatlich kündbar</small></span></li>
-      </ul>
-    </div>
-
-    <div class="kasten stark auf">
-      <p class="mittel">Selbstständig und SVS-versichert? Dann überweist dir die SVS 100 € aufs Konto.</p>
-      <p class="leise">Für jeden Tarif ausser Open Gym, und für den 10er-Block.</p>
-    </div>
+    <!-- Die eine Zahl steht frei. Neun Monatspreise, Laufzeiten und
+         Einzelangebote entscheiden über kein Probetraining — sie klappen auf. -->
+    <article class="tarif um allein auf">
+      <p class="fahne">Empfehlung zum Einstieg</p>
+      <p class="tn">3 Einheiten / Woche</p>
+      <p class="preis"><span class="zahl">150</span><span class="eur">€</span><span class="pm">pro Monat</span></p>
+      <p class="rech">13 Einheiten im Monat, keine Einschreibgebühr</p>
+      <p class="je"><span class="jz">11,54 €</span> pro Einheit</p>
+    </article>
 
     <details class="falte">
-      <summary>Vertrag, Bindung und Pause<span class="pm2" aria-hidden="true"></span></summary>
-      <div class="innen">
-        <p>Die Bindung beträgt wahlweise 1, 6 oder 12 Monate. Bei 6 Monaten kannst du einmal pausieren, bei 12 Monaten zweimal — je bis zu vier Wochen. Bei triftigem Grund ist der Vertrag übertragbar.</p>
+      <summary>Andere Rhythmen, Laufzeiten und Einzelpreise<span class="pm2" aria-hidden="true"></span></summary>
+      <div class="innen weit">
+        <div class="schalter bindung" role="group" aria-label="Bindung wählen" id="bindung" style="--n:3; --i:0">
+          <span class="schieber" aria-hidden="true"></span>
+          <button type="button" data-b="1" aria-pressed="true">1 Monat</button>
+          <button type="button" data-b="6" aria-pressed="false">6 Monate</button>
+          <button type="button" data-b="12" aria-pressed="false">12 Monate</button>
+        </div>
+
+        <div class="tarife" id="tarife">
+          <article class="tarif" data-p1="130" data-p6="120" data-p12="110" data-e="9">
+            <p class="tn">2 Einheiten / Woche</p>
+            <p class="preis"><span class="zahl">130</span><span class="eur">€</span><span class="pm">pro Monat</span></p>
+            <p class="rech">9 Einheiten im Monat, frei einteilbar</p>
+            <p class="je"><span class="jz">14,44 €</span> pro Einheit</p>
+          </article>
+          <article class="tarif" data-p1="150" data-p6="140" data-p12="130" data-e="13">
+            <p class="tn">3 Einheiten / Woche</p>
+            <p class="preis"><span class="zahl">150</span><span class="eur">€</span><span class="pm">pro Monat</span></p>
+            <p class="rech">13 Einheiten im Monat</p>
+            <p class="je"><span class="jz">11,54 €</span> pro Einheit</p>
+          </article>
+          <article class="tarif" data-p1="170" data-p6="160" data-p12="150" data-e="26">
+            <p class="tn">6 Einheiten / Woche</p>
+            <p class="preis"><span class="zahl">170</span><span class="eur">€</span><span class="pm">pro Monat</span></p>
+            <p class="rech">26 Einheiten, Montag bis Samstag</p>
+            <p class="je"><span class="jz">6,54 €</span> pro Einheit</p>
+          </article>
+        </div>
+
+        <div class="ohne">
+          <h3 class="mittel">Ohne Bindung</h3>
+          <ul>
+            <li><span class="op">15 €</span><span class="ot">Probetraining<small class="oz">75 Minuten, ein Coach</small></span></li>
+            <li><span class="op">25 €</span><span class="ot">Drop-in<small class="oz">eine Einheit</small></span></li>
+            <li><span class="op">200 €</span><span class="ot">10er-Block<small class="oz">ein Jahr gültig</small></span></li>
+            <li><span class="op">100 €</span><span class="ot">Personal Training<small class="oz">eins zu eins</small></span></li>
+            <li><span class="op">60 €</span><span class="ot">Open Gym<small class="oz">monatlich kündbar</small></span></li>
+          </ul>
+        </div>
+
+        <dl class="fakten" style="margin-top:1.4rem">
+          <div><dt>Bindung</dt><dd>1, 6 oder 12 Monate</dd></div>
+          <div><dt>Pause</dt><dd>Bei 6 Monaten einmal, bei 12 zweimal<small>Je bis zu vier Wochen</small></dd></div>
+          <div><dt>Übertragung</dt><dd>Bei triftigem Grund<small>Auf eine andere Person</small></dd></div>
+          <div><dt>SVS</dt><dd>100 € zurück<small>Für jeden Tarif ausser Open Gym, und für den 10er-Block</small></dd></div>
+        </dl>
       </div>
     </details>
 
@@ -850,135 +672,94 @@ html.js .da .balken i,html.js .mb i{transform:scaleX(var(--f,0))}
 <section class="abschnitt" id="coaches" aria-labelledby="h-coaches">
   <div class="bahn">
     <div class="kopfzeile auf">
-      <span class="mono num">05 — Wer auf der Fläche steht</span>
+      <span class="mono num">03 — Wer auf der Fläche steht</span>
       <h2 class="gross" id="h-coaches">Coaches</h2>
-      <p class="lauf leise">Mike und Dominik haben das Gym 2017 als Brüder aufgemacht.</p>
+      <p class="lauf leise">Vier. Zwei davon Brüder.</p>
     </div>
     <div class="coaches auf">
       <article class="coach">
         <img src="__PH_COACHMIKE__" alt="Porträt von Mike, Vollbart, kahl geschoren." width="536" height="720" loading="lazy" decoding="async">
         <h3>Mike</h3>
-        <p>Über 20 Jahre Badminton, Olympiastützpunkt Linz, Nationalkaderzentrum Wien. Gründer.</p>
       </article>
       <article class="coach">
         <img src="__PH_COACHDOMINIK__" alt="Porträt von Dominik, blond, lachend." width="443" height="720" loading="lazy" decoding="async">
         <h3>Dominik</h3>
-        <p>Dreifacher Staatsmeister im Gewichtheben. CrossFit Level 2 Trainer und Instruktor für die olympischen Züge.</p>
       </article>
       <article class="coach">
         <img src="__PH_COACHDIEGO__" alt="Porträt von Diego, dunkler Vollbart." width="537" height="720" loading="lazy" decoding="async">
         <h3>Diego</h3>
-        <p>Psychologe und CrossFit Level 1 Trainer. Kam aus Chile, wo er auf regionaler Ebene Wettkämpfe bestritten hat.</p>
       </article>
       <article class="coach">
         <img src="__PH_COACHBENNI__" alt="Porträt von Benni, dunkle Locken, verschränkte Arme." width="480" height="720" loading="lazy" decoding="async">
         <h3>Benni</h3>
-        <p>Aktiver Eishockeyspieler, studiert Lehramt für Bewegung und Sport in Klagenfurt. Schwerpunkt Konditionstraining.</p>
       </article>
     </div>
   </div>
 </section>
 
-<!-- ═══ HAUS ════════════════════════════════════════════════════════════ -->
-<section class="abschnitt" id="haus" aria-labelledby="h-haus">
+<!-- ═══ ANFANGEN ════════════════════════════════════════════════════════ -->
+<section class="abschnitt" id="anfangen" aria-labelledby="h-anfangen">
   <div class="bahn">
     <div class="kopfzeile auf">
-      <span class="mono num">06 — Das Haus</span>
-      <h2 class="gross" id="h-haus">Sebastiangasse 1</h2>
+      <span class="mono num">04 — Anfangen</span>
+      <h2 class="gross" id="h-anfangen">Probetraining</h2>
     </div>
-    <div class="haus auf">
-      <div class="haus-bild">
-        <img src="__PH_GYM__" alt="Blick in die Halle: Turnringe, eine Frau hängt am Klimmzugbalken." width="700" height="467" loading="lazy" decoding="async">
-      </div>
-      <div>
-        <dl class="fakten">
-          <div><dt>Adresse</dt><dd>Sebastiangasse 1<small>9020 Klagenfurt am Wörthersee</small></dd></div>
-          <div><dt>Parken</dt><dd>Gratis<small>Rund ums Gebäude</small></dd></div>
-          <div><dt>Garderoben</dt><dd>Zwei<small>Je ein Duschraum mit drei Duschen</small></dd></div>
-          <div><dt>Mitbringen</dt><dd>Handtuch, Trinkflasche<small>Hallenschuhe mit sauberer Sohle</small></dd></div>
-        </dl>
-        <div class="opengym" style="margin-top:2px">
-          <p class="mono" style="color:var(--n50)">Open Gym — täglich</p>
-          <p class="zeit">06:00–22:00</p>
-          <p class="leise">Eigener Tarif, 60 € im Monat, monatlich kündbar. Zutritt per App.</p>
+    <div class="anfangen auf">
+      <!-- Die lauteste Fläche der Seite gehört der Entscheidung. -->
+      <div class="kasten stark um">
+        <p class="mittel">Eine Einheit, ein Coach, 75 Minuten, 15 €.</p>
+        <p class="leise">Sag uns, wann es dir passt.</p>
+        <div class="wege">
+          <a class="knopf voll gr" href="tel:+4367682277302">Anrufen</a>
+          <a class="knopf gr" href="mailto:office@trojanperformance.at?subject=Probetraining">E-Mail schreiben</a>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ KONTAKT ═════════════════════════════════════════════════════════ -->
-<section class="abschnitt" id="kontakt" aria-labelledby="h-kontakt">
-  <div class="bahn">
-    <div class="kopfzeile auf">
-      <span class="mono num">07 — Anfangen</span>
-      <h2 class="gross" id="h-kontakt">Probetraining</h2>
-      <p class="lauf leise">Eine Einheit, ein Coach, 75 Minuten, 15 €. Vorkenntnisse braucht es keine. Handtuch, Trinkflasche, Hallenschuhe mit sauberer Sohle — mehr nicht.</p>
-    </div>
-
-    <div class="kontaktnetz">
-    <form class="form auf" id="form" novalidate>
-      <fieldset>
-        <legend>Anliegen</legend>
-        <div class="chips">
-          <label class="chip"><input type="radio" name="anliegen" value="Probetraining" checked><span>Probetraining</span></label>
-          <label class="chip"><input type="radio" name="anliegen" value="Allgemeine Anfrage"><span>Allgemeine Anfrage</span></label>
-          <label class="chip"><input type="radio" name="anliegen" value="1:1 Coaching"><span>1:1 Coaching</span></label>
-          <label class="chip"><input type="radio" name="anliegen" value="Firmentraining"><span>Firmentraining</span></label>
-        </div>
-      </fieldset>
-      <div class="feld"><label for="f-name">Name</label><input id="f-name" name="name" type="text" autocomplete="name" placeholder="Vor- und Nachname"></div>
-      <div class="feld"><label for="f-mail">E-Mail</label><input id="f-mail" name="mail" type="email" autocomplete="email" placeholder="du@beispiel.at"></div>
-      <div class="feld"><label for="f-text">Nachricht</label><textarea id="f-text" name="text" placeholder="Wann würde es dir passen?"></textarea></div>
-      <div><button class="knopf voll gr" type="submit">Absenden</button></div>
-      <div class="hinweis" id="hinweis" role="status" data-an="0">
-        <p class="mittel">Nichts wurde verschickt.</p>
-        <p class="lauf leise">Dieses Formular hat im Entwurf keinen Empfänger — es ist an nichts angebunden. Nimm den Weg daneben: <a id="mailtoLink" href="mailto:office@trojanperformance.at">die Anfrage als E-Mail öffnen</a> oder anrufen unter <a href="tel:+4367682277302">+43 676 8227 7302</a>.</p>
-      </div>
-    </form>
-
-    <aside class="kontaktdaten auf">
-      <div class="direkt">
-        <p class="mono" style="color:var(--n50); margin-bottom:.8rem">Oder direkt</p>
-        <p><a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a></p>
-        <p style="margin-top:.7rem"><a href="tel:+4367682277302">+43 676 8227 7302</a></p>
-        <div class="sozial">
-          <a class="knopf" href="https://www.instagram.com/trojan.performance/" rel="noopener">Instagram</a>
-          <a class="knopf" href="https://www.facebook.com/trojanperformanceofficial" rel="noopener">Facebook</a>
-          <a class="knopf" href="https://www.youtube.com/channel/UChUZebvjDwrWEdOCa86xNiA" rel="noopener">YouTube</a>
-        </div>
-      </div>
-      <dl class="fakten mitbringen">
-        <div><dt>Dauer</dt><dd>75 Minuten<small>Eine Einheit, ein Coach</small></dd></div>
-        <div><dt>Kostet</dt><dd>15 €<small>Einmalig, ohne Bindung</small></dd></div>
+      <dl class="fakten">
         <div><dt>Vorkenntnisse</dt><dd>Keine<small>Wirklich keine</small></dd></div>
         <div><dt>Mitbringen</dt><dd>Handtuch, Trinkflasche<small>Hallenschuhe mit sauberer Sohle</small></dd></div>
       </dl>
-    </aside>
     </div>
   </div>
 </section>
-
 </main>
+
+<!-- Das Kursblatt. Leer im Markup — was drinsteht, hängt an der Zeile,
+     die angetippt wurde. Siehe KURSBLATT im Skript. -->
+<dialog class="kblatt um" id="kursblatt" aria-labelledby="kb-name">
+  <div class="kb-in">
+    <div class="kb-kopf">
+      <h3 id="kb-name"></h3>
+      <button class="kb-zu" type="button" id="kbZu" aria-label="Kursblatt schliessen">✕</button>
+    </div>
+    <p class="kb-prof mono" id="kb-prof"></p>
+    <p class="kb-txt" id="kb-txt"></p>
+    <div class="werte" id="kb-werte"></div>
+    <p class="kb-mass mono" id="kb-mass"></p>
+    <div class="kb-fuss"><a class="knopf voll" href="#anfangen">Probetraining 15 €</a></div>
+  </div>
+</dialog>
 
 <footer class="fuss">
   <div class="bahn">
     <div class="fuss-netz">
       <div>
         <h2>Trojan Performance</h2>
-        <p class="lauf leise">Performance Center in Klagenfurt am Wörthersee. Gegründet 2017 von den Brüdern Mike und Dominik. Erster offizieller HYROX Training Club in Kärnten.</p>
+        <p class="lauf leise">Performance Center in Klagenfurt am Wörthersee. Erster offizieller HYROX Training Club in Kärnten.</p>
       </div>
       <div>
         <h2>Hier</h2>
         <p class="lauf leise">Sebastiangasse 1<br>9020 Klagenfurt am Wörthersee</p>
         <p style="margin-top:.7rem"><a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a><br><a href="tel:+4367682277302">+43 676 8227 7302</a></p>
+        <div class="sozial">
+          <a class="knopf" href="https://www.instagram.com/trojan.performance/" rel="noopener">Instagram</a>
+          <a class="knopf" href="https://www.facebook.com/trojanperformanceofficial" rel="noopener">Facebook</a>
+          <a class="knopf" href="https://www.youtube.com/channel/UChUZebvjDwrWEdOCa86xNiA" rel="noopener">YouTube</a>
+        </div>
       </div>
       <div>
         <h2>Noch nicht angebunden</h2>
         <ul class="offen">
-          <li>Das Kontaktformular verschickt nichts</li>
           <li>Kurse lassen sich hier nicht buchen</li>
-          <li>Kein Routenplaner hinterlegt</li>
           <li>Impressum fehlt</li>
           <li>Datenschutzerklärung fehlt</li>
         </ul>
@@ -1110,6 +891,10 @@ function zeichnen(daten,live){
   daten.forEach(function(e){
     if(e.tag>=0&&e.tag<7&&e.zeit) proTag[e.tag].push(e);
   });
+  /* Wie oft ein Kurs läuft, steht nicht mehr im Markup — es fällt aus der
+     Woche ab, die ohnehin geladen wird. So kann die Zahl nicht veralten. */
+  PRO_WOCHE={};
+  daten.forEach(function(e){ if(e.name) PRO_WOCHE[e.name]=(PRO_WOCHE[e.name]||0)+1; });
   proTag.forEach(function(l){ l.sort(function(a,b){ return minuten(a.zeit)-minuten(b.zeit); }); });
   var maxAnz=Math.max.apply(null,proTag.map(function(l){ return l.length; }))||1;
 
@@ -1147,11 +932,17 @@ function zeichnen(daten,live){
     if(liste.length){
       var ul=document.createElement('ul');
       liste.forEach(function(e){
-        var li=document.createElement('li'); li.className='zeile';
+        var li=document.createElement('li');
+        /* Die Zeile ist der Knopf: der Wochenplan trägt die Kursbeschreibung,
+           die es als eigenen Abschnitt nicht mehr gibt. */
+        var b=document.createElement('button'); b.className='zeile'; b.type='button';
+        b.setAttribute('aria-haspopup','dialog');
         var zt=document.createElement('span'); zt.className='zt'; zt.textContent=e.zeit;
         var zn=document.createElement('span'); zn.className='zn'; zn.textContent=e.name;
         var zd=document.createElement('span'); zd.className='zd'; zd.textContent=e.dauer+' min';
-        li.appendChild(zt); li.appendChild(zn); li.appendChild(zd);
+        b.appendChild(zt); b.appendChild(zn); b.appendChild(zd);
+        b.addEventListener('click',function(){ blattOeffnen(e); });
+        li.appendChild(b);
         ul.appendChild(li);
       });
       sp.appendChild(ul);
@@ -1231,24 +1022,67 @@ function zeichnen(daten,live){
 })();
 
 /* ─────────────────────────────────────────────────────────────────────
-   5. Formular — es sagt, was es ist: an nichts angebunden.
+   5. Das Kursblatt. Der Kurskatalog ist als Abschnitt gestrichen; die
+      Beschreibungen hängen jetzt an den Zeilen des Wochenplans. Antippen
+      genügt. Die Häufigkeit kommt aus der geladenen Woche, die
+      Gruppengrösse aus der Kursliste des Betreibers.
    ───────────────────────────────────────────────────────────────────── */
-(function(){
-  var f=document.getElementById('form');
-  if(!f) return;
-  f.addEventListener('submit',function(e){
-    e.preventDefault();
-    var d=new FormData(f);
-    var betreff=(d.get('anliegen')||'Anfrage')+' — '+(d.get('name')||'ohne Namen');
-    var koerper=(d.get('text')||'')+'\n\n'+(d.get('name')||'')+'\n'+(d.get('mail')||'');
-    var a=document.getElementById('mailtoLink');
-    if(a) a.href='mailto:office@trojanperformance.at?subject='+encodeURIComponent(betreff)+
-                 '&body='+encodeURIComponent(koerper);
-    var h=document.getElementById('hinweis');
-    h.setAttribute('data-an','1');
-    h.scrollIntoView({block:'nearest'});
+var PRO_WOCHE={};
+var KURSBLATT={
+ 'Performance':{p:'12–16 Plätze',f:16/24,
+   d:'Crosstraining aus Powerlifting, Weightlifting, Gymnastics, Calisthenics, Strongman und Ausdauer. Die Reize sind nicht willkürlich kombiniert, sondern folgen einer periodisierten Planung.'},
+ 'FBB/Strength & Power':{p:'16 Plätze',f:16/24,
+   d:'Muskelaufbau nach festem Schema, kombiniert mit kurzen intensiven Ausdauerblöcken. Kraft und Ausdauer in einer Einheit.'},
+ 'Powercircle':{p:'24 Plätze',f:1,
+   d:'Airbike, SkiErg, Schlitten, Jump-Box, Battle-Rope, Wallballs im Wechsel. Kurze harte Intervalle, kurze Pausen. Technisch anspruchslos, deshalb auch für Einsteiger geeignet.'},
+ 'Mama reloaded':{p:null,f:0,
+   d:'Wiedereinstieg nach der Schwangerschaft. Beckenboden, Rumpf und Kraft in einem Tempo, das sich an den Tag anpasst.'},
+ 'Hyrox':{p:'24 Plätze',f:1,
+   d:'Vorbereitung auf das Rennformat, das weltweit unter denselben Bedingungen läuft — für Open, Pro, Doubles und Relay. Für jedes Level, vom Einstieg bis zum Wettkampf.'},
+ 'Team-WOD':{p:'16 Plätze',f:16/24,
+   d:'Zu zweit mit deinem Trainingsbuddy. Jede Woche ein anderes Workout, Intensität und Schwierigkeitsgrad werden auf euch beide angepasst.'},
+ 'FBB':{p:'12 Plätze',f:12/24,
+   d:'Nach dem gemeinsamen Warm-up wählst du Ober- oder Unterkörper, je vier Übungen mit vorgegebenen Sätzen, Wiederholungen und Pausen. Zum Abschluss eine kurze, intensive Belastung.'},
+ 'Community TeamWOD':{p:'24 Plätze',f:1,
+   d:'Team-Workout in grosser Runde. Jede Woche ein anderes Programm, Intensität und Schwierigkeitsgrad individuell angepasst.'}
+};
+
+function wertZeile(marke,anteil,text,leer){
+  var d=document.createElement('div'); d.className='wert';
+  var l=document.createElement('span'); l.className='wl'; l.textContent=marke;
+  var b=document.createElement('span'); b.className='balken'+(leer?' leer':'');
+  var i=document.createElement('i'); i.style.setProperty('--f',anteil); b.appendChild(i);
+  var z=document.createElement('span'); z.className='wz'; z.textContent=text;
+  d.appendChild(l); d.appendChild(b); d.appendChild(z);
+  return d;
+}
+
+var blatt=document.getElementById('kursblatt');
+function blattOeffnen(e){
+  if(!blatt) return;
+  var i=KURSBLATT[e.name]||null;
+  var n=PRO_WOCHE[e.name]||1;
+  document.getElementById('kb-name').textContent=e.name;
+  document.getElementById('kb-prof').textContent=n+'× pro Woche · '+e.dauer+' Minuten';
+  document.getElementById('kb-txt').textContent = i ? i.d
+    : 'Für diesen Termin liegt noch keine Beschreibung vor. Ruf an, dann sagen wir dir, was dich erwartet.';
+  var w=document.getElementById('kb-werte');
+  w.textContent='';
+  w.appendChild(wertZeile('Läuft', Math.min(n,7)/7, n+'× / Woche'));
+  if(i&&i.p) w.appendChild(wertZeile('Gruppe', i.f, i.p));
+  document.getElementById('kb-mass').textContent =
+    i&&i.p ? 'Balken: «Läuft» gegen sieben pro Woche, «Gruppe» gegen 24 Plätze.'
+           : 'Balken: «Läuft» gegen sieben pro Woche. Gruppengrösse nicht angegeben.';
+  blatt.showModal();
+}
+if(blatt){
+  document.getElementById('kbZu').addEventListener('click',function(){ blatt.close(); });
+  /* Klick auf den Grund neben dem Blatt schliesst es ebenfalls. */
+  blatt.addEventListener('click',function(e){ if(e.target===blatt) blatt.close(); });
+  blatt.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(){ blatt.close(); });
   });
-})();
+}
 
 /* ─────────────────────────────────────────────────────────────────────
    6. Platzhalter-Links dürfen nicht an den Seitenanfang springen.

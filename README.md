@@ -1,9 +1,50 @@
-# Trojan Performance — achtzehn Entwürfe
+# Trojan Performance — neunzehn Entwürfe
 
 Startseiten-Entwürfe für [trojanperformance.at](https://www.trojanperformance.at/),
 statisch gehostet auf GitHub Pages.
 
-## Erste Runde
+## Der Schnitt
+
+Achtzehn Entwürfe lang war reduziert worden, was man sieht — Farbe, Bild, Rahmen — und
+nie, was dasteht. Gemessen trug `stele`, der ausdrücklich als „Arena radikal reduziert"
+gebaut war, **mehr** Text als Arena selbst (928 gegen 788 sichtbare Wörter). Das Ergebnis
+sah karg aus und las sich dicht.
+
+Seit dem Schnitt gilt ein anderer Maßstab: Eine Angabe bleibt, wenn sie **vor** der
+Entscheidung für ein Probetraining gebraucht wird. Drei Fragen darf der Besucher nicht
+suchen müssen — *passt das in meine Woche*, *was kostet es*, *ist das etwas für mich*.
+Alles Übrige ist gestrichen oder liegt hinter einer Bedienhandlung.
+
+| Weg | Dahinter |
+|---|---|
+| HYROX als eigener Abschnitt samt acht Rennstationen | Preismatrix → eine Zahl frei, neun hinter einem Aufklapper |
+| Kurskatalog als eigener Abschnitt | Kursbeschreibungen → am Wochenplan antippbar |
+| Coach-Biografien, Zahlenleisten, Kurszeiten-Tabellen, Kontaktformulare | |
+
+Der Wochenplan aus dem Buchungssystem ist dabei nach vorn gerückt: Er ist das einzige
+Material, das wahr ist und sich selbst aktualisiert, und er **ist** die Kursliste.
+
+Was der Schnitt gebracht hat, in sichtbaren Wörtern:
+
+| Entwurf | vorher | nachher | | Entwurf | vorher | nachher |
+|---|---:|---:|---|---|---:|---:|
+| kern | 790 | **342** | | schrift | 1051 | **341** |
+| umbra | 788 | **342** | | schirm | 105 | **113** |
+| stele | 928 | **312** | | spalte | 1017 | **441** |
+| logbuch | 1035 | **386** | | quer | 901 | **370** |
+| protokoll | 1174 | **544** | | fluss | 1241 | **392** |
+| rotstift | 1060 | **413** | | spektrum | 810 | **392** |
+| satz | 645 | **272** | | grau | 1022 | **414** |
+| nacht | 1174 | **554** | | wende | 1466 | **581** |
+
+`schirm` ist der einzige, der nichts abgeben musste: seine Zwangsbedingung — alles auf
+einem Bildschirm — hatte den Schnitt vorweggenommen. Er ist die empirische Untergrenze,
+an der sich die übrigen messen.
+
+**Matrix, Phalanx und Arena bleiben auf Kundenwunsch unverändert**, damit der Unterschied
+sichtbar bleibt. Sie tragen deshalb weiterhin die Aussage „acht Kurse" (siehe unten).
+
+## Erste Runde — unverändert
 
 | | Entwurf | Charakter |
 |---|---|---|
@@ -12,17 +53,17 @@ statisch gehostet auf GitHub Pages.
 | C | [`arena/`](arena/) | dunkel, filmisch — Vollbild-Bühne, dann Zahlen, Preise, Coaches, Kurse |
 
 Aus der Abstimmung mit dem Betreiber: **Arena ist der Favorit**, Matrix die zweite Wahl.
-Daraus ergaben sich die beiden folgenden Runden.
 
 ## Zweite Runde — aus Arena entwickelt
 
 | | Entwurf | Frage, die er beantwortet |
 |---|---|---|
-| D | [`stele/`](stele/) | Wie weit lässt sich reduzieren? Keine Bühne, keine Einblendungen, zwei Fotos |
+| D | [`stele/`](stele/) | Wie weit lässt sich reduzieren? Keine Bühne, keine Einblendungen |
 | E | [`umbra/`](umbra/) | Muss das Schwarz so hart sein? Warmer Grund, Aufbau unverändert |
 
-Umbra ist bewusst eine reine Farbstudie: der Textinhalt ist zeichengleich mit Arena,
-damit der Vergleich nur eine Frage stellt.
+Umbra ist eine reine Farbstudie: sein sichtbarer Text ist **zeichengleich mit `kern`**,
+damit der Vergleich nur eine Frage stellt. Bezugspunkt war früher Arena; seit dem Schnitt
+ist es Kern.
 
 ## Dritte Runde — unabhängig entstanden
 
@@ -33,7 +74,8 @@ damit der Vergleich nur eine Frage stellt.
 | H | [`rotstift/`](rotstift/) | Papier, eine Farbe — das Rot des Korrekturstifts |
 
 Diese drei haben nur die Inhalte bekommen, nicht die anderen Entwürfe. Alle drei sind
-unabhängig voneinander auf hellen Grund gekommen.
+unabhängig voneinander auf hellen Grund gekommen — der Befund, der zur Regel führte,
+dass jeder weitere Entwurf ein eigenes Verbot bekommt.
 
 ## Vierte Runde — die Seite als Handlung
 
@@ -43,10 +85,6 @@ unabhängig voneinander auf hellen Grund gekommen.
 | J | [`nacht/`](nacht/) | protokoll in weichem Dunkelbraun, Aufbau unverändert |
 
 ## Fünfte und sechste Runde — je eine Zwangsbedingung
-
-Drei Entwürfe mit identischem Auftrag waren fast identisch geworden. Seither bekommt
-jeder Entwurf ein eigenes Verbot — das erzeugt die Streuung, die der gleiche Auftrag
-nicht erzeugt.
 
 | | Entwurf | Verbot bzw. Zwang |
 |---|---|---|
@@ -58,6 +96,16 @@ nicht erzeugt.
 | P | [`spektrum/`](spektrum/) | die echten Kursfarben des Buchungssystems als Farbsystem |
 | Q | [`grau/`](grau/) | kein einziger Farbwert, `r = g = b` überall |
 | R | [`wende/`](wende/) | zwei Fassungen in einer Seite, Einsteiger und Fortgeschrittene |
+
+## Siebte Runde — der Schnitt
+
+| | Entwurf | |
+|---|---|---|
+| S | [`kern/`](kern/) | Arena auf das gekürzt, was vor der Entscheidung gebraucht wird |
+
+Kern ist die Vorlage, an der der Schnitt zuerst durchgespielt wurde: gleiche Farben,
+gleiche Schrift, gleiche Keile — 790 → 342 Wörter, 20 → 9 Bilder, Seitenhöhe am Desktop
+von 10044 auf 4860 px.
 
 ## Bauen
 
@@ -75,7 +123,7 @@ Bearbeitet wird immer `src/`, nie die generierten `index.html`.
 Lokal ansehen:
 
 ```bash
-python3 -m http.server 8099
+python3 -m http.server 8099 --bind 127.0.0.1
 ```
 
 ## Aufbau
@@ -84,7 +132,7 @@ python3 -m http.server 8099
 src/          Quellen mit Platzhaltern — hier wird editiert
 assets/       Fotos und Logo von trojanperformance.at, Vorschaubilder
 build.sh      Platzhalter -> Pfade, WebP-Zwillinge
-index.html    Übersicht mit Links auf die achtzehn Entwürfe
+index.html    Übersicht mit Links auf die neunzehn Entwürfe
 ```
 
 Jeder Entwurf ist eine einzelne HTML-Datei mit eingebettetem CSS und JS. Keine
@@ -93,18 +141,25 @@ liegen unter `assets/fonts/` und werden vom eigenen Host geladen.
 
 ## Offene Punkte
 
-- Die Kraft-/Ausdauer-/Technik-Werte der acht Kurse sind **erfunden** — die drei Achsen
-  sind die Gliederung des Gyms, die Zahlen darin nicht abgestimmt.
+- **„Acht Kurse" stimmt nicht.** Die Buchungsschnittstelle liefert in vier geprüften
+  Wochen (10.8., 17.8., 24.8., 31.8.2026) durchgehend einen neunten regelmäßigen Kurs:
+  *Fenja Power Yoga*, sonntags. Dazu Einzeltermine (*deadly dozen im Europapark*,
+  *Kriso Farewell TeamWOD*) und ein *Firmentraining*-Slot. Aus allen geschnittenen
+  Entwürfen ist die Zahl entfernt statt korrigiert — „neun" wäre geraten. **Matrix,
+  Phalanx und Arena tragen sie weiter**, weil sie auf Kundenwunsch unverändert bleiben.
+  Zu klären: Ist Power Yoga ein eigener Kurs, eine Fremdanmietung, oder gehört er nicht
+  in die Gruppe „Kurse"?
+- „Sechs Tage" ist überall auf **sieben** korrigiert. Die Belege haben sich verschoben:
+  der Sonntagstermin ist inzwischen Power Yoga, nicht mehr *Mama reloaded*. Die Aussage
+  bleibt richtig, die Begründung ist eine andere.
+- Die Kraft-/Ausdauer-/Technik-Werte der Kurse waren **erfunden** und sind mit dem
+  Schnitt aus allen Entwürfen verschwunden. Falls sie zurückkommen sollen, müssen sie
+  vom Betreiber kommen.
 - Die Beschreibung von *Mama reloaded* ist **Platzhalter**.
-- „Sechs Tage" ist überall auf **sieben** korrigiert: die Schnittstelle liefert über
-  fünf geprüfte Wochen durchgehend einen Sonntagstermin (Mama reloaded, 09:30), und der
-  Wochenplan derselben Seiten zeigt sieben Spalten. Sollte der Sonntagskurs wegfallen,
-  ist die Zahl erneut zu prüfen — sie steht fest im Text, nicht abgeleitet.
 - Der Zusatz „Und wenn drei nicht gehen: zwei gehen auch." ist auf Kundenwunsch aus
   allen Entwürfen entfernt.
 - Auf der Live-Seite stehen die Open-Gym-Zeiten an zwei Stellen unterschiedlich
   (22:00 bzw. 21:00, Samstag 06:00–21:00 bzw. 08:00–11:00). Ungeklärt.
-- Das FAQ der Live-Seite spricht von „7 Trainingskursen", aufgelistet sind acht.
 - Offen bleiben Kundenstimmen und was als triftiger Grund für eine Vertragsübertragung
   gilt.
 - Vor einem echten Livegang jede Zahl gegen die Angaben des Kunden prüfen.
