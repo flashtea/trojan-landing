@@ -1,4 +1,4 @@
-# Trojan Performance — zwanzig Entwürfe
+# Trojan Performance — einundzwanzig Entwürfe
 
 Startseiten-Entwürfe für [trojanperformance.at](https://www.trojanperformance.at/),
 statisch gehostet auf GitHub Pages.
@@ -6,7 +6,7 @@ statisch gehostet auf GitHub Pages.
 ## Engere Auswahl
 
 Fünf Entwürfe stehen zur Abstimmung: **arena**, **matrix**, **phalanx** — die drei aus
-der ersten Runde — sowie **rotstift** und **puls**. Die übrigen fünfzehn liegen in der
+der ersten Runde — sowie **rotstift** und **puls**. Die übrigen sechzehn liegen in der
 Übersicht darunter als Studien: Zwischenstände, aus denen die fünf hervorgegangen sind,
 keine Kandidaten.
 
@@ -126,6 +126,42 @@ Kern ist die Vorlage, an der der Schnitt zuerst durchgespielt wurde: gleiche Far
 gleiche Schrift, gleiche Keile — 790 → 342 Wörter, 20 → 9 Bilder, Seitenhöhe am Desktop
 von 10044 auf 4860 px.
 
+## Achte Runde — ein fremdes Farbsystem
+
+| | Entwurf | |
+|---|---|---|
+| U | [`leise/`](leise/) | Rotstift in der Palette der HybridX-Startseite |
+
+Reine Farbstudie, wie `umbra` eine ist: Aufbau, Raster, Schrift und Text sind die von
+`rotstift`, **zeichengleich** — beide zählen 409 Wörter. Getauscht ist nur das
+Farbsystem, damit der Vergleich eine einzige Frage stellt.
+
+Übernommen sind die Werte der HybridX-Startseite (`frontend/src/styles.scss`, dort „the
+quiet language") — Grund `#141417`, Tinte `#e9e5db`, gedämpft `#9b958a`, Haarlinie
+`rgba(222,217,204,.12)` — und die Regeln, die daran hängen: eine flache Fläche statt
+Karten, Trennung durch Haarlinie und Abstand, Hierarchie aus Grösse und Gewicht statt
+aus Farbe, und **der Akzent höchstens einmal je Bildschirm**.
+
+Der Akzent ist bei HybridX ein Bernstein; hier bleibt es das Blau der Livesite. Das ist
+die einzige Stelle, an der der Entwurf nicht von dort abschreibt.
+
+Was der Tausch kostet, ist die eigentliche Aussage: `rotstift` trägt sein Blau auf jeder
+Abschnittsnummer, jeder Randnotiz, jeder Coach-Rolle. Unter „einmal je Bildschirm"
+bleiben fünf Stellen — die gefüllte Schaltfläche, die eingekreiste `150 €`, das
+hervorgehobene „mit dir", der gewählte Wochentag, das Etikett „Empfehlung". Der Rest
+steht in Grau.
+
+Drei Werte weichen bewusst ab; die Gründe stehen im Quelltext:
+
+| | |
+|---|---|
+| Akzent `#6a9edc` statt `#3971b7` | Die offizielle Farbe kommt auf diesem Grund auf 3,69:1. Aufgehellt ist nur der Hellwert (47 % → 64 %), Farbton und Sättigung bleiben — 6,60:1 gegen den Grund, 6,80:1 für den Text auf gefüllter Fläche. `--akzent-tief` führt den amtlichen Wert weiter mit. |
+| zwei Graustufen statt drei | HybridX' drittes Grau (`#5c5850`) käme hier auf 2,60:1, im blausten Band des Verlaufs auf 2,32:1. Rotstifts Grau lag auf Papier bei 4,95:1. |
+| Wandbild dunkler | Weisse Kreide auf hellem Putz — bei rotstifts Werten ein 1440 px breites Weissband über dem Fuss. |
+
+Der Blaustich über dem Heldenbild fällt weg: er war eine Farbentscheidung, und im neuen
+System hat die Farbe nur eine Aufgabe.
+
 ## Bauen
 
 ```bash
@@ -151,7 +187,7 @@ python3 -m http.server 8099 --bind 127.0.0.1
 src/          Quellen mit Platzhaltern — hier wird editiert
 assets/       Fotos und Logo von trojanperformance.at, Vorschaubilder
 build.sh      Platzhalter -> Pfade, WebP-Zwillinge
-index.html    Übersicht: vier Entwürfe gross, fünfzehn Studien als Kontaktbogen
+index.html    Übersicht: fünf Entwürfe gross, sechzehn Studien als Kontaktbogen
 ```
 
 `index.html` wird **nicht** von `build.sh` erzeugt und ist von Hand zu pflegen. Kommt ein
@@ -188,7 +224,9 @@ liegen unter `assets/fonts/` und werden vom eigenen Host geladen.
   `--e-global-color-accent`). Auf dem Papierton kommt es auf **4,36:1** — knapp unter
   den 4,5:1, die für kleinen Text gefordert sind; das Rot lag bei 4,87:1. Betroffen sind
   nur die kleinen Mono-Zeilen, nicht die grossen. Zu klären: offizielle Farbe unverändert
-  lassen oder für kleinen Text abdunkeln.
+  lassen oder für kleinen Text abdunkeln. `leise` beantwortet dieselbe Frage für dunklen
+  Grund in die andere Richtung — Farbton und Sättigung bleiben, nur der Hellwert wandert.
+  Dieselbe Rechnung liesse sich auf dem Papier von `rotstift` anwenden.
 - Der Zusatz „Und wenn drei nicht gehen: zwei gehen auch." ist auf Kundenwunsch aus
   allen Entwürfen entfernt.
 - Auf der Live-Seite stehen die Open-Gym-Zeiten an zwei Stellen unterschiedlich

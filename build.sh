@@ -60,6 +60,9 @@ SEITEN = {
     # siebte Runde: Bewegung als Mittel, nicht als Zierde — ein Takt, aus dem
     # jede Dauer und jeder Zustandswechsel abgeleitet ist.
     'trojan-T-puls.src.html':      'puls',
+    # achte Runde: dieselbe Seite, ein fremdes Farbsystem — rotstift in der
+    # Palette der HybridX-Startseite, Blau statt deren Bernstein.
+    'trojan-U-leise.src.html':     'leise',
 }
 
 FEST = {
