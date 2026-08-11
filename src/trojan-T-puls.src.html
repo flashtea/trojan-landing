@@ -152,8 +152,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
    mit einer leeren Reihe darin. Den weichen Weg macht der View Transition,
    deshalb braucht es hier keinen Übergang. */
 .kopf.ueber .btn{display:none}
-.kopf .btn{view-transition-name:kopfcta}
-::view-transition-group(kopfcta){animation-duration:calc(var(--takt)/6)}
+
 .kopf-innen{display:flex;align-items:center;justify-content:space-between;gap:12px 30px;
   min-height:64px;padding-block:6px;flex-wrap:wrap}
 .logo{height:29px;width:auto;filter:brightness(0) invert(1)}
@@ -164,7 +163,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   display:inline-flex;align-items:center;min-height:44px;
   transition:color calc(var(--takt)/12) ease}
 .kopf-nav a:hover{color:#fff}
-.kopf-nav{view-transition-name:kopfnav}
 /* Unter 1000 px bricht die Leiste um, statt Punkte zu verlieren. Solange die
    Schaltfläche zurückgehalten wird, steht rechts aber Platz frei: dann rücken
    die Punkte neben die Marke, statt eine halbleere zweite Zeile aufzumachen.
@@ -184,9 +182,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   .kopf.ueber .kopf-nav{display:flex;order:0;flex-basis:auto;margin-left:auto;
     justify-content:flex-end;gap:clamp(12px,3.6vw,26px)}
 }
-::view-transition-group(kopfnav){animation-duration:calc(var(--takt)/6)}
-::view-transition-old(kopfnav),::view-transition-new(kopfnav){
-  animation-duration:calc(var(--takt)/6);animation-timing-function:cubic-bezier(.2,.8,.3,1)}
+
 .spur{height:3px;background:rgba(255,255,255,.12);overflow:hidden;
   transition:opacity calc(var(--takt)/8) ease}
 /* Über der Bühne ist die Spur leer — sie zeigt Fortschritt, und den gibt es
@@ -865,10 +861,13 @@ function kaskade(){
 (function(){
   const fuehler=document.querySelector('.hero'), kopf=document.querySelector('.kopf');
   if(!fuehler||!kopf) return;
+  /* Ohne View Transition. Ein Übergang nimmt jedes benannte Element mit auf,
+     also auch den Wochenplan und die Preise — und die wischten bei jedem
+     Zustandswechsel der Leiste neu auf, mitten im Scrollen. Die Leiste wechselt
+     ihre Anordnung jetzt hart; sichtbar ist davon nichts, weil am Telefon
+     ohnehin entweder die Punkte oder die Aufforderung dastehen und nie beide. */
   new IntersectionObserver(([e])=>{
-    const oben=e.isIntersecting;
-    if(kopf.classList.contains('ueber')===oben) return;
-    wechsel(()=>kopf.classList.toggle('ueber',oben));
+    kopf.classList.toggle('ueber',e.isIntersecting);
   },{rootMargin:'-70px 0px 0px 0px'}).observe(fuehler);
 })();
 
