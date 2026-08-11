@@ -283,7 +283,6 @@ h1 em,h2 em{font-style:normal;color:var(--blau-hoch)}
    Tage nebeneinander, auf schmalen einer, umgeschaltet über die Leiste. */
 .plan-kopf{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .live{display:inline-flex;align-items:center;gap:8px}
-.live b{display:block;width:7px;height:7px;border-radius:50%;background:var(--blau);flex:none}
 .tabs{display:flex;gap:4px;margin-top:clamp(22px,3vw,32px)}
 .tabs button{flex:1 1 0;min-width:0;min-height:46px;font-family:var(--mono);font-size:12px;
   letter-spacing:.1em;text-transform:uppercase;box-shadow:inset 0 0 0 1px rgba(16,18,21,.18);
@@ -291,8 +290,6 @@ h1 em,h2 em{font-style:normal;color:var(--blau-hoch)}
   transition:background-color calc(var(--takt)/12) ease,color calc(var(--takt)/12) ease}
 .tabs button:hover{background:rgba(16,18,21,.06)}
 .tabs button[aria-pressed=true]{background:var(--dunkel);color:var(--hell);box-shadow:none}
-.tabs .heute{display:block;width:6px;height:6px;border-radius:50%;background:var(--blau)}
-.tabs button[aria-pressed=true] .heute{background:var(--blau-hoch)}
 @media(min-width:861px){.tabs{display:none}}
 
 /* Die Woche steht als Spalte je Tag, wie in rotstift: der Tag ist die Einheit,
@@ -307,7 +304,6 @@ h1 em,h2 em{font-style:normal;color:var(--blau-hoch)}
   font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.16em;
   text-transform:uppercase;padding:11px 12px;
   background:var(--dunkel);color:var(--hell)}
-.tag-panel h3 .heute{display:block;width:6px;height:6px;border-radius:50%;background:var(--blau-hoch)}
 .tag-panel ul{list-style:none}
 .tag-panel li{border-top:1px solid rgba(16,18,21,.14);min-width:0}
 .tag-panel li:first-child{border-top:0}
@@ -500,7 +496,7 @@ h1 em,h2 em{font-style:normal;color:var(--blau-hoch)}
   <div class="huelle">
     <div class="plan-kopf">
       <h2 class="zug">Wann trainierst <em>du?</em></h2>
-      <p class="mono live zug v1"><b id="live-punkt" hidden></b><span id="plan-quelle">Diese Woche aus dem Buchungssystem</span></p>
+      <p class="mono live zug v1"><span id="plan-quelle">Diese Woche aus dem Buchungssystem</span></p>
     </div>
 
     <!-- Der Antipp-Hinweis steht für etwas, das es ohne Skript nicht gibt, und
@@ -668,25 +664,6 @@ function wechsel(fn){
   t.ready.catch(still); t.finished.catch(still); t.updateCallbackDone.catch(still);
 }
 
-/* Der Puls. Zwei Punkte schlagen auf dieser Seite: der eine sagt, dass der
-   Plan gerade wirklich aus dem Buchungssystem kommt, der andere markiert den
-   heutigen Tag. Beide entstehen zu verschiedenen Zeitpunkten — der eine beim
-   Zeichnen, der andere erst, wenn die Abfrage zurück ist. Zwei CSS-Animationen
-   liefen deshalb gegeneinander. startTime auf denselben Ursprung zu setzen,
-   kann nur die Web-Animations-API: danach schlagen sie im selben Takt,
-   unabhängig davon, wann sie angelegt wurden. */
-function pulsen(el){
-  if(ruhig.matches) return;
-  const a=el.animate([
-    {transform:'scale(1)',opacity:1},
-    {transform:'scale(2.1)',opacity:.15,offset:.22},
-    {transform:'scale(1)',opacity:1,offset:.55},
-    {transform:'scale(1)',opacity:1}
-  ],{duration:TAKT/2,iterations:Infinity,easing:'cubic-bezier(.2,.8,.3,1)'});
-  a.startTime=0;
-  return a;
-}
-
 /* ---- Kursbeschreibungen ---------------------------------------------------
    Der Kurskatalog ist als Abschnitt gestrichen; die Texte hängen jetzt am
    Termin. Wer wissen will, was ein Kurs ist, tippt ihn dort an, wo er ohnehin
@@ -785,7 +762,6 @@ function zeichnen(evts,live){
     panel.id='tag-'+t;
     panel.setAttribute('aria-label',LANG[t]);
     const h=el('h3',null,live?(KURZ[t]+' · '+datum(t)):KURZ[t]);
-    if(t===heute){ const pkt=el('span','heute'); h.appendChild(pkt); pulsen(pkt); }
     panel.appendChild(h);
 
     const ul=document.createElement('ul');
@@ -814,7 +790,6 @@ function zeichnen(evts,live){
     tb.dataset.tag=t;
     tb.setAttribute('aria-pressed',t===aktiverTag?'true':'false');
     tb.setAttribute('aria-label',LANG[t]);
-    if(t===heute){ const pkt=el('span','heute'); tb.appendChild(pkt); pulsen(pkt); }
     tb.addEventListener('click',()=>wechsel(()=>tagWaehlen(t)));
     tabs.appendChild(tb);
   });
@@ -822,9 +797,6 @@ function zeichnen(evts,live){
   kaskade();
   document.getElementById('plan-fuss').hidden=false;
 
-  const punkt=document.getElementById('live-punkt');
-  punkt.hidden=!live;
-  if(live) pulsen(punkt);
   document.getElementById('plan-quelle').textContent=live
     ? 'Diese Woche · live aus dem Buchungssystem'
     : 'Diese Woche aus dem Buchungssystem';
