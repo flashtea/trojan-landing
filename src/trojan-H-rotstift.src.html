@@ -141,8 +141,7 @@ figure.bild img{width:100%;filter:grayscale(1) contrast(1.1) brightness(1.04)}
    es getönt und nicht eingefärbt. Die Deckkraft liegt bei einem knappen
    Drittel von Arenas 0,82: dort sitzt das Blau in einer schwarzen Umgebung,
    hier auf hellem Papier, und die Akzentfarbe soll ein Akzent bleiben und
-   nicht die Grundstimmung werden. Beim Überfahren löst sich der Stich und das
-   Foto liegt frei, mit derselben Kurve und Dauer wie in Arena.
+   nicht die Grundstimmung werden.
    isolation:isolate hält das Blenden im Bild; ohne das mischt es sich mit dem
    Papier dahinter. */
 .blau{position:relative;isolation:isolate}
@@ -150,10 +149,18 @@ figure.bild img{width:100%;filter:grayscale(1) contrast(1.1) brightness(1.04)}
   content:"";position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(158deg,#78B0F2 0%,#2A5FA0 44%,#12243A 100%);
   mix-blend-mode:color;opacity:.26;
-  transition:opacity .45s cubic-bezier(.2,.7,.3,1);
 }
-.blau:hover::after{opacity:0}
-@media(prefers-reduced-motion:reduce){.blau::after{transition:none}}
+/* Die Speerspitze aus der Wortmarke, als diagonaler Streifen über dem Bild —
+   dasselbe Element wie in Arenas Bühne, samt heller Kante an der Schräge. Ein
+   eigenes Element und kein Pseudo: die Farblage darüber ist schon ::after, und
+   ::before läge unter dem Bild. z-index hebt den Keil über die Farblage, sonst
+   würde die ihn mit einfärben. */
+.keil{
+  position:absolute;right:0;top:0;bottom:0;width:44%;z-index:2;pointer-events:none;
+  background:linear-gradient(200deg,rgba(111,170,240,.42),rgba(57,113,183,.16) 55%,transparent 78%);
+  clip-path:polygon(38% 0,100% 0,100% 100%,0 100%);
+  filter:drop-shadow(-1px 0 0 rgba(150,196,255,.8));
+}
 
 /* ---------- Blöcke ---------- */
 .block{border-top:1px solid var(--tinte);padding:3.2rem 0 3.8rem}
@@ -446,6 +453,7 @@ figure.bild img{width:100%;filter:grayscale(1) contrast(1.1) brightness(1.04)}
         </div>
       </div>
       <figure class="bild blau">
+        <span class="keil" aria-hidden="true"></span>
         <img src="__PH_HERO__" width="1365" height="768" fetchpriority="high" alt="Trainingsfläche von oben: Hantelrack, dahinter eine Trainingsgruppe">
       </figure>
     </div>
