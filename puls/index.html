@@ -174,17 +174,27 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
    Flex-Anordnungen lassen sich nicht ineinander überführen, ein Übergang
    zwischen zwei Aufnahmen schon. Nur benannte Elemente werden aufgenommen,
    die Wurzel trägt view-transition-name:none. */
+/* Am Telefon bleibt die Leiste einzeilig, und die beiden Zustände teilen sich
+   den Platz: über der Bühne stehen die Punkte neben der Marke, denn die
+   Aufforderung steht ja in der Bühne. Danach übernimmt die Aufforderung und
+   die Punkte treten ab. Beides zugleich hiesse zwei Zeilen, und eine
+   zweizeilige feste Leiste nimmt am Telefon ein Sechstel des Bildschirms —
+   dauerhaft, für Sprungziele auf einer Seite, die man in zwanzig Sekunden
+   durchscrollt. */
 @media(max-width:1000px){
-  .kopf-nav{order:3;flex-basis:100%;margin-left:0;justify-content:space-between;gap:8px}
-  .kopf-innen{padding-block:12px 6px;min-height:0}
-  .kopf.ueber .kopf-nav{order:0;flex-basis:auto;margin-left:auto;
+  .kopf-nav{display:none}
+  .kopf.ueber .kopf-nav{display:flex;order:0;flex-basis:auto;margin-left:auto;
     justify-content:flex-end;gap:clamp(12px,3.6vw,26px)}
-  .kopf.ueber .kopf-innen{padding-block:6px;min-height:64px}
 }
 ::view-transition-group(kopfnav){animation-duration:calc(var(--takt)/6)}
 ::view-transition-old(kopfnav),::view-transition-new(kopfnav){
   animation-duration:calc(var(--takt)/6);animation-timing-function:cubic-bezier(.2,.8,.3,1)}
-.spur{height:3px;background:rgba(255,255,255,.12);overflow:hidden}
+.spur{height:3px;background:rgba(255,255,255,.12);overflow:hidden;
+  transition:opacity calc(var(--takt)/8) ease}
+/* Über der Bühne ist die Spur leer — sie zeigt Fortschritt, und den gibt es
+   dort noch nicht. Sichtbar blieb bisher trotzdem ihr Grund, als graue Kante
+   quer über das Bild. Sie tritt jetzt mit der Leiste zusammen an. */
+.kopf.ueber .spur{opacity:0}
 .spur i{display:block;height:100%;background:var(--blau);transform:scaleX(0);
   transform-origin:0 50%;will-change:transform}
 
