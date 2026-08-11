@@ -162,6 +162,17 @@ Drei Werte weichen bewusst ab; die Gründe stehen im Quelltext:
 Der Blaustich über dem Heldenbild fällt weg: er war eine Farbentscheidung, und im neuen
 System hat die Farbe nur eine Aufgabe.
 
+Eine Sache liess sich nicht übernehmen, sondern musste umgebaut werden. HybridX' feste
+Möblierung ist ein Schleier in Grundfarbe — dort sind das freistehende Kärtchen von rund
+hundert Pixeln, und dass sie ein paar Stufen neben dem Grund liegen, sieht niemand.
+Rotstifts Leiste läuft über die volle Breite: derselbe Schleier stand am rechten Rand
+gemessen auf `20,20,23`, während die Seite daneben auf `25,25,27` lag und im blausten
+Band auf `25,29,38`. Genau die zweite Fläche, die Regel 1 verbietet. Die Leiste trägt
+deshalb keinen eigenen Ton mehr, sondern denselben Verlauf, zurückgeschoben um die
+eigene Scrollhöhe — an ihrer Stelle zeigt sie den Himmel, den sie verdeckt. Über der
+Kante bleibt jetzt höchstens eine Stufe Unterschied, am Desktop wie am Telefon. Das Korn
+liegt dafür über der Leiste statt darunter.
+
 ## Bauen
 
 ```bash

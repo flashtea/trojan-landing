@@ -102,6 +102,14 @@
   --akzent-tief:#3971b7;
   --akzent-ink:#0b1119;
 
+  /* Der Verlauf steht als eigener Wert, weil ihn zwei Flächen tragen: der
+     Himmel über die ganze Strecke und die Leiste, die ihn an ihrer Stelle
+     nachzieht. Zwei Kopien wären zwei Wahrheiten, und die eine, die jemand
+     beim Ändern vergisst, ist die Naht. */
+  --verlauf:linear-gradient(180deg,
+    #131316 0%, #151519 16%, #16181f 40%,
+    #141a24 62%, #14202f 76%, #16191e 86%, #141417 100%);
+
   --mono:'IBM Plex Mono',ui-monospace,'SFMono-Regular',monospace;
   --grot:'Archivo',system-ui,sans-serif;
   --schwer:'Archivo Black','Archivo',system-ui,sans-serif;
@@ -141,9 +149,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
    und Bänder sind genau das, was die eine Fläche vermeiden soll. */
 .himmel{
   position:absolute;inset:0;z-index:-2;pointer-events:none;
-  background:linear-gradient(180deg,
-    #131316 0%, #151519 16%, #16181f 40%,
-    #141a24 62%, #14202f 76%, #16191e 86%, #141417 100%);
+  background-image:var(--verlauf);
 }
 .vignette{
   position:fixed;inset:0;z-index:-1;pointer-events:none;
@@ -154,7 +160,13 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
      5 rem; hier läuft die Wortmarke über 15,9 rem, und auf einer Fläche
      dieser Grösse liest sich dasselbe Korn als Druckraster statt als
      Papierton. */
-  position:fixed;inset:0;z-index:6;pointer-events:none;opacity:.042;
+  /* Über der Leiste, nicht unter ihr. Bei HybridX liegt das Korn unter der
+     Möblierung — dort sind das freistehende Kärtchen von hundert Pixeln, und
+     dass ihnen die Textur fehlt, sieht niemand. Rotstifts Leiste läuft über
+     die volle Breite: ohne Korn wäre sie das einzige glatte Feld der Seite
+     und läse sich als zweite Fläche. Der Sprunglink liegt darüber (99) und
+     bleibt sauber, der Dialog steht ohnehin in der obersten Ebene. */
+  position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.042;
   background-repeat:repeat;background-size:128px 128px;
 }
 
@@ -167,14 +179,31 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .skip:focus{left:0}
 
 /* ---------- Kopf ----------
-   Kein Balken, sondern Schrift, die über dem Inhalt schwebt: der Grund ist
-   fast, aber nicht ganz deckend, mit Unschärfe dahinter. Deckend genug, um
-   zu verdecken, durchlässig genug, um nicht als zweite Fläche zu lesen. */
+   Die Leiste muss den Inhalt verdecken, der unter ihr durchläuft — dafür
+   braucht sie einen deckenden Grund. Sie trug dafür einen Schleier in
+   --grund, und genau das war falsch: der Himmel läuft über die Strecke ins
+   Kühle, das Korn hebt die Fläche, und beides erreicht die Leiste nicht.
+   Gemessen am rechten Rand stand sie auf 20,20,23, während die Seite daneben
+   auf 25,25,27 lag und im blausten Band auf 25,29,38 — bis zu fünfzehn Stufen
+   Unterschied. Eine Leiste, die sich vom Grund abhebt, ist die zweite Fläche,
+   die Regel 1 gerade verbietet.
+   Sie trägt deshalb keinen eigenen Ton mehr, sondern denselben Verlauf,
+   zurückgeschoben um die eigene Scrollhöhe: an ihrer Stelle zeigt sie exakt
+   den Himmel, den sie verdeckt. Über der Kante bleibt jetzt höchstens eine
+   Stufe Unterschied.
+   Ohne Skript steht der Verlauf auf Viewporthöhe und Position null — die
+   Leiste zeigt den Ton vom Seitenanfang, und dort fängt ein Besucher ohne
+   Skript an. Die Unschärfe ist weg: hinter einer deckenden Fläche rechnet
+   sie nur. */
 .kopf{
   position:sticky;top:0;z-index:50;
-  background:rgba(20,20,23,.92);
-  -webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);
   border-bottom:1px solid var(--linie);
+}
+.kopf::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background-image:var(--verlauf);background-repeat:no-repeat;
+  background-size:100% var(--dokh,100vh);
+  background-position:0 calc(-1 * var(--rolle,0px));
 }
 .kopf-innen{display:flex;align-items:center;justify-content:space-between;min-height:54px}
 .marke{display:inline-flex;align-items:center;min-height:44px}
@@ -874,6 +903,31 @@ document.documentElement.classList.add('js');
     x.putImageData(im,0,0);
     document.getElementById('koernung').style.backgroundImage='url('+c.toDataURL()+')';
   }catch(_){}
+})();
+
+/* ---------- Die Leiste zieht den Himmel nach ----------
+   Gemessen wird der Himmel selbst, nicht scrollHeight: er ist die Fläche,
+   die der Verlauf füllt, und damit die einzige Höhe, die stimmen muss.
+   Der Beobachter fängt ab, dass die Seite später wächst — der Wochenplan
+   kommt aus dem Netz und baut sich neu, und mit ihm ändert sich die Höhe,
+   über die der Verlauf läuft. */
+(function(){
+  var k=document.querySelector('.kopf'), h=document.querySelector('.himmel');
+  if(!k||!h)return;
+  var offen=false;
+  function malen(){
+    offen=false;
+    k.style.setProperty('--rolle',(window.scrollY||0)+'px');
+  }
+  function messen(){
+    k.style.setProperty('--dokh',h.offsetHeight+'px');
+    malen();
+  }
+  function anfordern(){if(!offen){offen=true;requestAnimationFrame(malen);}}
+  messen();
+  addEventListener('scroll',anfordern,{passive:true});
+  addEventListener('resize',messen,{passive:true});
+  if('ResizeObserver' in window)new ResizeObserver(messen).observe(h);
 })();
 
 /* ---------- Platzhalter-Links ---------- */
