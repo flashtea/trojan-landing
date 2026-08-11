@@ -81,6 +81,14 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
    Skript bleibt sie sichtbar — der sichtbare Zustand ist der Grundzustand. */
 .kopf.ueber nav a[href="#probe"]{opacity:0;pointer-events:none}
 .kopf nav a[href="#probe"]{transition:opacity .28s ease}
+/* Der zurückgehaltene Punkt behält seinen Platz — sonst spränge die Leiste,
+   wenn er dazukommt. Stattdessen rückt die ganze Reihe um seine Breite nach
+   rechts und fährt beim Antreten nach links zurück. Verschoben wird die Reihe,
+   nicht ihre Breite: eine Bewegung, kein Umbruch. Die Breite misst das Skript,
+   weil sie an der Schrift hängt. */
+.kopf nav{transition:transform .32s cubic-bezier(.2,.8,.3,1)}
+.kopf.ueber nav{transform:translateX(var(--schub,0px))}
+.kopf{overflow-x:clip}
 
 /* ---------- Hero ---------- */
 .hero{padding-top:2.2rem}
@@ -850,6 +858,15 @@ function zusammenfassung(evts){
 (function(){
   var f=document.querySelector('.fuehler'), k=document.querySelector('.kopf');
   if(!f||!k||!('IntersectionObserver' in window))return;
+  var probe=k.querySelector('nav a[href="#probe"]');
+  function messen(){
+    if(!probe)return;
+    var stil=getComputedStyle(k.querySelector('nav'));
+    k.style.setProperty('--schub', (probe.offsetWidth + parseFloat(stil.gap||0)) + 'px');
+  }
+  messen();
+  addEventListener('resize',messen,{passive:true});
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(messen);
   new IntersectionObserver(function(e){k.classList.toggle('ueber',e[0].isIntersecting);}).observe(f);
 })();
 

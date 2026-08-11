@@ -64,6 +64,9 @@
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%;scroll-padding-top:90px}
+/* Unter 1000 px ist die Leiste zweizeilig, sobald die Schaltfläche dasteht —
+   ein Sprungziel muss unter beide Zeilen rutschen, nicht unter eine. */
+@media(max-width:1000px){html{scroll-padding-top:136px}}
 @media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
 body{background:var(--dunkel);color:var(--hell);font-family:var(--grot);font-weight:500;
   font-size:16px;line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
@@ -145,9 +148,13 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
    dieselbe Aufforderung im selben Bildschirm nimmt beiden das Gewicht, also
    tritt die in der Leiste erst an, wenn die im Bild weggescrollt ist. Sie
    verschwindet nur, sie rückt nicht — sonst springt die Leiste. */
-.kopf.ueber .btn{opacity:0;pointer-events:none;transform:translateY(-4px)}
-.kopf .btn{transition:opacity calc(var(--takt)/8) ease,transform calc(var(--takt)/8) ease,
-  background-color calc(var(--takt)/12) ease}
+/* display:none und nicht opacity:0 — versteckt, aber im Fluss, hielte die
+   Schaltfläche am Telefon ihre eigene Zeile und die Leiste bliebe 126 px hoch
+   mit einer leeren Reihe darin. Den weichen Weg macht der View Transition,
+   deshalb braucht es hier keinen Übergang. */
+.kopf.ueber .btn{display:none}
+.kopf .btn{view-transition-name:kopfcta}
+::view-transition-group(kopfcta){animation-duration:calc(var(--takt)/6)}
 .kopf-innen{display:flex;align-items:center;justify-content:space-between;gap:16px 30px;
   min-height:78px;padding-block:9px;flex-wrap:wrap}
 .logo{height:29px;width:auto;filter:brightness(0) invert(1)}
@@ -158,12 +165,24 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   display:inline-flex;align-items:center;min-height:44px;
   transition:color calc(var(--takt)/12) ease}
 .kopf-nav a:hover{color:#fff}
-/* Unter 1000 px bricht die Leiste um, statt Punkte zu verlieren: die vier
-   passen auf 360 px, sie standen nur alle links und liessen rechts Luft. */
+.kopf-nav{view-transition-name:kopfnav}
+/* Unter 1000 px bricht die Leiste um, statt Punkte zu verlieren. Solange die
+   Schaltfläche zurückgehalten wird, steht rechts aber Platz frei: dann rücken
+   die Punkte neben die Marke, statt eine halbleere zweite Zeile aufzumachen.
+   Der Weg zwischen beiden Anordnungen ist ein View Transition — zwei
+   Flex-Anordnungen lassen sich nicht ineinander überführen, ein Übergang
+   zwischen zwei Aufnahmen schon. Nur benannte Elemente werden aufgenommen,
+   die Wurzel trägt view-transition-name:none. */
 @media(max-width:1000px){
   .kopf-nav{order:3;flex-basis:100%;margin-left:0;justify-content:space-between;gap:8px}
   .kopf-innen{padding-block:12px 6px;min-height:0}
+  .kopf.ueber .kopf-nav{order:0;flex-basis:auto;margin-left:auto;
+    justify-content:flex-end;gap:clamp(12px,3.6vw,26px)}
+  .kopf.ueber .kopf-innen{padding-block:9px;min-height:78px}
 }
+::view-transition-group(kopfnav){animation-duration:calc(var(--takt)/6)}
+::view-transition-old(kopfnav),::view-transition-new(kopfnav){
+  animation-duration:calc(var(--takt)/6);animation-timing-function:cubic-bezier(.2,.8,.3,1)}
 .spur{height:3px;background:rgba(255,255,255,.12);overflow:hidden}
 .spur i{display:block;height:100%;background:var(--blau);transform:scaleX(0);
   transform-origin:0 50%;will-change:transform}
@@ -830,8 +849,11 @@ function kaskade(){
 (function(){
   const fuehler=document.querySelector('.fuehler'), kopf=document.querySelector('.kopf');
   if(!fuehler||!kopf) return;
-  new IntersectionObserver(([e])=>kopf.classList.toggle('ueber',e.isIntersecting))
-    .observe(fuehler);
+  new IntersectionObserver(([e])=>{
+    const oben=e.isIntersecting;
+    if(kopf.classList.contains('ueber')===oben) return;
+    wechsel(()=>kopf.classList.toggle('ueber',oben));
+  }).observe(fuehler);
 })();
 
 document.getElementById('plan-woche').addEventListener('click',e=>{
