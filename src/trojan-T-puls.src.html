@@ -196,7 +196,11 @@ h1 em,h2 em{font-style:normal;color:var(--blau-hoch)}
 .etikett{display:inline-flex;align-items:center;gap:9px;color:var(--blau-hoch);
   padding:8px 14px;background:rgba(57,113,183,.2);box-shadow:inset 0 0 0 1px rgba(110,168,234,.4)}
 .etikett b{display:block;width:5px;height:5px;background:currentColor;flex:none}
-.hero h1{margin-top:clamp(14px,2vw,22px)}
+/* Der Name füllt die Breite, statt in der für einen Satz gedachten Grösse zu
+   stehen: seit hier die Wortmarke steht und kein Satz mehr, ist die Zeile so
+   breit wie das Wort. 12.2vw hält „Performance" auch auf 360 px einzeilig. */
+.hero h1{margin-top:clamp(14px,2vw,22px);font-size:clamp(30px,10.4vw,92px);line-height:.94}
+@media(max-width:430px){.hero h1{font-size:10.4vw}}
 .knoepfe{display:flex;flex-wrap:wrap;gap:10px;margin-top:clamp(22px,3vw,34px)}
 @media(max-width:430px){.knoepfe .btn{flex:1 1 100%}}
 
@@ -396,7 +400,7 @@ h1 em,h2 em{font-style:normal;color:var(--blau-hoch)}
     <!-- „So empfiehlt es das Gym" stand hier und redete auf der eigenen Seite in
          der dritten Person über den Betreiber. Die Zeile ist weg; die Angaben,
          die sie trug, stehen als Tatsachen da. -->
-    <h1>Anfangen kannst du<br><em>diese Woche.</em></h1>
+    <h1>Trojan<br><em>Performance</em></h1>
     <p class="lead">Sieben Tage die Woche Kurse, in jeder Einheit ein Coach mit dir auf
       der Fläche. Vorkenntnisse braucht es keine.</p>
     <div class="knoepfe">
@@ -452,10 +456,10 @@ h1 em,h2 em{font-style:normal;color:var(--blau-hoch)}
   <div class="huelle">
     <p class="kopfzeile mono zug">Preise</p>
     <p class="preis-zahl zug">150 <small>€ im Monat</small></p>
-    <p class="lead zug v1">Drei Einheiten pro Woche, keine Einschreibgebühr; mit zwölf
-      Monaten Bindung 130 €.</p>
-    <p class="lead zug v1">Empfohlen für den Einstieg: zwei Einheiten für die Kraft, eine
-      für die Ausdauer. Nicht das billigste Gym der Stadt, dafür sparen wir nicht an
+    <p class="lead zug v1">Für drei Einheiten pro Woche, keine Einschreibgebühr, der
+      Kraftaufbauplan ist dabei. Mit zwölf Monaten Bindung sind es 130 €.</p>
+    <p class="lead zug v1">So ist der Einstieg gedacht: zwei Einheiten für die Kraft,
+      eine für die Ausdauer. Nicht das billigste Gym der Stadt, dafür sparen wir nicht an
       Betreuung, nicht an Zeit und nicht an Platz im Kurs.</p>
     <!-- Alles Weitere ist nicht weg, es steht nur nicht vor der einen Zahl,
          wegen der die meisten hier sind. -->
