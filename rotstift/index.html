@@ -152,17 +152,6 @@ figure.bild img{width:100%;filter:grayscale(1) contrast(1.1) brightness(1.04)}
   background:linear-gradient(158deg,#78B0F2 0%,#2A5FA0 44%,#12243A 100%);
   mix-blend-mode:color;opacity:.26;
 }
-/* Die Speerspitze aus der Wortmarke, als diagonaler Streifen über dem Bild —
-   dasselbe Element wie in Arenas Bühne, samt heller Kante an der Schräge. Ein
-   eigenes Element und kein Pseudo: die Farblage darüber ist schon ::after, und
-   ::before läge unter dem Bild. z-index hebt den Keil über die Farblage, sonst
-   würde die ihn mit einfärben. */
-.keil{
-  position:absolute;right:0;top:0;bottom:0;width:44%;z-index:2;pointer-events:none;
-  background:linear-gradient(200deg,rgba(111,170,240,.42),rgba(57,113,183,.16) 55%,transparent 78%);
-  clip-path:polygon(38% 0,100% 0,100% 100%,0 100%);
-  filter:drop-shadow(-1px 0 0 rgba(150,196,255,.8));
-}
 
 /* ---------- Blöcke ---------- */
 .block{border-top:1px solid var(--tinte);padding:3.2rem 0 3.8rem}
@@ -455,7 +444,6 @@ figure.bild img{width:100%;filter:grayscale(1) contrast(1.1) brightness(1.04)}
         </div>
       </div>
       <figure class="bild blau">
-        <span class="keil" aria-hidden="true"></span>
         <picture><source type="image/webp" srcset="../assets/o-hero.webp"><img src="../assets/o-hero.jpg" width="1365" height="768" fetchpriority="high" alt="Trainingsfläche von oben: Hantelrack, dahinter eine Trainingsgruppe"></picture>
       </figure>
     </div>
