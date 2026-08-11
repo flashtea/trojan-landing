@@ -136,9 +136,20 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
    und legt erst beim Scrollen ihren Grund an. Der Wechsel hängt an einem
    Fühler von einem Pixel Höhe ganz oben — billiger als ein Scroll-Behandler,
    der bei jedem Bild rechnet. */
-.kopf{position:fixed;inset:0 0 auto;z-index:100;background:transparent;
+.kopf{position:fixed;inset:0 0 auto;z-index:100;
+  background:rgba(16,18,21,.9);backdrop-filter:blur(16px);
   transition:background-color calc(var(--takt)/8) ease,backdrop-filter calc(var(--takt)/8) ease}
-.kopf.fest{background:rgba(16,18,21,.9);backdrop-filter:blur(16px)}
+/* Über der Bühne liegt die Leiste durchsichtig auf dem Bild. Der feste Grund
+   ist der Grundzustand und die Durchsicht der Sonderfall, nicht umgekehrt:
+   ohne Skript bleibt es damit bei der lesbaren Fassung. */
+.kopf.ueber{background:transparent;backdrop-filter:none}
+/* Über der Bühne steht „Probetraining" schon als Schaltfläche im Bild. Zweimal
+   dieselbe Aufforderung im selben Bildschirm nimmt beiden das Gewicht, also
+   tritt die in der Leiste erst an, wenn die im Bild weggescrollt ist. Sie
+   verschwindet nur, sie rückt nicht — sonst springt die Leiste. */
+.kopf.ueber .btn{opacity:0;pointer-events:none;transform:translateY(-4px)}
+.kopf .btn{transition:opacity calc(var(--takt)/8) ease,transform calc(var(--takt)/8) ease,
+  background-color calc(var(--takt)/12) ease}
 .kopf-innen{display:flex;align-items:center;justify-content:space-between;gap:16px 30px;
   min-height:78px;padding-block:9px;flex-wrap:wrap}
 .logo{height:29px;width:auto;filter:brightness(0) invert(1)}
@@ -821,7 +832,7 @@ function kaskade(){
 (function(){
   const fuehler=document.querySelector('.fuehler'), kopf=document.querySelector('.kopf');
   if(!fuehler||!kopf) return;
-  new IntersectionObserver(([e])=>kopf.classList.toggle('fest',!e.isIntersecting))
+  new IntersectionObserver(([e])=>kopf.classList.toggle('ueber',e.isIntersecting))
     .observe(fuehler);
 })();
 

@@ -1,20 +1,26 @@
-# Trojan Performance — neunzehn Entwürfe
+# Trojan Performance — zwanzig Entwürfe
 
 Startseiten-Entwürfe für [trojanperformance.at](https://www.trojanperformance.at/),
 statisch gehostet auf GitHub Pages.
 
 ## Engere Auswahl
 
-Vier Entwürfe stehen zur Abstimmung: **arena**, **matrix**, **phalanx** — die drei aus
-der ersten Runde — und **rotstift**. Die übrigen fünfzehn liegen in der Übersicht
-darunter als Studien: Zwischenstände, aus denen die vier hervorgegangen sind, keine
-Kandidaten.
+Fünf Entwürfe stehen zur Abstimmung: **arena**, **matrix**, **phalanx** — die drei aus
+der ersten Runde — sowie **rotstift** und **puls**. Die übrigen fünfzehn liegen in der
+Übersicht darunter als Studien: Zwischenstände, aus denen die fünf hervorgegangen sind,
+keine Kandidaten.
 
 Arena ist der Favorit des Betreibers, Matrix seine zweite Wahl. Rotstift ist der Favorit
 auf Gestalterseite und der einzige der vier, der den Schnitt bereits trägt — dieselbe
 Gestaltung, ein Drittel des Textes. Er trägt seit dem 10. August 2026 auch nicht mehr das
 Rot des Korrekturstifts, sondern das offizielle Blau der Livesite (`#3971b7`, im
 Elementor-Kit als `--e-global-color-accent`).
+
+`puls` ist der jüngste und mit Abstand knappste: Arenas Bühne samt Duoton und Keil,
+darunter die Woche in der einfachen Form aus `rotstift`, in eigener Farbgebung. Sein
+Zwang war die Bewegung — alles erscheint über die Scrollstrecke statt über einen
+Zeitgeber, und ohne Skript wie unter `prefers-reduced-motion` steht die Seite vollständig
+da.
 
 ## Der Schnitt
 
@@ -46,7 +52,7 @@ Was der Schnitt gebracht hat, in sichtbaren Wörtern:
 | stele | 928 | **312** | | spalte | 1017 | **441** |
 | logbuch | 1035 | **386** | | quer | 901 | **370** |
 | protokoll | 1174 | **544** | | fluss | 1241 | **392** |
-| rotstift | 1060 | **407** | | spektrum | 810 | **392** |
+| rotstift | 1060 | **409** | | spektrum | 810 | **392** |
 | satz | 645 | **272** | | grau | 1022 | **414** |
 | nacht | 1174 | **554** | | wende | 1466 | **581** |
 

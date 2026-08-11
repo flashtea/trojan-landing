@@ -50,6 +50,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .huelle{max-width:1200px;margin:0 auto;padding-left:var(--rand);padding-right:var(--rand)}
 
 /* ---------- Sprunglink ---------- */
+.fuehler{position:absolute;top:0;left:0;width:1px;height:1px}
 .skip{
   position:absolute;left:-9999px;top:0;z-index:99;
   font-family:var(--mono);font-size:.85rem;
@@ -76,6 +77,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .kopf nav a:hover{color:var(--akzent)}
 .kopf nav a.nur-breit{display:none}
 @media(min-width:720px){.kopf nav a.nur-breit{display:inline-flex}}
+/* „Probetraining" steht über dem Falz schon als Schaltfläche im Kopfbereich.
+   Zweimal dieselbe Aufforderung im selben Bildschirm nimmt beiden das Gewicht,
+   also tritt die in der Leiste erst an, wenn die andere weggescrollt ist. Ohne
+   Skript bleibt sie sichtbar — der sichtbare Zustand ist der Grundzustand. */
+.kopf.ueber nav a[href="#probe"]{opacity:0;pointer-events:none}
+.kopf nav a[href="#probe"]{transition:opacity .28s ease}
 
 /* ---------- Hero ---------- */
 .hero{padding-top:2.2rem}
@@ -402,6 +409,7 @@ figure.bild img{width:100%;filter:grayscale(1) contrast(1.1) brightness(1.04)}
 </style>
 </head>
 <body>
+<b class="fuehler" aria-hidden="true"></b>
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
 
 <header class="kopf">
@@ -515,7 +523,11 @@ figure.bild img{width:100%;filter:grayscale(1) contrast(1.1) brightness(1.04)}
       <div class="blockkopf auf">
         <span class="idx">03</span>
         <h2>Preise</h2>
-        <span class="recht">Keine Einschreibgebühr</span>
+        <!-- Hier stand „Keine Einschreibgebühr" ein zweites Mal, zwei Zeilen
+             über derselben Angabe in der Zeile unter dem Preis. Die Randnotiz
+             trägt jetzt die Angabe, die daneben fehlte: was die Zahl bedeutet,
+             wenn man sie auf die Einheit herunterrechnet. -->
+        <span class="recht">11,54 € je Einheit</span>
       </div>
       <div class="auf">
         <p class="zitat"><span class="markiert">150&nbsp;€<svg viewBox="0 0 100 48" aria-hidden="true" focusable="false"><path d="M10,25 C11,11 35,4 54,5 C76,6 93,12 92,25 C91,38 66,44 46,43 C26,42 8,36 9,26 C10,18 22,12 34,10"/></svg></span> im Monat.<br>Drei Mal die Woche.</p>
@@ -834,6 +846,14 @@ function zusammenfassung(evts){
   }
   return teile.join(' · ');
 }
+
+/* Fühler von einem Pixel am Seitenanfang: solange er im Bild ist, steht der
+   Besucher oben und die Leiste hält ihre Aufforderung zurück. */
+(function(){
+  var f=document.querySelector('.fuehler'), k=document.querySelector('.kopf');
+  if(!f||!k||!('IntersectionObserver' in window))return;
+  new IntersectionObserver(function(e){k.classList.toggle('ueber',e[0].isIntersecting);}).observe(f);
+})();
 
 function zeichnen(evts,live){
   var kurz=['Mo','Di','Mi','Do','Fr','Sa','So'];
