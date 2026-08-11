@@ -57,6 +57,9 @@ SEITEN = {
     # sechste Runde: nicht weniger Gestaltung, weniger Inhalt. Arena, auf das
     # gekuerzt, was vor der Entscheidung fuer ein Probetraining gebraucht wird.
     'trojan-S-kern.src.html':      'kern',
+    # siebte Runde: Bewegung als Mittel, nicht als Zierde — ein Takt, aus dem
+    # jede Dauer und jeder Zustandswechsel abgeleitet ist.
+    'trojan-T-puls.src.html':      'puls',
 }
 
 FEST = {
