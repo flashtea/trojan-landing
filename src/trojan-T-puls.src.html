@@ -121,8 +121,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     filter:grayscale(1) contrast(calc(1.04 + var(--zug) * .5)) brightness(calc(1.16 - var(--zug) * .5))}
   /* Die Kurve wird gezogen, während sie ins Bild kommt. */
   .kurve{animation:ziehen linear both;animation-timeline:view();animation-range:entry 10% cover 46%}
-  /* Trennlinien werden gezogen, nicht gezeichnet. */
-  .linie i{animation:fuellen linear both;animation-timeline:view();animation-range:entry 0% entry 90%}
 }}
 @supports(animation-timeline:scroll()){
 @media(prefers-reduced-motion:no-preference){
@@ -216,10 +214,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .band{position:relative;padding-block:clamp(52px,7.5vw,104px)}
 .band.dunkel{background:var(--dunkel);color:var(--hell)}
 .band.hell{background:var(--hell);color:var(--dunkel)}
-.linie{position:absolute;inset:0 0 auto;height:2px;overflow:hidden}
-.linie i{display:block;height:100%;transform:scaleX(0);transform-origin:0 50%;
-  background:repeating-linear-gradient(90deg,var(--blau) 0 14px,transparent 14px 28px)}
-
 h1,h2{font-family:var(--schwer);text-transform:uppercase;letter-spacing:-.035em;
   line-height:.94;text-wrap:balance}
 h1{font-size:clamp(34px,7.6vw,92px)}
@@ -444,7 +438,7 @@ h1 em,h2 em{font-style:normal;color:var(--blau-hoch)}
      erst), keine Übergänge, keine View Transitions. */
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;
     transition-duration:.01ms!important;scroll-behavior:auto!important}
-  .spur i,.linie i{transform:scaleX(1)}
+  .spur i{transform:scaleX(1)}
   .btn:active,.kurs:active{transform:none}
 }
 </style>
@@ -489,7 +483,6 @@ h1 em,h2 em{font-style:normal;color:var(--blau-hoch)}
 </section>
 
 <section class="band hell" id="plan">
-  <div class="linie" aria-hidden="true"><i></i></div>
   <div class="huelle">
     <div class="plan-kopf">
       <h2 class="zug">Wann trainierst <em>du?</em></h2>
@@ -512,7 +505,6 @@ h1 em,h2 em{font-style:normal;color:var(--blau-hoch)}
 </section>
 
 <section class="band dunkel" id="warum">
-  <div class="linie" aria-hidden="true"><i></i></div>
   <div class="huelle grund">
     <div>
       <p class="kopfzeile mono zug">Der Unterschied</p>
@@ -530,7 +522,6 @@ h1 em,h2 em{font-style:normal;color:var(--blau-hoch)}
 </section>
 
 <section class="band hell" id="preise">
-  <div class="linie" aria-hidden="true"><i></i></div>
   <div class="huelle">
     <p class="kopfzeile mono zug">Preise</p>
     <p class="preis-zahl zug">150 <small>€ im Monat</small></p>
@@ -571,7 +562,6 @@ h1 em,h2 em{font-style:normal;color:var(--blau-hoch)}
 </section>
 
 <section class="band dunkel" id="coaches">
-  <div class="linie" aria-hidden="true"><i></i></div>
   <div class="huelle">
     <h2 class="zug">Vier Coaches. Zwei davon <em>Brüder.</em></h2>
     <div class="coaches">
@@ -584,7 +574,6 @@ h1 em,h2 em{font-style:normal;color:var(--blau-hoch)}
 </section>
 
 <section class="band hell" id="start">
-  <div class="linie" aria-hidden="true"><i></i></div>
   <div class="huelle schluss">
     <h2 class="zug">Einmal <em>mittrainieren.</em></h2>
     <p class="lead zug v1">Eine Einheit, ein Coach, 75 Minuten. Vorkenntnisse brauchst du keine.
@@ -610,7 +599,6 @@ h1 em,h2 em{font-style:normal;color:var(--blau-hoch)}
 </dialog>
 
 <footer class="band dunkel">
-  <div class="linie" aria-hidden="true"><i></i></div>
   <div class="huelle">
     <div class="f-raster">
       <div>
