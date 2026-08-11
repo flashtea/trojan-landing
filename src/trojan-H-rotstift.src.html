@@ -48,7 +48,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .huelle{max-width:1200px;margin:0 auto;padding-left:var(--rand);padding-right:var(--rand)}
 
 /* ---------- Sprunglink ---------- */
-.fuehler{position:absolute;top:0;left:0;width:1px;height:1px}
 .skip{
   position:absolute;left:-9999px;top:0;z-index:99;
   font-family:var(--mono);font-size:.85rem;
@@ -64,8 +63,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 }
 .kopf-innen{display:flex;align-items:center;justify-content:space-between;min-height:54px}
 .marke{display:inline-flex;align-items:center;min-height:44px}
-.marke img{height:17px;width:auto}
-@media(min-width:720px){.marke img{height:26px}}
+.marke img{height:20px;width:auto}
+@media(min-width:720px){.marke img{height:30px}}
 .kopf nav{display:flex;gap:.1rem}
 .kopf nav a{
   display:inline-flex;align-items:center;min-height:44px;padding:0 .55rem;
@@ -415,7 +414,6 @@ figure.bild img{width:100%;filter:grayscale(1) contrast(1.1) brightness(1.04)}
 </style>
 </head>
 <body>
-<b class="fuehler" aria-hidden="true"></b>
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
 
 <header class="kopf">
@@ -853,10 +851,12 @@ function zusammenfassung(evts){
   return teile.join(' · ');
 }
 
-/* Fühler von einem Pixel am Seitenanfang: solange er im Bild ist, steht der
-   Besucher oben und die Leiste hält ihre Aufforderung zurück. */
+/* Beobachtet wird die Bühne, nicht der Seitenanfang: erst wenn sie ganz aus
+   dem Bild ist, ist die Aufforderung darin auch weg und die Leiste darf sie
+   übernehmen. Der negative obere Rand rechnet die feste Leiste heraus, sonst
+   gilt die Bühne noch als sichtbar, während sie schon dahinter steckt. */
 (function(){
-  var f=document.querySelector('.fuehler'), k=document.querySelector('.kopf');
+  var f=document.querySelector('.hero'), k=document.querySelector('.kopf');
   if(!f||!k||!('IntersectionObserver' in window))return;
   var probe=k.querySelector('nav a[href="#probe"]');
   function messen(){
@@ -867,7 +867,8 @@ function zusammenfassung(evts){
   messen();
   addEventListener('resize',messen,{passive:true});
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(messen);
-  new IntersectionObserver(function(e){k.classList.toggle('ueber',e[0].isIntersecting);}).observe(f);
+  new IntersectionObserver(function(e){k.classList.toggle('ueber',e[0].isIntersecting);},
+    {rootMargin:'-60px 0px 0px 0px'}).observe(f);
 })();
 
 function zeichnen(evts,live){

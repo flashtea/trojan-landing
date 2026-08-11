@@ -82,7 +82,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .mono{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
 .huelle{max-width:1240px;margin-inline:auto;padding-inline:var(--rand)}
 
-.fuehler{position:absolute;top:0;left:0;width:1px;height:1px}
 .skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--blau);color:#fff;
   font-family:var(--mono);font-size:13px;padding:14px 20px;text-decoration:none}
 .skip:focus{left:0}
@@ -157,8 +156,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .kopf.ueber .btn{display:none}
 .kopf .btn{view-transition-name:kopfcta}
 ::view-transition-group(kopfcta){animation-duration:calc(var(--takt)/6)}
-.kopf-innen{display:flex;align-items:center;justify-content:space-between;gap:16px 30px;
-  min-height:78px;padding-block:9px;flex-wrap:wrap}
+.kopf-innen{display:flex;align-items:center;justify-content:space-between;gap:12px 30px;
+  min-height:64px;padding-block:6px;flex-wrap:wrap}
 .logo{height:29px;width:auto;filter:brightness(0) invert(1)}
 .marke{display:inline-flex;align-items:center;min-height:44px}
 .kopf-nav{display:flex;gap:clamp(16px,2.6vw,34px);list-style:none;margin-left:auto}
@@ -180,7 +179,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   .kopf-innen{padding-block:12px 6px;min-height:0}
   .kopf.ueber .kopf-nav{order:0;flex-basis:auto;margin-left:auto;
     justify-content:flex-end;gap:clamp(12px,3.6vw,26px)}
-  .kopf.ueber .kopf-innen{padding-block:9px;min-height:78px}
+  .kopf.ueber .kopf-innen{padding-block:6px;min-height:64px}
 }
 ::view-transition-group(kopfnav){animation-duration:calc(var(--takt)/6)}
 ::view-transition-old(kopfnav),::view-transition-new(kopfnav){
@@ -452,7 +451,6 @@ h1 em,h2 em{font-style:normal;color:var(--blau-hoch)}
 </style>
 </head>
 <body>
-<b class="fuehler" aria-hidden="true"></b>
 <a class="skip" href="#inhalt">Zum Inhalt</a>
 
 <header class="kopf">
@@ -655,7 +653,13 @@ const ruhig=matchMedia('(prefers-reduced-motion: reduce)');
    Funktion, die den Zustand ändert, weiss davon nichts. */
 function wechsel(fn){
   if(ruhig.matches || !document.startViewTransition){ fn(); return; }
-  document.startViewTransition(fn);
+  const t=document.startViewTransition(fn);
+  /* Wird ein Übergang vom nächsten überholt, lehnt er seine Zusagen ab. Das
+     ist kein Fehler, sondern der Normalfall, seit die Kopfleiste beim Scrollen
+     umschaltet: zwei Zustandswechsel kurz hintereinander, der erste wird
+     verworfen. Unbehandelt steht die Ablehnung als AbortError in der Konsole. */
+  const still=()=>{};
+  t.ready.catch(still); t.finished.catch(still); t.updateCallbackDone.catch(still);
 }
 
 /* Der Puls. Zwei Punkte schlagen auf dieser Seite: der eine sagt, dass der
@@ -844,18 +848,20 @@ function kaskade(){
     {duration:TAKT/4,delay:i*(TAKT/16),easing:'cubic-bezier(.2,.8,.3,1)',fill:'backwards'}));
 }
 
-/* Der Fühler ist ein Pixel am Seitenanfang. Verlässt er das Bild, hat der
-   Besucher gescrollt und die Kopfleiste legt ihren Grund an. Ein Beobachter
-   statt eines Scroll-Behandlers: der rechnet nur beim Übertreten, nicht bei
-   jedem Bild. */
+/* Beobachtet wird die Bühne. Solange irgendein Teil von ihr im Bild ist, liegt
+   die Leiste durchsichtig darauf und hält ihre Aufforderung zurück — die steht
+   ja in der Bühne selbst. Erst wenn die Bühne ganz weg ist, legt die Leiste
+   ihren Grund an und übernimmt die Aufforderung. Ein Beobachter statt eines
+   Scroll-Behandlers: der rechnet nur beim Übertreten, nicht bei jedem Bild.
+   Der negative obere Rand rechnet die Leiste selbst heraus. */
 (function(){
-  const fuehler=document.querySelector('.fuehler'), kopf=document.querySelector('.kopf');
+  const fuehler=document.querySelector('.hero'), kopf=document.querySelector('.kopf');
   if(!fuehler||!kopf) return;
   new IntersectionObserver(([e])=>{
     const oben=e.isIntersecting;
     if(kopf.classList.contains('ueber')===oben) return;
     wechsel(()=>kopf.classList.toggle('ueber',oben));
-  }).observe(fuehler);
+  },{rootMargin:'-70px 0px 0px 0px'}).observe(fuehler);
 })();
 
 document.getElementById('plan-woche').addEventListener('click',e=>{
