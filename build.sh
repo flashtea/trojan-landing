@@ -63,12 +63,13 @@ SEITEN = {
     # achte Runde: dieselbe Seite, ein fremdes Farbsystem — rotstift in der
     # Palette der HybridX-Startseite, Blau statt deren Bernstein.
     'trojan-U-leise.src.html':     'leise',
-    # Dieselbe Palette, drei Lesarten. leise nimmt von HybridX auch die Regel
-    # „Akzent einmal je Bildschirm", tausch nur die Werte, abstand dämpft
-    # zusätzlich das blaue Band des Verlaufs. Je zwei benachbarte
-    # unterscheiden sich in genau einer Sache.
-    'trojan-V-tausch.src.html':    'tausch',
-    'trojan-W-abstand.src.html':   'abstand',
+    # Dieselbe Palette, zwei Lesarten: leise nimmt von HybridX auch die Regel
+    # „Akzent einmal je Bildschirm" und darf dafür einen blauen Grund haben,
+    # abstand nimmt nur die Werte, setzt Blau an allen 23 Stellen von rotstift
+    # und gibt dafür das Blau im Grund her. Blaue Schrift und blauer Grund
+    # schliessen einander aus — eine dritte Fassung, die beides wollte, ist
+    # daran gescheitert und wieder weg.
+    'trojan-V-abstand.src.html':   'abstand',
 }
 
 FEST = {

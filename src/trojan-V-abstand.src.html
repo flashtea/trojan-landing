@@ -16,28 +16,54 @@
   font-weight:500;font-style:normal;font-display:swap}
 
 /* ============================================================================
-   ABSTAND — wie tausch, aber der Himmel gibt das Blau wieder her.
+   ABSTAND — Rotstift mit den Farbwerten von HybridX, sonst nichts.
 
-   Gegenprobe zu `tausch`, und zwar zu genau einer Zahl. Unterschied: eine
-   einzige Farbstufe im Verlauf. Sonst ist die Datei zeichengleich.
+   Die zweite Lesart des Auftrags, den `leise` anders liest. Beide tragen
+   dieselbe Palette, und sie unterscheiden sich in zwei Dingen:
 
-   Kleiner blauer Text steht auf diesem Grund gut da, solange der Grund nicht
-   selbst blau ist. Der Himmel laeuft aber bei 76 % durch #14202f, und dort
-   sitzt Blau auf Blau: die Helligkeit trennt noch (5,82:1), der Farbton
-   kaum noch. Gemessen als Abstand in der a/b-Ebene von CIELAB:
+     leise   nimmt von HybridX auch die Regel, die an der Palette haengt —
+             der Akzent bedeutet JETZT und steht hoechstens einmal je
+             Bildschirm. Von rotstifts 23 Akzentstellen bleiben fuenf. Sein
+             Grund darf dafuer ins Blaue laufen: dort steht kein kleiner
+             blauer Text, der darunter litte.
+     abstand nimmt nur die Werte. Wo rotstift Blau setzt, steht Blau — alle
+             23 Stellen, in derselben Rolle, samt Blaustich ueber dem
+             Heldenbild. Dafuer gibt der Grund sein Blau her, siehe unten.
 
-     rotstift, dunkles Blau auf Papier      46,3
-     tausch,   auf neutralem Grund          34,8
-     tausch,   im blauen Band               25,2   <- hier faellt es aus
-     abstand,  im gedaempften Band          30,6
+   Alles Uebrige ist aus `leise` uebernommen: Grund #141417, Tinte #e9e5db,
+   gedaempft #9b958a, Haarlinie rgba(222,217,204,.12), der Verlauf ueber die
+   Strecke, das Korn, die Leiste, die den Verlauf nachzieht. Auch die drei
+   Werte, die dort aus Kontrastgruenden abweichen (der gehobene Akzent, zwei
+   Graustufen statt drei, das dunklere Wandbild).
+
+   ---- warum der Grund sein Blau hergibt ----
+
+   Kleiner blauer Text steht auf dunklem Grund gut da, solange der Grund
+   nicht selbst blau ist. Eine Zwischenfassung trug rotstifts 23 Stellen auf
+   leises Verlauf, und der laeuft bei 76 % durch #14202f: dort sitzt Blau auf
+   Blau, die Helligkeit trennt noch (5,82:1), der Farbton kaum noch. Gemessen
+   als Abstand in der a/b-Ebene von CIELAB:
+
+     rotstift, dunkles Blau auf Papier      4,36:1   46,3
+     auf neutralem Grund                    6,60:1   34,8
+     im blauen Band                         5,82:1   25,2   <- faellt aus
+     im gedaempften Band                    6,26:1   30,6
 
    Das Band war ohnehin zu stark. HybridX' Verlauf laeuft in der Mitte ins
-   Warme und weicht dabei um +17,+4,-6 vom Grundton ab; der hier lief ins
-   Kuehle und wich um +0,+12,+24 ab — knapp die Haelfte mehr, als das
+   Warme und weicht dabei um +17,+4,-6 vom Grundton ab; leises laeuft ins
+   Kuehle und weicht um +0,+12,+24 ab — knapp die Haelfte mehr, als das
    Vorbild sich nimmt. #161a22 bringt ihn auf dessen Mass zurueck.
 
    Der Kontrast steigt dabei mit: 5,82 -> 6,26:1. Beide Zahlen gehen in
    dieselbe Richtung, weil beide dasselbe Problem hatten.
+
+   Der Befund dahinter, fuer den naechsten, der hier Blau setzt: kleiner
+   blauer Text steht auf dunklem Grund in der Helligkeit ueberall besser da
+   als auf rotstifts Papier, dessen #3971b7 die 4,5:1 fuer kleinen Text
+   nirgends erreicht. Im Farbton ueberall schlechter, weil dunkles Blau auf
+   Creme zweimal trennt und helles Blau auf Dunkel nur einmal.
+   Blaue Schrift und blauer Grund schliessen einander aus. Man kann das eine
+   haben oder das andere.
    ========================================================================= */
 
 :root{
@@ -336,7 +362,7 @@ figure.bild img{width:100%;filter:grayscale(1) contrast(1.06) brightness(.82)}
 .plan-tabs button .dt{font-size:.56rem;color:var(--dim)}
 /* Der gewählte Tag steht bei rotstift als gefüllte Fläche da, Tinte mit
    Papierschrift. Umgekehrt auf dunklem Grund. Kein Akzent: rotstift setzt
-   hier keinen, und tausch erfindet keine Stelle dazu, an der er keine hat. */
+   hier keinen, und abstand erfindet keine Stelle dazu, an der er keine hat. */
 .plan-tabs button[aria-pressed="true"]{background:var(--tinte);color:var(--grund)}
 .plan-tabs button[aria-pressed="true"] .dt{color:rgba(20,20,23,.7)}
 .plan-tabs button:hover{color:var(--akzent)}

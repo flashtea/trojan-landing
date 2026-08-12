@@ -1,4 +1,4 @@
-# Trojan Performance — dreiundzwanzig Entwürfe
+# Trojan Performance — zweiundzwanzig Entwürfe
 
 Startseiten-Entwürfe für [trojanperformance.at](https://www.trojanperformance.at/),
 statisch gehostet auf GitHub Pages.
@@ -6,7 +6,7 @@ statisch gehostet auf GitHub Pages.
 ## Engere Auswahl
 
 Fünf Entwürfe stehen zur Abstimmung: **arena**, **matrix**, **phalanx** — die drei aus
-der ersten Runde — sowie **rotstift** und **puls**. Die übrigen achtzehn liegen in der
+der ersten Runde — sowie **rotstift** und **puls**. Die übrigen siebzehn liegen in der
 Übersicht darunter als Studien: Zwischenstände, aus denen die fünf hervorgegangen sind,
 keine Kandidaten.
 
@@ -131,23 +131,25 @@ von 10044 auf 4860 px.
 | | Entwurf | |
 |---|---|---|
 | U | [`leise/`](leise/) | Rotstift in der Palette der HybridX-Startseite |
-| V | [`tausch/`](tausch/) | wie `leise`, aber Blau an allen 23 Stellen von `rotstift` |
-| W | [`abstand/`](abstand/) | wie `tausch`, aber der Grund gibt das Blau wieder her |
+| V | [`abstand/`](abstand/) | dieselbe Palette, aber Blau an allen 23 Stellen von `rotstift` |
 
 Reine Farbstudien, wie `umbra` eine ist: Aufbau, Raster, Schrift und Text sind die von
-`rotstift`, **zeichengleich** — alle vier zählen 409 Wörter. Alle drei tragen dieselbe
-Palette. **Je zwei benachbarte unterscheiden sich in genau einer Sache**, damit jeder
-Vergleich eine einzige Frage stellt:
+`rotstift`, **zeichengleich** — alle drei zählen 409 Wörter. Beide tragen dieselbe
+Palette und lesen den Auftrag verschieden:
 
-| Schritt | Was sich ändert | Was das beantwortet |
+| | Akzent | Grund |
 |---|---|---|
-| `leise` → `tausch` | Blau an 5 Stellen statt an 23 | Trägt die Seite ihre Farbe sparsam oder wie bisher? |
-| `tausch` → `abstand` | eine Farbstufe im Verlauf | Darf der Grund selbst blau sein, wenn Text darauf blau ist? |
+| `leise` | an 5 Stellen | darf ins Blaue laufen |
+| `abstand` | an allen 23 | gibt sein Blau her |
+
+Das ist **kein** freies Kreuzprodukt. Blaue Schrift und blauer Grund schliessen einander
+aus: die Fassung, die beides wollte, ist gebaut, gemessen und wieder verworfen worden —
+siehe unten.
 
 Übernommen sind die Werte der HybridX-Startseite (`frontend/src/styles.scss`, dort „the
 quiet language") — Grund `#141417`, Tinte `#e9e5db`, gedämpft `#9b958a`, Haarlinie
 `rgba(222,217,204,.12)`. Der Akzent ist dort ein Bernstein; hier bleibt es das Blau der
-Livesite. Das ist die einzige Stelle, an der keiner der drei von dort abschreibt.
+Livesite. Das ist die einzige Stelle, an der keiner von beiden von dort abschreibt.
 
 **`leise`** nimmt zusätzlich die Regeln, die bei HybridX an der Palette hängen: eine
 flache Fläche statt Karten, Trennung durch Haarlinie und Abstand, Hierarchie aus Grösse
@@ -156,31 +158,43 @@ bleiben von `rotstift`s 23 Akzentstellen fünf — die gefüllte Schaltfläche, 
 eingekreiste `150 €`, das hervorgehobene „mit dir", der gewählte Wochentag, das Etikett
 „Empfehlung". Der Rest steht in Grau.
 
-**`tausch`** nimmt nur die Werte. Wo `rotstift` Blau setzt, steht Blau — alle 23 Stellen,
+**`abstand`** nimmt nur die Werte. Wo `rotstift` Blau setzt, steht Blau — alle 23 Stellen,
 in derselben Rolle, samt Blaustich über dem Heldenbild. Was dort Tinte auf Papier ist,
 ist hier Tinte auf Grund: der gefüllte Knopf, die Tagesüberschrift und der gewählte
 Reiter kehren sich um statt zu verschwinden.
 
-**`abstand`** ist `tausch` mit einer einzigen geänderten Farbstufe. Kleiner blauer Text
-steht auf diesem Grund gut da, solange der Grund nicht selbst blau ist — der Verlauf
-läuft aber bei 76 % durch `#14202f`, und dort trennt die Helligkeit noch, der Farbton
+### Warum es keine dritte gibt
+
+Zwischen den beiden stand eine Fassung, die beides wollte: `rotstift`s 23 Akzentstellen
+auf `leise`s blauem Grund. Sie ist gebaut, gemessen und wieder verworfen worden, und der
+Grund gehört hierher, weil er für jeden gilt, der auf dunklem Grund blau schreibt.
+
+Kleiner blauer Text steht gut da, solange der Grund nicht selbst blau ist. `leise`s
+Verlauf läuft aber bei 76 % durch `#14202f`: dort trennt die Helligkeit noch, der Farbton
 kaum noch. Gemessen als Abstand in der a/b-Ebene von CIELAB:
 
 | | Kontrast | Buntabstand |
 |---|---:|---:|
 | `rotstift`, dunkles Blau auf Papier | 4,36:1 | 46,3 |
-| `tausch` / `leise`, neutraler Grund | 6,60:1 | 34,8 |
-| `tausch` / `leise`, im blauen Band | 5,82:1 | **25,2** |
-| `abstand`, im gedämpften Band | **6,26:1** | 30,6 |
+| dunkler Grund, neutral | 6,60:1 | 34,8 |
+| dunkler Grund, im blauen Band | 5,82:1 | **25,2** |
+| `abstand`, gedämpftes Band | **6,26:1** | 30,6 |
 
-Der Befund dahinter: kleiner blauer Text steht auf dunklem Grund in der **Helligkeit**
-überall besser da als auf `rotstift`s Papier, dessen `#3971b7` die 4,5:1 für kleinen Text
-nirgends erreicht. Im **Farbton** ist er überall schlechter, weil dunkles Blau auf Creme
-zweimal trennt und helles Blau auf Dunkel nur einmal. Das blaue Band war ohnehin zu
-stark: HybridX' Verlauf weicht in der Mitte um `+17,+4,-6` vom Grundton ab, der hier um
-`+0,+12,+24` — knapp die Hälfte mehr, als das Vorbild sich nimmt.
+Der Befund: kleiner blauer Text steht auf dunklem Grund in der **Helligkeit** überall
+besser da als auf `rotstift`s Papier, dessen `#3971b7` die 4,5:1 für kleinen Text nirgends
+erreicht. Im **Farbton** überall schlechter, weil dunkles Blau auf Creme zweimal trennt
+und helles Blau auf Dunkel nur einmal. Das blaue Band war ohnehin zu stark: HybridX'
+Verlauf weicht in der Mitte um `+17,+4,-6` vom Grundton ab, `leise`s um `+0,+12,+24` —
+knapp die Hälfte mehr, als das Vorbild sich nimmt. `#161a22` bringt ihn auf dessen Mass
+zurück, und beide Zahlen steigen mit, weil beide dasselbe Problem hatten.
 
-Drei Werte weichen in allen dreien bewusst ab; die Gründe stehen im Quelltext:
+Daraus die Regel: **blaue Schrift und blauer Grund schliessen einander aus.** `leise` kann
+sich seinen blauen Grund leisten, gerade weil dort kein kleiner blauer Text steht;
+`abstand` kann es nicht. Die Kombination, die beides wollte, hat beides verschlechtert —
+und mit Blau an 23 Stellen hört die eingekreiste `150 €` ausserdem auf, ein Ereignis zu
+sein.
+
+Drei Werte weichen in beiden bewusst ab; die Gründe stehen im Quelltext:
 
 | | |
 |---|---|
@@ -190,11 +204,11 @@ Drei Werte weichen in allen dreien bewusst ab; die Gründe stehen im Quelltext:
 
 In `leise` fällt zusätzlich der Blaustich über dem Heldenbild weg: er war eine
 Farbentscheidung, und unter „einmal je Bildschirm" hat die Farbe dort nur eine Aufgabe.
-`tausch` und `abstand` führen ihn weiter — mit `.45` statt `rotstift`s `.26`, weil die
-Tönung auf dunklem Grund bei `.26` fast verschwindet (Arena, das denselben Verlauf auf
-Schwarz legt, steht auf `.82`).
+`abstand` führt ihn weiter — mit `.45` statt `rotstift`s `.26`, weil die Tönung auf
+dunklem Grund bei `.26` fast verschwindet (Arena, das denselben Verlauf auf Schwarz legt,
+steht auf `.82`).
 
-Eine Sache liess sich in keinem der drei übernehmen, sondern musste umgebaut werden. HybridX' feste
+Eine Sache liess sich in keinem von beiden übernehmen, sondern musste umgebaut werden. HybridX' feste
 Möblierung ist ein Schleier in Grundfarbe — dort sind das freistehende Kärtchen von rund
 hundert Pixeln, und dass sie ein paar Stufen neben dem Grund liegen, sieht niemand.
 Rotstifts Leiste läuft über die volle Breite: derselbe Schleier stand am rechten Rand
@@ -230,7 +244,7 @@ python3 -m http.server 8099 --bind 127.0.0.1
 src/          Quellen mit Platzhaltern — hier wird editiert
 assets/       Fotos und Logo von trojanperformance.at, Vorschaubilder
 build.sh      Platzhalter -> Pfade, WebP-Zwillinge
-index.html    Übersicht: fünf Entwürfe gross, achtzehn Studien als Kontaktbogen
+index.html    Übersicht: fünf Entwürfe gross, siebzehn Studien als Kontaktbogen
 ```
 
 `index.html` wird **nicht** von `build.sh` erzeugt und ist von Hand zu pflegen. Kommt ein
