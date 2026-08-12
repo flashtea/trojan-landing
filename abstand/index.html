@@ -1,0 +1,1179 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="../assets/monogram.png">
+<title>Trojan Performance — Performance Center Klagenfurt am Wörthersee</title>
+<meta name="description" content="Sieben Tage die Woche Kurse, in jeder Einheit ein Coach auf der Fläche. Wochenplan live aus dem Buchungssystem. Probetraining 15 €. Sebastiangasse 1, Klagenfurt.">
+<style>
+@font-face{font-family:'Archivo';src:url('../assets/fonts/archivo-var.woff2') format('woff2');
+  font-weight:500 800;font-style:normal;font-display:swap}
+@font-face{font-family:'Archivo Black';src:url('../assets/fonts/archivo-black.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'IBM Plex Mono';src:url('../assets/fonts/plexmono-400.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'IBM Plex Mono';src:url('../assets/fonts/plexmono-500.woff2') format('woff2');
+  font-weight:500;font-style:normal;font-display:swap}
+
+/* ============================================================================
+   ABSTAND — wie tausch, aber der Himmel gibt das Blau wieder her.
+
+   Gegenprobe zu `tausch`, und zwar zu genau einer Zahl. Unterschied: eine
+   einzige Farbstufe im Verlauf. Sonst ist die Datei zeichengleich.
+
+   Kleiner blauer Text steht auf diesem Grund gut da, solange der Grund nicht
+   selbst blau ist. Der Himmel laeuft aber bei 76 % durch #14202f, und dort
+   sitzt Blau auf Blau: die Helligkeit trennt noch (5,82:1), der Farbton
+   kaum noch. Gemessen als Abstand in der a/b-Ebene von CIELAB:
+
+     rotstift, dunkles Blau auf Papier      46,3
+     tausch,   auf neutralem Grund          34,8
+     tausch,   im blauen Band               25,2   <- hier faellt es aus
+     abstand,  im gedaempften Band          30,6
+
+   Das Band war ohnehin zu stark. HybridX' Verlauf laeuft in der Mitte ins
+   Warme und weicht dabei um +17,+4,-6 vom Grundton ab; der hier lief ins
+   Kuehle und wich um +0,+12,+24 ab — knapp die Haelfte mehr, als das
+   Vorbild sich nimmt. #161a22 bringt ihn auf dessen Mass zurueck.
+
+   Der Kontrast steigt dabei mit: 5,82 -> 6,26:1. Beide Zahlen gehen in
+   dieselbe Richtung, weil beide dasselbe Problem hatten.
+   ========================================================================= */
+
+:root{
+  --grund:#141417;
+  --tinte:#e9e5db;
+  --dim:#9b958a;
+
+  /* Eine Haarlinie, überall. Rotstift zieht seine Linien in voller Tinte;
+     auf hellem Papier trägt das, auf dunklem Grund wäre es ein Gitter aus
+     Narben. */
+  --linie:rgba(222,217,204,.12);
+  --linie-hell:rgba(222,217,204,.2);
+
+  /* Warme Tönungen über der flachen Fläche — Zebrazeilen, Überfahren,
+     gedrückte Zustände. Statt nacktem rgba(255,255,255,…). */
+  --ton-1:rgba(222,217,204,.03);
+  --ton-2:rgba(222,217,204,.05);
+  --ton-3:rgba(222,217,204,.08);
+
+  /* Die offizielle Akzentfarbe der Livesite ist #3971b7 (im Elementor-Kit
+     als --e-global-color-accent). Auf diesem Grund kommt sie auf 3,69:1 und
+     ist damit für kleinen Text unbrauchbar — auf dem Papier von rotstift lag
+     sie bei 4,36:1 und war schon dort knapp. Aufgehellt wird deshalb nur die
+     Helligkeit: Farbton 213° und Sättigung bleiben, wo sie waren, gehoben ist
+     der Hellwert von 47 % auf 64 %. Das ergibt 6,60:1 gegen den Grund und
+     6,80:1 für den dunklen Text auf gefüllter Fläche.
+     --akzent-tief ist der amtliche Wert und bleibt hier stehen, damit
+     erkennbar bleibt, wovon --akzent abgeleitet ist. */
+  --akzent:#6a9edc;
+  --akzent-hell:#8db6e6;
+  --akzent-tief:#3971b7;
+  --akzent-ink:#0b1119;
+
+  /* Der Verlauf steht als eigener Wert, weil ihn zwei Flächen tragen: der
+     Himmel über die ganze Strecke und die Leiste, die ihn an ihrer Stelle
+     nachzieht. Zwei Kopien wären zwei Wahrheiten, und die eine, die jemand
+     beim Ändern vergisst, ist die Naht. */
+  --verlauf:linear-gradient(180deg,
+    #131316 0%, #151519 16%, #16181f 40%,
+    #15181e 62%, #161a22 76%, #15181c 86%, #141417 100%);
+
+  --mono:'IBM Plex Mono',ui-monospace,'SFMono-Regular',monospace;
+  --grot:'Archivo',system-ui,sans-serif;
+  --schwer:'Archivo Black','Archivo',system-ui,sans-serif;
+  --rand:20px;
+}
+@media(min-width:900px){:root{--rand:32px}}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-padding-top:70px}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{
+  position:relative;
+  background:var(--grund);color:var(--tinte);
+  font-family:var(--grot);font-weight:500;font-size:1rem;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--akzent);color:var(--akzent-ink)}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--akzent);outline-offset:3px;border-radius:1px}
+
+.mono{font-family:var(--mono);font-weight:400}
+/* Zahlen laufen in gleicher Breite, damit Preise und Uhrzeiten untereinander
+   auf derselben Stelle stehen. */
+.mono,.datenblatt dd,.eintrag .z,.eintrag .d,.tarif dd,.ohne .p,.plan-status{
+  font-variant-numeric:tabular-nums;
+}
+.huelle{max-width:1200px;margin:0 auto;padding-left:var(--rand);padding-right:var(--rand)}
+
+/* ---------- Atmosphäre ----------
+   Drei Schichten von der HybridX-Startseite: ein Verlauf über die gesamte
+   Strecke statt Bänder je Abschnitt, eine Vignette und ein feines Korn.
+   Der Verlauf dort läuft in der Mitte ins Warme, weil der Akzent dort ein
+   Bernstein ist; hier läuft er ins Kühle, aus demselben Grund. Die
+   Auslenkung ist dieselbe: sechs Prozent Helligkeit, sonst sähe man Bänder,
+   und Bänder sind genau das, was die eine Fläche vermeiden soll. */
+.himmel{
+  position:absolute;inset:0;z-index:-2;pointer-events:none;
+  background-image:var(--verlauf);
+}
+.vignette{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(130% 95% at 50% 42%, transparent 52%, rgba(0,0,0,.5) 100%);
+}
+.koernung{
+  /* Bei HybridX steht das Korn auf .055. Dort ist die grösste Schrift knapp
+     5 rem; hier läuft die Wortmarke über 15,9 rem, und auf einer Fläche
+     dieser Grösse liest sich dasselbe Korn als Druckraster statt als
+     Papierton. */
+  /* Über der Leiste, nicht unter ihr. Bei HybridX liegt das Korn unter der
+     Möblierung — dort sind das freistehende Kärtchen von hundert Pixeln, und
+     dass ihnen die Textur fehlt, sieht niemand. Rotstifts Leiste läuft über
+     die volle Breite: ohne Korn wäre sie das einzige glatte Feld der Seite
+     und läse sich als zweite Fläche. Der Sprunglink liegt darüber (99) und
+     bleibt sauber, der Dialog steht ohnehin in der obersten Ebene. */
+  position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.042;
+  background-repeat:repeat;background-size:128px 128px;
+}
+
+/* ---------- Sprunglink ---------- */
+.skip{
+  position:absolute;left:-9999px;top:0;z-index:99;
+  font-family:var(--mono);font-size:.85rem;
+  background:var(--akzent);color:var(--akzent-ink);padding:.9rem 1.2rem;
+}
+.skip:focus{left:0}
+
+/* ---------- Kopf ----------
+   Die Leiste muss den Inhalt verdecken, der unter ihr durchläuft — dafür
+   braucht sie einen deckenden Grund. Sie trug dafür einen Schleier in
+   --grund, und genau das war falsch: der Himmel läuft über die Strecke ins
+   Kühle, das Korn hebt die Fläche, und beides erreicht die Leiste nicht.
+   Gemessen am rechten Rand stand sie auf 20,20,23, während die Seite daneben
+   auf 25,25,27 lag und im blausten Band auf 25,29,38 — bis zu fünfzehn Stufen
+   Unterschied. Eine Leiste, die sich vom Grund abhebt, ist die zweite Fläche,
+   die Regel 1 gerade verbietet.
+   Sie trägt deshalb keinen eigenen Ton mehr, sondern denselben Verlauf,
+   zurückgeschoben um die eigene Scrollhöhe: an ihrer Stelle zeigt sie exakt
+   den Himmel, den sie verdeckt. Über der Kante bleibt jetzt höchstens eine
+   Stufe Unterschied.
+   Ohne Skript steht der Verlauf auf Viewporthöhe und Position null — die
+   Leiste zeigt den Ton vom Seitenanfang, und dort fängt ein Besucher ohne
+   Skript an. Die Unschärfe ist weg: hinter einer deckenden Fläche rechnet
+   sie nur. */
+.kopf{
+  position:sticky;top:0;z-index:50;
+  border-bottom:1px solid var(--linie);
+}
+.kopf::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background-image:var(--verlauf);background-repeat:no-repeat;
+  background-size:100% var(--dokh,100vh);
+  background-position:0 calc(-1 * var(--rolle,0px));
+}
+.kopf-innen{display:flex;align-items:center;justify-content:space-between;min-height:54px}
+.marke{display:inline-flex;align-items:center;min-height:44px}
+/* Die Wortmarke liegt schwarz vor und wird für den dunklen Grund umgedreht.
+   Die Deckkraft nimmt dem Reinweiss die Spitze, damit sie neben der Tinte
+   nicht als das hellste Element der Seite steht. */
+.marke img{height:24px;width:auto;filter:brightness(0) invert(1);opacity:.9}
+@media(min-width:720px){.marke img{height:30px}}
+.kopf nav{display:flex;gap:.1rem}
+.kopf nav a{
+  display:inline-flex;align-items:center;min-height:44px;padding:0 .55rem;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+  text-decoration:none;color:var(--dim);
+  transition:color .18s ease;
+}
+.kopf nav a:hover{color:var(--akzent)}
+/* Am schmalsten Gerät stehen Logo und Reihe sonst auf Stoss, sobald der
+   vierte Punkt dazukommt: 84 px Marke, 236 px Reihe, 320 px Platz. Die Punkte
+   geben den Rand ab, nicht das Logo. */
+@media(max-width:420px){
+  .kopf nav a{padding:0 .38rem;font-size:.68rem;letter-spacing:.06em}
+}
+.kopf nav a.nur-breit{display:none}
+@media(min-width:720px){.kopf nav a.nur-breit{display:inline-flex}}
+/* „Probetraining" steht über dem Falz schon als Schaltfläche im Kopfbereich.
+   Zweimal dieselbe Aufforderung im selben Bildschirm nimmt beiden das Gewicht,
+   also tritt die in der Leiste erst an, wenn die andere weggescrollt ist. Ohne
+   Skript bleibt sie sichtbar — der sichtbare Zustand ist der Grundzustand. */
+.kopf.ueber nav a[href="#probe"]{opacity:0;pointer-events:none}
+.kopf nav a[href="#probe"]{transition:opacity .28s ease,color .18s ease}
+/* Der zurückgehaltene Punkt behält seinen Platz — sonst spränge die Leiste,
+   wenn er dazukommt. Stattdessen rückt die ganze Reihe um seine Breite nach
+   rechts und fährt beim Antreten nach links zurück. Verschoben wird die Reihe,
+   nicht ihre Breite: eine Bewegung, kein Umbruch. Die Breite misst das Skript,
+   weil sie an der Schrift hängt. */
+.kopf nav{transition:transform .32s cubic-bezier(.2,.8,.3,1)}
+.kopf.ueber nav{transform:translateX(var(--schub,0px))}
+.kopf{overflow-x:clip}
+
+/* ---------- Hero ---------- */
+.hero{padding-top:2.2rem}
+.hero-kicker{
+  display:flex;justify-content:space-between;gap:1rem;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--dim);
+  padding-bottom:.7rem;margin-bottom:1.4rem;
+}
+.hero-kicker .rechts{color:var(--akzent);text-align:right}
+.fit{display:block;width:100%;overflow:hidden}
+.fit>span{
+  display:inline-block;white-space:nowrap;
+  font-family:var(--schwer);font-weight:400;line-height:.86;
+  text-transform:uppercase;letter-spacing:0;
+}
+.fit-a>span{font-size:clamp(3.4rem,20.5vw,15.9rem)}
+.fit-b>span{font-size:clamp(1.75rem,10.6vw,8.2rem)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.hero-unten{margin-top:2.2rem;display:grid;gap:2.2rem}
+@media(min-width:900px){
+  .hero-unten{grid-template-columns:5fr 7fr;gap:3rem;align-items:start}
+}
+.datenblatt{border-top:1px solid var(--linie)}
+.datenblatt>div{
+  display:grid;grid-template-columns:7.2rem 1fr;gap:1rem;
+  padding:.62rem 0;border-bottom:1px solid var(--linie);
+}
+.datenblatt dt{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--dim);padding-top:.18rem;
+}
+.datenblatt dd{font-size:.92rem;line-height:1.45;color:var(--dim)}
+.datenblatt dd strong{font-weight:750;color:var(--tinte)}
+.hero-cta{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.3rem}
+
+/* Die gefüllte Schaltfläche trug in rotstift Tinte auf Papier. Auf einer
+   Seite ohne zweite Fläche gibt es diese Umkehr nicht mehr — es gibt nur den
+   Akzent. Das ist dieselbe Stelle, an der HybridX seinen Bernstein setzt. */
+.knopf{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:48px;padding:0 1.4rem;
+  font-family:var(--mono);font-size:.78rem;letter-spacing:.09em;text-transform:uppercase;
+  text-decoration:none;border:1px solid var(--linie-hell);
+  transition:background .18s ease,color .18s ease,border-color .18s ease;
+}
+/* Bei rotstift ist der gefüllte Knopf Tinte auf Papier und wird beim
+   Überfahren blau. Auf dunklem Grund kehrt sich das um: die Tinte ist die
+   Fläche, der Grund die Schrift. Der Wechsel ins Blau bleibt.
+   Die Schrift auf der blauen Fläche ist dunkel, nicht hell: #e9e5db auf
+   diesem Blau kommt auf 3,96:1 und trüge den Text nicht. */
+.knopf-voll{background:var(--tinte);color:var(--grund);border-color:var(--tinte)}
+.knopf-voll:hover{background:var(--akzent);color:var(--akzent-ink);border-color:var(--akzent)}
+.knopf-leer{color:var(--dim)}
+.knopf-leer:hover{color:var(--tinte);border-color:var(--tinte)}
+
+/* ---------- Figuren ----------
+   Graustufe wie in rotstift, aber ohne dessen Blaustich über dem Heldenbild.
+   Der Duoton war eine Farbentscheidung, und im neuen System hat die Farbe
+   nur eine Aufgabe. Bliebe die Tönung, stünden auf dem ersten Bildschirm
+   zwei blaue Dinge: eine Aufforderung und eine Stimmung.
+   Die Helligkeit geht herunter statt hinauf: dieselben Bilder, die auf
+   Papier aufgehellt werden mussten, blenden auf dunklem Grund. */
+figure.bild img{width:100%;filter:grayscale(1) contrast(1.06) brightness(.82)}
+
+/* Blaustich auf dem Heldenbild, aus rotstift. Graustufe im Bild, darüber ein
+   Verlauf im Farbmodus: der überträgt Farbton und Sättigung und lässt die
+   Helligkeit unangetastet — getönt, nicht eingefärbt.
+   Die Deckkraft ist der eine Wert, der wandern musste. Rotstift steht auf
+   0,26, weil das Blau dort auf hellem Papier sitzt; auf diesem Grund
+   verschwindet die Tönung bei 0,26 fast. Arena, das denselben Verlauf auf
+   Schwarz legt, steht auf 0,82. Hier liegt sie dazwischen. */
+.blau{position:relative;isolation:isolate}
+.blau::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(158deg,#78B0F2 0%,#2A5FA0 44%,#12243A 100%);
+  mix-blend-mode:color;opacity:.45;
+}
+
+/* ---------- Blöcke ---------- */
+.block{border-top:1px solid var(--linie);padding:3.2rem 0 3.8rem}
+@media(min-width:900px){.block{padding:4.5rem 0 5.5rem}}
+.blockkopf{display:flex;flex-wrap:wrap;align-items:baseline;gap:1rem;margin-bottom:1.8rem}
+.blockkopf .idx{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--akzent)}
+.blockkopf h2{
+  font-family:var(--schwer);font-weight:400;text-transform:uppercase;
+  font-size:clamp(1.55rem,4.6vw,2.9rem);line-height:1;letter-spacing:-.005em;
+}
+.blockkopf .recht{margin-left:auto;font-family:var(--mono);font-size:.68rem;color:var(--dim);
+  letter-spacing:.07em;text-transform:uppercase;text-align:right}
+@media(max-width:719px){.blockkopf .recht{display:none}}
+/* Die Randnotizen sind schmückend und verschwinden am Telefon. Diese eine
+   nicht: sie trägt die einzige Angabe darüber, wer das Gym führt. */
+@media(max-width:719px){
+  .blockkopf .recht-immer{display:block;flex:0 0 100%;margin-left:0;text-align:left}
+}
+
+.satz{max-width:34em;font-size:1.02rem;color:var(--dim)}
+.satz strong{color:var(--tinte);font-weight:750}
+.satz+.satz{margin-top:.9rem}
+.klein{font-family:var(--mono);font-size:.72rem;line-height:1.65;color:var(--dim)}
+
+/* Etikett in der Akzentfarbe, Schrift und Rahmen — wie bei rotstift. */
+.badge{
+  display:inline-block;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--akzent);border:1px solid var(--akzent);
+  padding:.45rem .7rem;margin-bottom:1.2rem;
+}
+
+/* ---------- 01 Plan ---------- */
+.plan-status{font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--dim)}
+.plan-status b{font-weight:500;color:var(--akzent)}
+.plan-tabs{display:grid;grid-template-columns:repeat(var(--spalten,6),1fr);gap:2px;margin:1.4rem 0 0}
+.plan-tabs button{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:48px;padding:.35rem .05rem;gap:.12rem;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.03em;
+  border:1px solid var(--linie);color:var(--dim);
+  transition:color .18s ease,background .18s ease;
+}
+.plan-tabs button .dt{font-size:.56rem;color:var(--dim)}
+/* Der gewählte Tag steht bei rotstift als gefüllte Fläche da, Tinte mit
+   Papierschrift. Umgekehrt auf dunklem Grund. Kein Akzent: rotstift setzt
+   hier keinen, und tausch erfindet keine Stelle dazu, an der er keine hat. */
+.plan-tabs button[aria-pressed="true"]{background:var(--tinte);color:var(--grund)}
+.plan-tabs button[aria-pressed="true"] .dt{color:rgba(20,20,23,.7)}
+.plan-tabs button:hover{color:var(--akzent)}
+.plan-tabs button[aria-pressed="true"]:hover{color:var(--grund)}
+.plan-woche{border:1px solid var(--linie);margin-top:-1px}
+.tag-panel{display:none}
+.tag-panel.aktiv{display:block}
+/* Die Tagesüberschrift ist bei rotstift ein Tintenbalken mit Papierschrift.
+   Umgekehrt auf dunklem Grund: die Tinte ist die Fläche. */
+.tag-panel h3{
+  font-family:var(--mono);font-weight:500;font-size:.72rem;letter-spacing:.08em;
+  text-transform:uppercase;padding:.65rem .8rem;border-bottom:1px solid var(--linie);
+  background:var(--tinte);color:var(--grund);
+}
+.tag-panel ul{list-style:none}
+.tag-panel li{border-bottom:1px solid var(--linie);min-width:0}
+.tag-panel li:last-child{border-bottom:0}
+/* Jeder Eintrag öffnet seinen Kurs — also ein Knopf und kein Div mit
+   Klick-Behandler: Rolle, Tastatur und Fokus bringt der Browser mit. */
+.eintrag{
+  display:flex;gap:.8rem;align-items:baseline;width:100%;min-width:0;
+  text-align:left;padding:.6rem .8rem;min-height:44px;font-size:.9rem;
+  transition:background .16s ease;
+}
+.eintrag .z{font-family:var(--mono);font-size:.78rem;white-space:nowrap;color:var(--dim)}
+.eintrag .n{font-weight:700;line-height:1.3}
+.eintrag .d{margin-left:auto;font-family:var(--mono);font-size:.66rem;color:var(--dim);white-space:nowrap}
+.eintrag:hover .n,.eintrag:focus-visible .n{color:var(--akzent)}
+.tag-panel li.leer{color:var(--dim);font-family:var(--mono);font-size:.78rem;padding:.6rem .8rem}
+@media(min-width:960px){
+  .plan-tabs{display:none}
+  .plan-woche{display:grid;grid-template-columns:repeat(var(--spalten,6),minmax(0,1fr));gap:1px;background:var(--linie)}
+  .tag-panel{display:block;background:var(--grund);min-width:0}
+  .eintrag{display:grid;grid-template-columns:1fr auto;gap:.1rem .5rem;padding:.55rem .7rem}
+  .eintrag .n{grid-column:1/-1;font-size:.84rem}
+  .eintrag .d{margin-left:0}
+}
+.plan-fuss{margin-top:1rem}
+
+/* Kursdetail. Es gibt keine Kursliste mehr — die Woche ist die Kursliste. Wer
+   wissen will, was ein Kurs ist, tippt ihn dort an, wo er ohnehin steht.
+   <dialog> bringt Esc, Fokusfang und Rolle mit. Auch der Dialog ist keine
+   erhobene Fläche: derselbe Grund, eine Linie darum. */
+.kdlg{
+  border:1px solid var(--linie-hell);background:var(--grund);color:var(--tinte);
+  margin:auto;width:min(480px,calc(100vw - 2rem));max-height:calc(100dvh - 3rem);overflow:auto;
+}
+.kdlg::backdrop{background:rgba(0,0,0,.7)}
+.kdlg-innen{padding:1.2rem}
+@media(min-width:900px){.kdlg-innen{padding:1.6rem}}
+.kdlg-kopf{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
+.kdlg h3{font-family:var(--grot);font-weight:780;text-transform:uppercase;font-size:1.25rem;line-height:1.15}
+.kdlg .kmeta{font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--akzent);margin-top:.4rem}
+.kdlg .ktext{margin-top:.9rem;font-size:.93rem;color:var(--dim)}
+.kdlg .zu{min-width:44px;min-height:44px;margin:-.5rem -.5rem 0 0;font-family:var(--mono);
+  font-size:1.3rem;line-height:1;flex:none;color:var(--dim)}
+.kdlg .zu:hover{color:var(--akzent)}
+.kdlg .kfuss{margin-top:1.4rem}
+
+/* ---------- 02 Prinzip ---------- */
+.leitsatz{
+  font-family:var(--schwer);font-weight:400;text-transform:uppercase;
+  font-size:clamp(1.45rem,4.9vw,3.3rem);line-height:1.04;letter-spacing:-.005em;
+  max-width:19em;margin-bottom:1.6rem;
+}
+.leitsatz em{font-style:normal;color:var(--akzent)}
+.prinzip-gitter{display:grid;gap:2rem}
+@media(min-width:900px){.prinzip-gitter{grid-template-columns:6fr 6fr;gap:3rem;align-items:start}}
+
+/* ---------- 03 Preise ---------- */
+.zitat{
+  font-family:var(--schwer);font-weight:400;text-transform:uppercase;
+  font-size:clamp(1.5rem,5.4vw,3.4rem);line-height:1.02;max-width:14em;
+  margin-bottom:.9rem;
+}
+.zitat-quelle{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:1.6rem}
+.markiert{position:relative;display:inline-block;padding:0 .1em}
+.markiert svg{position:absolute;inset:-46% -18%;width:136%;height:192%;overflow:visible;pointer-events:none}
+.markiert svg path{stroke:var(--akzent);stroke-width:2.4;fill:none;stroke-linecap:round}
+@media(prefers-reduced-motion:no-preference){
+  .js .markiert svg path{stroke-dasharray:420;stroke-dashoffset:420;transition:stroke-dashoffset 1.2s ease .35s}
+  .js .sichtbar .markiert svg path{stroke-dashoffset:0}
+}
+
+/* Der Rest der Preisliste. Nichts ist weg, es steht nur nichts im Weg: neun
+   Monatspreise, Laufzeiten und Einzelangebote nehmen ausgeklappt mehr Platz
+   ein als der Abschnitt darüber — und keine dieser Zahlen entscheidet, ob
+   jemand ein Probetraining bucht. */
+/* Der Aufklapper trug seine Bedienung als kleines Plus am rechten Rand, am
+   Desktop einen Meter von der Beschriftung entfernt, auf einer Zeile ohne
+   Rahmen. Dass dort dreizehn weitere Preise liegen, war ihm nicht anzusehen.
+   Jetzt ist die Zeile ein Feld mit Rahmen, das Plus steht gerahmt davor, und
+   rechts steht als Wort, was passiert. Beim Aufklappen bleibt der Rahmen und
+   trägt den Inhalt — deshalb der Innenabstand unten. */
+.mehr summary{
+  list-style:none;cursor:pointer;display:flex;align-items:center;gap:.8rem;min-height:56px;
+  padding:.5rem .9rem;border:1px solid var(--linie-hell);
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--akzent);
+  transition:background .18s ease;
+}
+.mehr summary:hover{background:rgba(106,158,220,.08)}
+.mehr summary::-webkit-details-marker{display:none}
+.mehr summary::before{
+  content:"+";flex:0 0 auto;
+  display:inline-flex;align-items:center;justify-content:center;
+  width:1.55rem;height:1.55rem;border:1px solid var(--akzent);
+  font-size:1rem;line-height:1;
+}
+.mehr[open] summary::before{content:"\2212"}
+.mehr summary::after{
+  content:"Aufklappen";margin-left:auto;padding-left:1rem;
+  color:var(--dim);letter-spacing:.08em;
+}
+.mehr[open] summary::after{content:"Zuklappen"}
+@media(max-width:559px){.mehr summary::after{display:none}}
+.mehr-innen{padding:1.6rem 0 2rem}
+.tarife{display:grid;gap:1.2rem}
+@media(min-width:900px){.tarife{grid-template-columns:repeat(3,1fr);gap:1.4rem;align-items:stretch}}
+.tarif{border:1px solid var(--linie);padding:1.1rem 1.1rem 1.2rem;display:flex;flex-direction:column;position:relative}
+/* Die Empfehlung war ein doppelt gezogener Rahmen. Zwei Pixel Haarlinie sind
+   keine zwei Pixel Tinte — den Unterschied trägt jetzt die hellere Linie und
+   das Etikett darüber. */
+.tarif.empf{border-color:var(--linie-hell)}
+.tarif-tag{
+  position:absolute;top:-0.7rem;left:.9rem;background:var(--akzent);color:var(--akzent-ink);
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:.28rem .55rem;
+}
+.tarif h3{font-family:var(--grot);font-weight:780;font-size:1.25rem;text-transform:uppercase;line-height:1.1}
+.tarif h3 span{display:block;font-family:var(--mono);font-weight:400;font-size:.68rem;
+  letter-spacing:.08em;color:var(--dim);margin-top:.3rem;text-transform:uppercase}
+.tarif dl{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:1.1rem 0 .9rem;border:1px solid var(--linie)}
+.tarif dl>div{padding:.6rem .5rem .7rem;text-align:center}
+.tarif dl>div+div{border-left:1px solid var(--linie)}
+.tarif dt{font-family:var(--mono);font-size:.6rem;letter-spacing:.07em;text-transform:uppercase;color:var(--dim)}
+.tarif dd{font-family:var(--mono);font-weight:500;font-size:1.06rem;margin-top:.3rem;white-space:nowrap}
+.tarif .rechnung{font-family:var(--mono);font-size:.68rem;line-height:1.6;color:var(--dim);margin-top:auto}
+.preis-zeile{margin-top:2.6rem}
+.preis-zeile h3,.neben h3{
+  font-family:var(--mono);font-weight:500;font-size:.72rem;letter-spacing:.1em;
+  text-transform:uppercase;margin-bottom:.8rem;color:var(--akzent);
+}
+.ohne{list-style:none;border-top:1px solid var(--linie)}
+.ohne li{
+  display:grid;grid-template-columns:5.4rem 1fr;gap:1rem;align-items:baseline;
+  border-bottom:1px solid var(--linie);padding:.6rem 0;
+}
+.ohne .p{font-family:var(--mono);font-weight:500;font-size:1rem;white-space:nowrap}
+.ohne .w{font-size:.92rem;color:var(--dim)}
+.ohne .w small{display:block;font-family:var(--mono);font-size:.66rem;letter-spacing:.05em;color:var(--dim);text-transform:uppercase;margin-top:.1rem}
+@media(min-width:900px){
+  .ohne{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--linie);border-bottom:0}
+  .ohne li{display:block;border-bottom:1px solid var(--linie);padding:.9rem}
+  .ohne li+li{border-left:1px solid var(--linie)}
+  .ohne .p{font-size:1.35rem}
+  /* Beide sind inline-Spans; im gestapelten Kasten klebte die Bezeichnung
+     ohne Umbruch am Preis („15 €Probetraining"). Der margin-top stand da,
+     konnte an einem inline-Element aber nicht wirken. */
+  .ohne .w{display:block;margin-top:.35rem}
+}
+.neben{display:grid;gap:2rem;margin-top:2.6rem}
+@media(min-width:900px){.neben{grid-template-columns:1fr 1fr 1fr;gap:2.5rem}}
+.neben p{font-size:.9rem;max-width:38ch;color:var(--dim)}
+.svs{border:1px solid var(--akzent);padding:1rem 1.1rem}
+.svs .p100{font-family:var(--mono);font-weight:500;color:var(--akzent)}
+
+/* ---------- 04 Coaches ---------- */
+.coaches{display:grid;gap:1.4rem;grid-template-columns:repeat(2,1fr)}
+@media(min-width:900px){.coaches{grid-template-columns:repeat(4,1fr)}}
+.coach img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:50% 50%;
+  filter:grayscale(1) contrast(1.06) brightness(.84);border:1px solid var(--linie)}
+/* Die vier Porträts sind unterschiedlich hoch geschnitten (536, 443, 537, 480
+   auf je 720). Im 3:4-Ausschnitt verlieren die schmalen oben und unten am
+   meisten, und die Augen sassen dadurch bis zu sieben Prozent der Kachelhöhe
+   auseinander. Die Werte holen alle vier auf dieselbe Augenlinie, rund 29,5 %
+   der Kachel. Mike und Diego bleiben bei 50 %: bei ihnen wird kaum etwas
+   abgeschnitten, es gibt nichts zu verschieben. */
+.coach--dominik img{object-position:50% 18%}
+.coach--benni img{object-position:50% 16%}
+.coach h3{font-family:var(--grot);font-weight:780;text-transform:uppercase;font-size:1.02rem;margin-top:.6rem}
+/* Wer das Gym führt, in einer Zeile. Keine Biografie — die bleibt gestrichen.
+ */
+.coach .rolle{font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--akzent);margin-top:.15rem}
+
+/* ---------- Fuss ----------
+   In rotstift kippt der Fuss ins Negativ: Tinte als Fläche, Papier als
+   Schrift. Auf einer Seite, die nur eine Fläche kennt, gibt es dieses Kippen
+   nicht — der Fuss ist derselbe Grund, abgesetzt durch eine Linie und Raum. */
+.mural{border-top:1px solid var(--linie)}
+/* Das Wandbild ist weisse Kreide auf hellem Putz und damit von sich aus das
+   hellste Material der Seite. Auf Papier ist es ein Bild; auf diesem Grund
+   wäre es bei rotstifts Werten eine Lampe — ein 1440 px breites Weissband
+   direkt über dem Fuss, das die ganze untere Seitenhälfte an sich zieht.
+   Der Helligkeitswert ist deshalb das einzige, was hier stark abweicht. */
+.mural img{width:100%;filter:grayscale(1) contrast(1.02) brightness(.45)}
+.fuss{border-top:1px solid var(--linie)}
+.fuss-innen{padding:2.6rem var(--rand) 3rem;max-width:1200px;margin:0 auto;
+  display:grid;gap:2rem}
+@media(min-width:900px){.fuss-innen{grid-template-columns:1fr auto;align-items:end}}
+.fuss img.wort{height:15px;width:auto;filter:brightness(0) invert(1);opacity:.9}
+.fuss .klein{color:var(--dim)}
+.fuss a{color:inherit;text-decoration:none;border-bottom:1px solid var(--linie-hell)}
+.fuss a:hover{color:var(--tinte);border-color:var(--akzent)}
+.fuss nav{display:flex;flex-wrap:wrap;gap:1.1rem;font-family:var(--mono);font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;color:var(--dim)}
+.fuss nav a{display:inline-flex;align-items:center;min-height:44px;border-bottom:0}
+.fuss nav a:hover{color:var(--akzent)}
+.fuss .stand{grid-column:1/-1;border-top:1px solid var(--linie);padding-top:1.1rem;margin-top:.4rem}
+
+/* ---------- Einblenden ---------- */
+@media(prefers-reduced-motion:no-preference){
+  .js .auf{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease}
+  .js .auf.sichtbar{opacity:1;transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#inhalt">Zum Inhalt springen</a>
+<div class="himmel" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="koernung" id="koernung" aria-hidden="true"></div>
+
+<header class="kopf">
+  <div class="huelle kopf-innen">
+    <a href="#inhalt" class="marke"><img src="../assets/logo.png" alt="Trojan Performance — zum Seitenanfang"></a>
+    <nav aria-label="Bereiche">
+      <a href="#plan">Plan</a>
+      <a href="#preise">Preise</a>
+      <a class="nur-breit" href="#coaches">Coaches</a>
+      <a href="#probe">Probetraining</a>
+    </nav>
+  </div>
+</header>
+
+<main id="inhalt">
+
+  <!-- ======== HERO ========
+       Das Datenblatt beantwortet die drei Fragen, die niemand suchen soll:
+       wann, was kostet es, was ist das. Sieben Zeilen waren es vorher; die
+       gestrichenen — Gründungsjahr, Open Gym, Tarifspanne — entscheiden nicht
+       über ein Probetraining. -->
+  <section class="hero huelle" aria-label="Überblick">
+    <p class="hero-kicker"><span>Performance Center · Klagenfurt am Wörthersee</span><span class="rechts">Offizieller HYROX Training Club</span></p>
+    <h1>
+      <span class="sr">Trojan Performance</span>
+      <span class="fit fit-a" aria-hidden="true"><span>Trojan</span></span>
+      <span class="fit fit-b" aria-hidden="true"><span>Performance</span></span>
+    </h1>
+    <div class="hero-unten">
+      <div>
+        <dl class="datenblatt">
+          <div><dt>Standort</dt><dd>Sebastiangasse 1, 9020 Klagenfurt</dd></div>
+          <div><dt>Kurse</dt><dd class="js-kurszeiten">siehe Wochenplan</dd></div>
+          <div><dt>Preis</dt><dd><strong>150 €</strong> im Monat, drei Einheiten pro Woche</dd></div>
+          <div><dt>Einstieg</dt><dd>Probetraining <strong>15&nbsp;€</strong>, keine Vorkenntnisse</dd></div>
+        </dl>
+        <div class="hero-cta">
+          <a class="knopf knopf-voll" href="#probe">Probetraining</a>
+          <a class="knopf knopf-leer" href="#plan">Wochenplan</a>
+        </div>
+      </div>
+      <figure class="bild blau">
+        <picture><source type="image/webp" srcset="../assets/o-hero.webp"><img src="../assets/o-hero.jpg" width="1365" height="768" fetchpriority="high" alt="Trainingsfläche von oben: Hantelrack, dahinter eine Trainingsgruppe"></picture>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ======== 01 PLAN ========
+       Der Wochenplan ist das stärkste Material des Kunden: er ist wahr und er
+       aktualisiert sich selbst. Deshalb steht er jetzt vorn und ersetzt den
+       Kurskatalog — mit echten Zeiten statt „3× pro Woche". -->
+  <section class="block" id="plan">
+    <div class="huelle">
+      <div class="blockkopf auf">
+        <span class="idx">01</span>
+        <h2>Diese Woche</h2>
+        <span class="recht">Aus dem Buchungssystem</span>
+      </div>
+      <!-- Nur im Störfall sichtbar. Dass der Plan aus dem Buchungssystem kommt,
+           sagt die Randnotiz oben; welche Woche zu sehen ist, steht in den
+           Datumszeilen der Tabelle darunter. Beides zweimal zu sagen war eine
+           Zeile zu viel. Was nicht wegfällt: die Warnung, wenn die Abfrage
+           scheitert und ein gespeicherter Stand dasteht. -->
+      <p class="plan-status" id="plan-status" hidden></p>
+      <div class="auf">
+        <div class="plan-tabs" id="plan-tabs" aria-label="Wochentag wählen"></div>
+        <div class="plan-woche" id="plan-woche"></div>
+      </div>
+      <noscript><p class="klein plan-fuss">Ohne JavaScript bleibt dieser Plan leer.</p></noscript>
+      <p class="klein plan-fuss">Tipp einen Kurs an, dann steht dort, was dich erwartet.</p>
+    </div>
+  </section>
+
+  <!-- ======== 02 PRINZIP ======== -->
+  <section class="block" id="prinzip">
+    <div class="huelle">
+      <div class="blockkopf auf">
+        <span class="idx">02</span>
+        <h2>Prinzip</h2>
+        <span class="recht">Für wen das ist</span>
+      </div>
+      <!-- Der Kunde schreibt „…und korrigiert — er sagt nicht nur an." Der
+           Gedankenstrich ist raus, und das Objekt der Korrektur ist die
+           Technik, nicht der Besucher: „korrigiert dich" liest sich für einen
+           Einsteiger als Zurechtweisung. Hervorgehoben ist „mit dir", weil
+           darin der Unterschied steckt, nicht im Verb. -->
+      <p class="leitsatz auf">In jedem Kurs steht ein Coach <em>mit dir</em> auf der Fläche und korrigiert deine Technik.</p>
+      <div class="prinzip-gitter">
+        <div class="auf">
+          <!-- Keine Kursanzahl: die Schnittstelle fuehrt einen regelmaessigen
+               Kurs mehr, als die abgestimmte Liste kennt, dazu Sondertermine.
+               Die Dauer steht wieder als Zahl da. In vier geprueften Wochen
+               (10.8. bis 6.9.2026) dauern 81 von 97 Terminen 75 Minuten; die
+               Ausnahmen sind Mama reloaded mit 45 und Fenja Power Yoga mit 60.
+               Beides sind nach Auskunft des Auftraggebers Fremdkurse, deshalb
+               steht hier die Regel ohne Einschraenkung. Der Wochenplan darueber
+               weist die Dauer an jedem Termin einzeln aus und bleibt die
+               Instanz, die im Zweifel recht hat. -->
+          <p class="satz">Trainiert wird im Kurs, nach Plan, in kleinen Gruppen. Eine Einheit dauert 75 Minuten. Vorkenntnisse braucht es keine.</p>
+        </div>
+        <figure class="bild auf">
+          <picture><source type="image/webp" srcset="../assets/o-kursgruppe.webp"><img src="../assets/o-kursgruppe.jpg" width="1365" height="910" loading="lazy" alt="Kursgruppe hält den Liegestütz, Langhantelstangen liegen am Boden"></picture>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== 03 PREISE ======== -->
+  <section class="block" id="preise">
+    <div class="huelle">
+      <div class="blockkopf auf">
+        <span class="idx">03</span>
+        <h2>Preise</h2>
+        <!-- Hier stand „Keine Einschreibgebühr" ein zweites Mal, zwei Zeilen
+             über derselben Angabe in der Zeile unter dem Preis. Die Randnotiz
+             trägt jetzt die Angabe, die daneben fehlte: was die Zahl bedeutet,
+             wenn man sie auf die Einheit herunterrechnet. -->
+        <span class="recht">11,54 € je Einheit</span>
+      </div>
+      <div class="auf">
+        <p class="zitat"><span class="markiert">150&nbsp;€<svg viewBox="0 0 100 48" aria-hidden="true" focusable="false"><path d="M10,25 C11,11 35,4 54,5 C76,6 93,12 92,25 C91,38 66,44 46,43 C26,42 8,36 9,26 C10,18 22,12 34,10"/></svg></span> im Monat.<br>Drei Mal die Woche.</p>
+        <p class="zitat-quelle">Keine Einschreibgebühr · Kraftaufbauplan inklusive</p>
+        <!-- „Nicht das billigste Gym der Stadt" stand hier als Zitat des
+             Betreibers, obwohl der Satz in inhalt.md nicht beim Inhalt steht,
+             sondern unter „Ansprache" — eine Tonangabe, keine Aussage für die
+             Seite. Über sich selbst in der dritten Person zu reden geht auf der
+             eigenen Startseite nicht.
+             Der Text stammt jetzt vom Auftraggeber. Das „wir" darin ist die
+             einzige erste Person der Seite; sonst sagt sie „trainiert wird" und
+             „Vorkenntnisse braucht es keine". Das ist Absicht: an der einen
+             Stelle, an der das Gym für sich einsteht, spricht es auch als es
+             selbst. Die drei Zusagen sind gedeckt — ein Coach in jedem Kurs,
+             75 Minuten je Einheit, begrenzte Plätze. -->
+        <p class="satz">Empfohlen für den Einstieg: drei Einheiten pro Woche, zwei für die Kraft, eine für die Ausdauer. Wir sind nicht das billigste Gym der Stadt, dafür sparen wir nicht an Betreuung, nicht an Zeit und nicht an Platz im Kurs.</p>
+      </div>
+
+      <details class="mehr auf" style="margin-top:2.6rem">
+        <summary>Andere Rhythmen, Laufzeiten und Einzelpreise</summary>
+        <div class="mehr-innen">
+          <div class="tarife">
+            <article class="tarif">
+              <h3>2 Einheiten<span>pro Woche</span></h3>
+              <dl>
+                <div><dt>1 Monat</dt><dd>130 €</dd></div>
+                <div><dt>6 Monate</dt><dd>120 €</dd></div>
+                <div><dt>12 Monate</dt><dd>110 €</dd></div>
+              </dl>
+            </article>
+            <article class="tarif empf">
+              <p class="tarif-tag">Empfehlung</p>
+              <h3>3 Einheiten<span>pro Woche</span></h3>
+              <dl>
+                <div><dt>1 Monat</dt><dd>150 €</dd></div>
+                <div><dt>6 Monate</dt><dd>140 €</dd></div>
+                <div><dt>12 Monate</dt><dd>130 €</dd></div>
+              </dl>
+              <p class="rechnung">13 Einheiten im Monat, 11,54 € pro Einheit — mit 12 Monaten Bindung 10,00 €.</p>
+            </article>
+            <article class="tarif">
+              <h3>6 Einheiten<span>pro Woche</span></h3>
+              <dl>
+                <div><dt>1 Monat</dt><dd>170 €</dd></div>
+                <div><dt>6 Monate</dt><dd>160 €</dd></div>
+                <div><dt>12 Monate</dt><dd>150 €</dd></div>
+              </dl>
+            </article>
+          </div>
+
+          <div class="preis-zeile">
+            <h3>Ohne Bindung</h3>
+            <ul class="ohne">
+              <li><span class="p">15 €</span><span class="w">Probetraining<small>eine Einheit</small></span></li>
+              <li><span class="p">25 €</span><span class="w">Drop-in<small>einzelne Einheit</small></span></li>
+              <li><span class="p">200 €</span><span class="w">10er-Block<small>ein Jahr gültig</small></span></li>
+              <li><span class="p">100 €</span><span class="w">Personal Training<small>Einzeltermin</small></span></li>
+              <li><span class="p">60 €</span><span class="w">Open Gym<small>täglich 06:00–22:00</small></span></li>
+            </ul>
+          </div>
+
+          <div class="neben">
+            <div>
+              <h3>Vertrag</h3>
+              <p>Bindung 1, 6 oder 12 Monate. Pause: bei 6 Monaten einmal, bei 12 zweimal — je bis 4 Wochen.</p>
+            </div>
+            <div>
+              <h3>Übertragung</h3>
+              <p>Bei triftigem Grund ist der Vertrag übertragbar.</p>
+            </div>
+            <div class="svs">
+              <h3>SVS</h3>
+              <p>Selbstständig und SVS-versichert? Dann überweist dir die SVS <span class="p100">100 €</span> aufs Konto — für jeden Tarif außer Open Gym.</p>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ======== 04 COACHES ========
+       Gesichter schaffen Vertrauen, Lebensläufe nicht: die Biografien sind
+       gestrichen, die Porträts bleiben. Die beiden Gründer stehen vorn und
+       tragen eine Zeile — wer das Gym führt, gehört zur Entscheidung; was er
+       vorher trainiert hat, nicht. Beide Angaben stehen in inhalt.md. -->
+  <section class="block" id="coaches">
+    <div class="huelle">
+      <div class="blockkopf auf">
+        <span class="idx">04</span>
+        <h2>Coaches</h2>
+        <span class="recht recht-immer">Mike und Dominik sind Brüder · gegründet 2017</span>
+      </div>
+      <div class="coaches">
+        <article class="coach coach--mike auf">
+          <picture><source type="image/webp" srcset="../assets/o-coachmike.webp"><img src="../assets/o-coachmike.jpg" width="536" height="720" loading="lazy" alt="Porträt von Coach Mike"></picture>
+          <h3>Mike</h3>
+          <p class="rolle">Gründer</p>
+        </article>
+        <article class="coach coach--dominik auf">
+          <picture><source type="image/webp" srcset="../assets/o-coachdominik.webp"><img src="../assets/o-coachdominik.jpg" width="443" height="720" loading="lazy" alt="Porträt von Coach Dominik"></picture>
+          <h3>Dominik</h3>
+          <p class="rolle">Gründer</p>
+        </article>
+        <article class="coach coach--diego auf">
+          <picture><source type="image/webp" srcset="../assets/o-coachdiego.webp"><img src="../assets/o-coachdiego.jpg" width="537" height="720" loading="lazy" alt="Porträt von Coach Diego"></picture>
+          <h3>Diego</h3>
+        </article>
+        <article class="coach coach--benni auf">
+          <picture><source type="image/webp" srcset="../assets/o-coachbenni.webp"><img src="../assets/o-coachbenni.jpg" width="480" height="720" loading="lazy" alt="Porträt von Coach Benni"></picture>
+          <h3>Benni</h3>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== 05 PROBETRAINING ========
+       Statt des Kontaktformulars, das ohnehin keinen Empfänger hat: die zwei
+       Wege, die der Betreiber selbst führt. -->
+  <section class="block" id="probe">
+    <div class="huelle">
+      <div class="blockkopf auf">
+        <span class="idx">05</span>
+        <h2>Probetraining</h2>
+        <span class="recht">Ohne Vorkenntnisse</span>
+      </div>
+      <div class="auf">
+        <p class="badge">15 € · 75 Minuten · ein Coach</p>
+        <p class="satz">Eine Einheit mittrainieren. Mitbringen: Handtuch, Trinkflasche, Hallenschuhe mit sauberer Sohle — mehr nicht.</p>
+        <div class="hero-cta">
+          <a class="knopf knopf-voll" href="mailto:office@trojanperformance.at?subject=Probetraining">Termin anfragen</a>
+          <a class="knopf knopf-leer" href="tel:+4367682277302">+43 676 8227 7302</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="mural">
+  <picture><source type="image/webp" srcset="../assets/o-mural.webp"><img src="../assets/o-mural.jpg" width="1200" height="551" loading="lazy" alt="Wandbild mit dem Trojan-Logo in der Halle"></picture>
+</div>
+<footer class="fuss">
+  <div class="fuss-innen">
+    <div>
+      <img class="wort" src="../assets/logo.png" alt="Trojan Performance">
+      <p class="klein" style="margin-top:1rem">Erster offizieller HYROX Training Club in Kärnten · Sebastiangasse 1, 9020 Klagenfurt am Wörthersee<br>
+      <a href="mailto:office@trojanperformance.at">office@trojanperformance.at</a> · <a href="tel:+4367682277302">+43 676 8227 7302</a></p>
+    </div>
+    <nav aria-label="Kanäle und Rechtliches">
+      <a href="https://www.instagram.com/trojan.performance/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/trojanperformanceofficial" target="_blank" rel="noopener">Facebook</a>
+      <a href="#" data-leer>Impressum</a>
+      <a href="#" data-leer>Datenschutz</a>
+    </nav>
+    <p class="klein stand">Entwurf zur Abstimmung — Impressum und Datenschutz sind noch nicht angebunden.</p>
+  </div>
+</footer>
+
+<dialog class="kdlg" id="kursdlg" aria-labelledby="kd-name">
+  <div class="kdlg-innen">
+    <div class="kdlg-kopf">
+      <h3 id="kd-name"></h3>
+      <button class="zu" type="button" aria-label="Schliessen">&times;</button>
+    </div>
+    <p class="kmeta" id="kd-meta"></p>
+    <p class="ktext" id="kd-text"></p>
+    <p class="klein" id="kd-hinweis" hidden>* Beschreibung vorläufig, der endgültige Text folgt.</p>
+    <div class="kfuss">
+      <a class="knopf knopf-voll" href="mailto:office@trojanperformance.at?subject=Probetraining">Probetraining</a>
+    </div>
+  </div>
+</dialog>
+
+<script>
+document.documentElement.classList.add('js');
+
+/* ---------- Korn ----------
+   Von der HybridX-Startseite übernommen: 128×128 Rauschen, im Browser
+   erzeugt statt als Bild geladen. Auf einer Seite, die aus einer einzigen
+   Fläche und Haarlinien besteht, verhindert es, dass grosse Flächen als
+   Farbbänder auseinanderfallen. Scheitert der Canvas, fehlt nur das Korn. */
+(function(){
+  try{
+    var c=document.createElement('canvas');c.width=c.height=128;
+    var x=c.getContext('2d'),im=x.createImageData(128,128),d=im.data;
+    for(var i=0;i<d.length;i+=4){var v=Math.random()*255|0;d[i]=d[i+1]=d[i+2]=v;d[i+3]=255;}
+    x.putImageData(im,0,0);
+    document.getElementById('koernung').style.backgroundImage='url('+c.toDataURL()+')';
+  }catch(_){}
+})();
+
+/* ---------- Die Leiste zieht den Himmel nach ----------
+   Gemessen wird der Himmel selbst, nicht scrollHeight: er ist die Fläche,
+   die der Verlauf füllt, und damit die einzige Höhe, die stimmen muss.
+   Der Beobachter fängt ab, dass die Seite später wächst — der Wochenplan
+   kommt aus dem Netz und baut sich neu, und mit ihm ändert sich die Höhe,
+   über die der Verlauf läuft. */
+(function(){
+  var k=document.querySelector('.kopf'), h=document.querySelector('.himmel');
+  if(!k||!h)return;
+  var offen=false;
+  function malen(){
+    offen=false;
+    k.style.setProperty('--rolle',(window.scrollY||0)+'px');
+  }
+  function messen(){
+    k.style.setProperty('--dokh',h.offsetHeight+'px');
+    malen();
+  }
+  function anfordern(){if(!offen){offen=true;requestAnimationFrame(malen);}}
+  messen();
+  addEventListener('scroll',anfordern,{passive:true});
+  addEventListener('resize',messen,{passive:true});
+  if('ResizeObserver' in window)new ResizeObserver(messen).observe(h);
+})();
+
+/* ---------- Platzhalter-Links ---------- */
+document.querySelectorAll('a[href="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){e.preventDefault();});
+});
+
+/* ---------- Wortmarke exakt auf Satzspiegelbreite ---------- */
+function passt(){
+  document.querySelectorAll('.fit').forEach(function(z){
+    var s=z.firstElementChild, b=z.clientWidth;
+    if(!s||!b)return;
+    s.style.fontSize='100px';
+    var w=s.getBoundingClientRect().width;
+    if(w>0)s.style.fontSize=(100*b/w*0.995).toFixed(2)+'px';
+  });
+}
+if(document.fonts&&document.fonts.ready){document.fonts.ready.then(passt);}
+passt();
+var passtT;
+addEventListener('resize',function(){cancelAnimationFrame(passtT);passtT=requestAnimationFrame(passt);});
+
+/* ---------- Einblenden ---------- */
+(function(){
+  var mm=matchMedia('(prefers-reduced-motion: reduce)');
+  var alle=document.querySelectorAll('.auf');
+  if(mm.matches||!('IntersectionObserver' in window)){
+    alle.forEach(function(el){el.classList.add('sichtbar');});
+    return;
+  }
+  var io=new IntersectionObserver(function(eintraege){
+    eintraege.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('sichtbar');io.unobserve(e.target);}
+    });
+  },{rootMargin:'0px 0px -8% 0px'});
+  alle.forEach(function(el){io.observe(el);});
+})();
+
+/* ---------- Kursdetail ----------
+   Die Kursbeschreibungen standen als eigener Abschnitt auf der Seite —
+   Absätze, die vor der Entscheidung niemand liest. Jetzt hängen sie am
+   Wochenplan: gestrichen ist nichts, es steht nur nichts mehr im Weg.
+   Die Plätze stammen vom Betreiber, Häufigkeit und Dauer fallen aus der
+   geladenen Woche ab und können deshalb nicht veralten.
+   Diese Liste ist bewusst nicht die Kursliste der Seite: die Schnittstelle
+   führt Kurse, für die der Betreiber noch keinen Text abgestimmt hat, und
+   einzelne Sondertermine. Für die greift der Hinweis unten. */
+var KURSINFO={
+ 'Performance':{plaetze:'12–16',text:'Crosstraining aus Powerlifting, Weightlifting, Gymnastics, Calisthenics, Strongman und Ausdauer. Die Reize sind nicht willkürlich kombiniert, sondern folgen einer periodisierten Planung.'},
+ 'FBB/Strength & Power':{plaetze:'16',text:'Muskelaufbau nach festem Schema, kombiniert mit kurzen intensiven Ausdauerblöcken. Kraft und Ausdauer in einer Einheit.'},
+ 'Powercircle':{plaetze:'24',text:'Airbike, SkiErg, Schlitten, Jump-Box, Battle-Rope, Wallballs im Wechsel. Kurze harte Intervalle, kurze Pausen. Technisch anspruchslos, deshalb auch für Einsteiger geeignet.'},
+ 'Mama reloaded':{text:'Wiedereinstieg nach der Schwangerschaft. Beckenboden, Rumpf und Kraft in einem Tempo, das sich an den Tag anpasst.*',vorlaeufig:true},
+ 'Hyrox':{plaetze:'24',text:'Vorbereitung auf das Rennformat, das weltweit unter denselben Bedingungen läuft — für Open, Pro, Doubles und Relay. Für jedes Level, vom Einstieg bis zum Wettkampf.'},
+ 'Team-WOD':{plaetze:'16',text:'Zu zweit mit deinem Trainingsbuddy. Jede Woche ein anderes Workout, Intensität und Schwierigkeitsgrad werden auf euch beide angepasst.'},
+ 'FBB':{plaetze:'12',text:'Nach dem gemeinsamen Warm-up wählst du Ober- oder Unterkörper, je vier Übungen mit vorgegebenen Sätzen, Wiederholungen und Pausen. Zum Abschluss eine kurze, intensive Belastung.'},
+ 'Community TeamWOD':{plaetze:'24',text:'Team-Workout in großer Runde. Jede Woche ein anderes Programm, Intensität und Schwierigkeitsgrad individuell angepasst.'}
+};
+
+var dlg=document.getElementById('kursdlg');
+function kursOeffnen(name,prof){
+  var i=KURSINFO[name]||{};
+  document.getElementById('kd-name').textContent=name;
+  document.getElementById('kd-meta').textContent=prof+(i.plaetze?(' · '+i.plaetze+' Plätze'):'');
+  document.getElementById('kd-text').textContent=i.text||'Für diesen Termin liegt noch keine abgestimmte Beschreibung vor.';
+  document.getElementById('kd-hinweis').hidden=!i.vorlaeufig;
+  if(dlg.showModal)dlg.showModal();
+}
+dlg.querySelector('.zu').addEventListener('click',function(){dlg.close();});
+dlg.addEventListener('click',function(e){if(e.target===dlg)dlg.close();});
+document.getElementById('plan-woche').addEventListener('click',function(e){
+  var b=e.target.closest('.eintrag[data-kurs]');
+  if(b)kursOeffnen(b.dataset.kurs,b.dataset.prof);
+});
+
+/* ---------- Wochenplan aus dem Buchungssystem ---------- */
+const PLAN_STAND=[
+  [1,'06:00',75,'Performance'],   [3,'06:00',75,'Performance'],
+  [0,'08:15',75,'FBB/Strength & Power'], [1,'08:15',75,'Performance'],
+  [2,'08:15',75,'FBB/Strength & Power'], [4,'08:15',75,'Performance'],
+  [5,'08:15',75,'FBB/Strength & Power'], [5,'09:30',75,'Community TeamWOD'],
+  [4,'09:45',45,'Mama reloaded'],  [2,'10:00',45,'Mama reloaded'],
+  [4,'10:45',45,'Mama reloaded'],
+  [2,'16:00',75,'Powercircle'],    [4,'16:00',75,'FBB/Strength & Power'],
+  [0,'17:15',75,'Powercircle'],    [0,'17:15',75,'Performance'],
+  [1,'17:15',75,'FBB/Strength & Power'], [2,'17:15',75,'Team-WOD'],
+  [3,'17:15',75,'Performance'],    [4,'17:15',75,'Hyrox'],
+  [0,'18:30',75,'FBB/Strength & Power'], [1,'18:30',75,'Performance'],
+  [2,'18:30',75,'Hyrox'],          [3,'18:30',75,'FBB'],
+  [3,'18:30',75,'Powercircle']
+].map(([tag,zeit,dauer,name])=>({tag,zeit,dauer,name}));   // tag: 0 = Montag
+
+function planWoche(){
+  const jetzt=new Date(), versatz=(jetzt.getDay()+6)%7;
+  const mo=new Date(jetzt.getFullYear(),jetzt.getMonth(),jetzt.getDate()-versatz);
+  const so=new Date(mo.getFullYear(),mo.getMonth(),mo.getDate()+7);
+  const f=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}T00:00:00.000Z`;
+  return [f(mo),f(so),mo];
+}
+
+function endzeit(e){
+  var t=e.zeit.split(':'), min=(+t[0])*60+(+t[1])+e.dauer;
+  return String(Math.floor(min/60)).padStart(2,'0')+':'+String(min%60).padStart(2,'0');
+}
+
+// Die Zeile im Datenblatt sagt die Grobform der Woche, nicht die Zeitspannen.
+// Vorher stand dort „Mo–Fr 06:00–11:30 und 16:00–19:45" — die Vereinigung über
+// fünf Tage, die aussieht wie ein Öffnungsfenster. Am Montag steht vormittags
+// ein einziger Kurs, um 08:15. Dieselbe Sorte Fehler wie „acht Kurse": eine
+// Zusammenfassung, die der Wochenplan darunter widerlegt, sobald jemand
+// nachsieht. Die Worte hier sind an jedem einzelnen Tag wahr, und die genauen
+// Zeiten stehen einen Bildschirm weiter im Plan, exakt und antippbar.
+function zusammenfassung(evts){
+  function wort(gruppe){
+    var teile=[];
+    var frueh=gruppe.filter(function(e){return e.zeit<'12:00';});
+    var spaet=gruppe.filter(function(e){return e.zeit>='12:00';});
+    if(frueh.length){
+      var start=frueh.map(function(e){return e.zeit;}).sort()[0];
+      teile.push(start<'08:00'?'früh':'vormittags');
+    }
+    if(spaet.length){
+      var ende=spaet.map(endzeit).sort().slice(-1)[0];
+      teile.push(ende>='18:00'?'abends':'nachmittags');
+    }
+    return teile.join(' und ');
+  }
+  var block=[['Mo–Fr',evts.filter(function(e){return e.tag<=4;})],
+             ['Sa',evts.filter(function(e){return e.tag===5;})],
+             ['So',evts.filter(function(e){return e.tag===6;})]]
+    .filter(function(b){return b[1].length;})
+    .map(function(b){return [b[0],wort(b[1])];});
+  // Benachbarte Tage mit gleicher Beschreibung zusammenziehen: „Sa und So
+  // vormittags". Nur, wenn die Beschreibung selbst kein „und" enthält, sonst
+  // stünde da „Mo–Fr und Sa früh und abends".
+  var teile=[];
+  for(var i=0;i<block.length;i++){
+    var tage=[block[i][0]];
+    while(i+1<block.length && block[i+1][1]===block[i][1] && block[i][1].indexOf(' und ')<0){
+      tage.push(block[i+1][0]); i++;
+    }
+    teile.push(tage.join(' und ')+' '+block[i][1]);
+  }
+  return teile.join(' · ');
+}
+
+/* Beobachtet wird die Bühne, nicht der Seitenanfang: erst wenn sie ganz aus
+   dem Bild ist, ist die Aufforderung darin auch weg und die Leiste darf sie
+   übernehmen. Der negative obere Rand rechnet die feste Leiste heraus, sonst
+   gilt die Bühne noch als sichtbar, während sie schon dahinter steckt. */
+(function(){
+  var f=document.querySelector('.hero'), k=document.querySelector('.kopf');
+  if(!f||!k||!('IntersectionObserver' in window))return;
+  var probe=k.querySelector('nav a[href="#probe"]');
+  function messen(){
+    if(!probe)return;
+    var stil=getComputedStyle(k.querySelector('nav'));
+    k.style.setProperty('--schub', (probe.offsetWidth + parseFloat(stil.gap||0)) + 'px');
+  }
+  messen();
+  addEventListener('resize',messen,{passive:true});
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(messen);
+  new IntersectionObserver(function(e){k.classList.toggle('ueber',e[0].isIntersecting);},
+    {rootMargin:'-60px 0px 0px 0px'}).observe(f);
+})();
+
+function zeichnen(evts,live){
+  var kurz=['Mo','Di','Mi','Do','Fr','Sa','So'];
+  var lang=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
+  evts=evts.filter(function(e){return e.name;}).slice().sort(function(a,b){
+    return (a.tag-b.tag)||(a.zeit<b.zeit?-1:(a.zeit>b.zeit?1:0));
+  });
+
+  var proWoche={};
+  evts.forEach(function(e){proWoche[e.name]=(proWoche[e.name]||0)+1;});
+
+  var tage=[0,1,2,3,4,5];
+  if(evts.some(function(e){return e.tag===6;}))tage.push(6);
+
+  var wrap=document.getElementById('plan-woche');
+  var tabs=document.getElementById('plan-tabs');
+  wrap.textContent='';tabs.textContent='';
+  wrap.style.setProperty('--spalten',tage.length);
+  tabs.style.setProperty('--spalten',tage.length);
+
+  var mo=planWoche()[2];
+  function datum(t){
+    var d=new Date(mo.getFullYear(),mo.getMonth(),mo.getDate()+t);
+    return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.';
+  }
+
+  var heute=(new Date().getDay()+6)%7;
+  var start=tage.indexOf(heute)>=0?heute:0;
+
+  var knoepfe=[];
+  tage.forEach(function(t){
+    var panel=document.createElement('section');
+    panel.className='tag-panel';panel.id='tag-'+t;
+    panel.setAttribute('aria-label',lang[t]);
+    var h=document.createElement('h3');
+    h.textContent=live?(kurz[t]+' · '+datum(t)):kurz[t];
+    panel.appendChild(h);
+    var ul=document.createElement('ul');
+    var amTag=evts.filter(function(e){return e.tag===t;});
+    if(!amTag.length){
+      var leer=document.createElement('li');
+      leer.className='leer';leer.textContent='— keine Kurse';
+      ul.appendChild(leer);
+    }
+    amTag.forEach(function(e){
+      var li=document.createElement('li');
+      var b=document.createElement('button');
+      b.type='button';b.className='eintrag';
+      b.setAttribute('data-kurs',e.name);
+      b.setAttribute('data-prof',proWoche[e.name]+'× pro Woche · '+e.dauer+' Minuten');
+      b.setAttribute('aria-haspopup','dialog');
+      b.setAttribute('aria-label',e.name+', '+lang[t]+' '+e.zeit+' Uhr — Beschreibung öffnen');
+      var z=document.createElement('span');z.className='z';z.textContent=e.zeit;
+      var n=document.createElement('span');n.className='n';n.textContent=e.name;
+      var d=document.createElement('span');d.className='d';d.textContent=e.dauer+' min';
+      b.appendChild(z);b.appendChild(n);b.appendChild(d);
+      li.appendChild(b);
+      ul.appendChild(li);
+    });
+    panel.appendChild(ul);
+    if(t===start)panel.classList.add('aktiv');
+    wrap.appendChild(panel);
+
+    var tb=document.createElement('button');
+    tb.type='button';
+    var bt=document.createElement('span');bt.textContent=kurz[t];
+    tb.appendChild(bt);
+    if(live){
+      var bd=document.createElement('span');bd.className='dt';bd.textContent=datum(t);
+      tb.appendChild(bd);
+    }
+    tb.setAttribute('aria-label',lang[t]+(live?(', '+datum(t)):''));
+    tb.setAttribute('aria-pressed',t===start?'true':'false');
+    tb.setAttribute('aria-controls','tag-'+t);
+    tb.addEventListener('click',function(){
+      knoepfe.forEach(function(k){k.setAttribute('aria-pressed','false');});
+      tb.setAttribute('aria-pressed','true');
+      wrap.querySelectorAll('.tag-panel').forEach(function(p){p.classList.remove('aktiv');});
+      panel.classList.add('aktiv');
+    });
+    knoepfe.push(tb);
+    tabs.appendChild(tb);
+  });
+
+  var zf=zusammenfassung(evts);
+  if(zf)document.querySelectorAll('.js-kurszeiten').forEach(function(el){el.textContent=zf;});
+}
+
+zeichnen(PLAN_STAND,false);
+
+(async()=>{
+  const [von,bis]=planWoche();
+  try{
+    const r=await fetch(`https://gymkloud.com/api/public/course-event/trojan_performance`+
+      `?from=${von}&to=${bis}&groupNames=Kurse`);
+    if(!r.ok) throw new Error(r.status);
+    const d=await r.json();
+    if(!Array.isArray(d)||!d.length) throw new Error('leer');
+    zeichnen(d.map(e=>({
+      tag:(new Date(e.startTime).getDay()+6)%7,
+      zeit:e.startTime.slice(11,16),
+      dauer:Math.round((new Date(e.endTime)-new Date(e.startTime))/60000)||75,
+      name:(e.course&&e.course.name||'').trim(),
+    })),true);
+  }catch(_){
+    /* Der eingefrorene Stand bleibt stehen — aber ungesagt bleibt es nicht:
+       ein Plan, der vielleicht nicht mehr stimmt, muss sich als solcher zu
+       erkennen geben. Das Feld trägt kein .auf, weil der Beobachter nur
+       einsammelt, was beim Laden schon eine Fläche hatte. */
+    var s=document.getElementById('plan-status');
+    s.textContent='Buchungssystem gerade nicht erreichbar — gespeicherter Wochenstand';
+    s.hidden=false;
+  }
+})();
+</script>
+</body>
+</html>
