@@ -204,9 +204,12 @@ Drei Werte weichen in beiden bewusst ab; die Gründe stehen im Quelltext:
 
 In `leise` fällt zusätzlich der Blaustich über dem Heldenbild weg: er war eine
 Farbentscheidung, und unter „einmal je Bildschirm" hat die Farbe dort nur eine Aufgabe.
-`abstand` führt ihn weiter — mit `.45` statt `rotstift`s `.26`, weil die Tönung auf
-dunklem Grund bei `.26` fast verschwindet (Arena, das denselben Verlauf auf Schwarz legt,
-steht auf `.82`).
+`abstand` führt ihn weiter, mit `rotstift`s eigener Deckkraft `.26`. Kurzzeitig stand
+hier `.45`, mit der Begründung, die Tönung verschwinde auf dunklem Grund — nachgemessen
+stimmt das nicht. Gemittelt über die Bildfläche ergibt dieselbe `.26` hier eine
+Buntheit von `C* 7,0`, auf `rotstift`s Papier `7,1`; die Helligkeit des Fotos ist an
+der Stelle fast dieselbe (`L* 17,6` gegen `19,9`). Es gab nichts zu kompensieren, und
+`.45` lief auf das 1,7-fache von `rotstift`s Farbe hinaus.
 
 Eine Sache liess sich in keinem von beiden übernehmen, sondern musste umgebaut werden. HybridX' feste
 Möblierung ist ein Schleier in Grundfarbe — dort sind das freistehende Kärtchen von rund

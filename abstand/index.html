@@ -308,15 +308,20 @@ figure.bild img{width:100%;filter:grayscale(1) contrast(1.06) brightness(.82)}
 /* Blaustich auf dem Heldenbild, aus rotstift. Graustufe im Bild, darüber ein
    Verlauf im Farbmodus: der überträgt Farbton und Sättigung und lässt die
    Helligkeit unangetastet — getönt, nicht eingefärbt.
-   Die Deckkraft ist der eine Wert, der wandern musste. Rotstift steht auf
-   0,26, weil das Blau dort auf hellem Papier sitzt; auf diesem Grund
-   verschwindet die Tönung bei 0,26 fast. Arena, das denselben Verlauf auf
-   Schwarz legt, steht auf 0,82. Hier liegt sie dazwischen. */
+   Die Deckkraft ist rotstifts eigene, unverändert. Hier stand kurz 0,45, mit
+   der Begründung, die Tönung verschwinde auf dunklem Grund. Nachgemessen
+   stimmt das nicht: gemittelt über die Bildfläche kommt derselbe Wert 0,26
+   hier auf eine Buntheit von C* 7,0, auf rotstifts Papier auf 7,1. Die
+   Helligkeit des Fotos ist an dieser Stelle fast dieselbe (L* 17,6 gegen
+   19,9), also gibt es nichts zu kompensieren; 0,45 lief auf das 1,7-fache
+   von rotstifts Farbe hinaus.
+   Wer das noch einmal nachrechnet: Deckkraft ändern heisst Buntheit ändern,
+   nicht Helligkeit — der Farbmodus hält L* über alle Werte bei rund 17,6. */
 .blau{position:relative;isolation:isolate}
 .blau::after{
   content:"";position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(158deg,#78B0F2 0%,#2A5FA0 44%,#12243A 100%);
-  mix-blend-mode:color;opacity:.45;
+  mix-blend-mode:color;opacity:.26;
 }
 
 /* ---------- Blöcke ---------- */
